@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: gestion-clubes
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/gestion_clubes?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${DB_USERNAME:clubes}
+    password: ${DB_PASSWORD:clubes123}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  thymeleaf:
+    cache: false
+server:
+  port: ${PORT:8080}
+app:
+  admin:
+    email: ${ADMIN_EMAIL:admin@example.com}
+    password: ${ADMIN_PASSWORD:admin123}
+
