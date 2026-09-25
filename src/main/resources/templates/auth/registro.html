@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crear cuenta</title>
+    <link rel="icon" type="image/png" th:href="@{/images/Logo-UVG.png}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <main class="container card">
+        <h1>Crear cuenta</h1><form th:action="@{/registro}" th:object="${usuario}" method="post">
+            <div th:if="${#fields.hasGlobalErrors()}" class="alert error">
+                <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
+            </div>
+            <label>Nombre<input th:field="*{nombre}" autocomplete="name" required>
+                <small th:errors="*{nombre}">
+                </small>
+            </label>
+            <label>Correo<input type="email" th:field="*{email}" autocomplete="email" required>
+                <small th:errors="*{email}"></small>
+            </label>
+            <label>Contraseña<input type="password" th:field="*{password}" autocomplete="new-password" required>
+                <small th:errors="*{password}"></small>
+            </label>
+            <label>Confirmar contraseña<input type="password" th:field="*{confirmarPassword}" autocomplete="new-password" required>
+                <small th:errors="*{confirmarPassword}"></small>
+            </label><button type="submit">Registrarme</button>
+        </form><p>¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión</a>´
+        </p>
+    </main>
+</body>

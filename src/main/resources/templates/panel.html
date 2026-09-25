@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Principal</title><link rel="icon" type="image/png" th:href="@{/images/Logo-UVG.png}"><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body class="dashboard-page">
+<header class="topbar">
+	<div class="brand"><img th:src="@{/images/Logo-UVG.png}" alt="Universidad del Valle de Guatemala"><span>Clubes Universitarios</span></div>
+	<div class="topbar-actions"><div class="topbar-context">Portal Clubes UVG</div><form th:action="@{/logout}" method="post"><button type="submit" class="logout-button">Cerrar sesión</button></form></div>
+</header>
+<div class="dashboard-layout">
+	<aside class="sidebar" aria-label="Navegación principal">
+		<p class="sidebar-title">Menú</p>
+		<div class="nav-item active" aria-current="page"><span class="nav-mark">01</span>Inicio</div>
+		<div class="nav-item"><span class="nav-mark">02</span>Clubes</div>
+		<div class="nav-item"><span class="nav-mark">03</span>Actividades</div>
+		<div class="nav-item"><span class="nav-mark">04</span>Miembros</div>
+		<div class="nav-item"><span class="nav-mark">05</span>Avisos</div>
+        <div class="nav-item"><span class="nav-mark">06</span>Calendario</div>
+	</aside>
+	<main class="dashboard-main">
+		<section class="dashboard-intro">
+			<p class="eyebrow">Información general</p>
+			<h1>Panel principal</h1>
+			<p>Un espacio para conocer la vida estudiantil y la gestión de clubes.</p>
+		</section>
+		<section class="dashboard-grid" aria-label="Módulos del portal">
+			<article class="dashboard-card featured-card"><span class="card-label">Módulo</span><h2>Clubes estudiantiles</h2><p>Administra la comunidad y sus espacios de participación.</p><span class="card-status">Próximamente</span></article>
+			<article class="dashboard-card"><span class="card-label">Módulo</span><h2>Actividades</h2><p>Organiza eventos, reuniones y actividades universitarias.</p><span class="card-status">Próximamente</span></article>
+			<article class="dashboard-card"><span class="card-label">Módulo</span><h2>Miembros</h2><p>Consulta y gestiona la participación de estudiantes.</p><span class="card-status">Próximamente</span></article>
+			<article class="dashboard-card"><span class="card-label">Módulo</span><h2>Avisos</h2><p>Comparte información importante con la comunidad.</p><span class="card-status">Próximamente</span></article>
+		</section>
+	</main>
+</div>
+</body>
+</html>
+

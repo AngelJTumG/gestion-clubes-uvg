@@ -5,20 +5,20 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class RegistroUsuarioDto {
-    @NotBlank(message = "El nombre es obligatorio")
-    @Size(max = 100, message = "El nombre no puede superar 100 caracteres")
+    @NotBlank(message = "Por favor, ingresa tu nombre")
+    @Size(max = 100, message = "Tu nombre puede tener hasta 100 caracteres")
     private String nombre;
 
-    @NotBlank(message = "El correo es obligatorio")
-    @Email(message = "Ingresa un correo válido")
-    @Size(max = 150, message = "El correo no puede superar 150 caracteres")
+    @NotBlank(message = "Por favor, ingresa tu correo")
+    @Email(message = "Ingresa un correo electrónico válido")
+    @Size(max = 150, message = "Tu correo puede tener hasta 150 caracteres")
     private String email;
 
-    @NotBlank(message = "La contraseña es obligatoria")
+    @NotBlank(message = "Por favor, ingresa una contraseña")
     @Size(min = 8, max = 72, message = "La contraseña debe tener entre 8 y 72 caracteres")
     private String password;
 
-    @NotBlank(message = "Confirma la contraseña")
+    @NotBlank(message = "Por favor, confirma tu contraseña")
     @Size(min = 8, max = 72, message = "La contraseña debe tener entre 8 y 72 caracteres")
     private String confirmarPassword;
 
