@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Iniciar sesión</title>
+    <link rel="icon" type="image/png" th:href="@{/images/Logo-UVG.png}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <main class="container card">
+        <h1>Iniciar sesión</h1>
+        <p th:if="${param.error}" class="alert error">Correo o contraseña incorrectos.</p>
+        <p th:if="${param.logout}" class="alert success">Sesión cerrada correctamente.</p>
+        <p th:if="${param.registroExitoso}" class="alert success">Cuenta creada. Ya puedes iniciar sesión.</p>
+        <form th:action="@{/login}" method="post">
+            <label>Correo<input type="email" name="username" autocomplete="email" required></label>
+            <label>Contraseña<input type="password" name="password" autocomplete="current-password" required></label>
+            <button type="submit">Ingresar</button>
+        </form><p>¿No tienes cuenta? <a th:href="@{/registro}">Regístrate</a></p>
+    </main>
+</body>
+</html>
+
