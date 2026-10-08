@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detalle del club | Clubes UVG</title>
+    <link rel="icon" type="image/png" th:href="@{/images/Logo-UVG.png}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="dashboard-page">
+<header class="topbar">
+    <div class="brand"><img th:src="@{/images/Logo-UVG.png}" alt="Universidad del Valle de Guatemala"><span>Clubes Universitarios</span></div>
+    <div class="topbar-actions"><a th:href="@{/panel}">Panel principal</a><form th:action="@{/logout}" method="post"><button type="submit" class="logout-button">Cerrar sesión</button></form></div>
+</header>
+<main class="club-main">
+    <p class="eyebrow">Administración de clubes</p>
+    <p class="alert success" role="status" th:if="${exito}" th:text="${exito}"></p>
+    <h1 th:text="${club.nombre}">Nombre del club</h1>
+    <p class="club-intro">Datos registrados del club.</p>
+    <section class="card" aria-label="Información del club">
+        <dl class="club-details">
+            <div><dt>Descripción</dt><dd th:text="${club.descripcion}"></dd></div>
+            <div><dt>Categoría</dt><dd th:text="${club.categoria}"></dd></div>
+            <div><dt>Horario</dt><dd th:text="${club.horario}"></dd></div>
+            <div><dt>Ubicación</dt><dd th:text="${club.ubicacion}"></dd></div>
+            <div><dt>Requisitos</dt><dd th:text="${club.requisitos}"></dd></div>
+            <div><dt>Datos de contacto</dt><dd th:text="${club.datosContacto}"></dd></div>
+            <div><dt>Coordinador</dt><dd th:text="${club.coordinador.usuario.nombre}"></dd></div>
+            <div><dt>Correo del coordinador</dt><dd th:text="${club.coordinador.usuario.email}"></dd></div>
+        </dl>
+    </section>
+    <div class="club-actions">
+        <a class="button" th:href="@{/admin/clubes/nuevo}">Agregar otro club</a>
+        <a class="button secondary" th:href="@{/panel}">Volver al panel</a>
+    </div>
+</main>
+</body>
+</html>
