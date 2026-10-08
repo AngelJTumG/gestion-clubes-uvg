@@ -125,7 +125,14 @@ public class Club {
     }
 
     public void setCoordinador(Coordinador coordinador) {
+        java.util.Objects.requireNonNull(coordinador, "El club requiere un coordinador");
+        if (this.coordinador == coordinador) return;
+        Coordinador anterior = this.coordinador;
         this.coordinador = coordinador;
+        if (anterior != null) anterior.getClubesAdministrados().remove(this);
+        if (!coordinador.getClubesAdministrados().contains(this)) {
+            coordinador.getClubesAdministrados().add(this);
+        }
     }
 
     public void setFotografias(List<Fotografia> fotografias) {

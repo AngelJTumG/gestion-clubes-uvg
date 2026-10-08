@@ -49,7 +49,7 @@ public class ClubController {
         try {
             Club club = clubService.crear(dto);
             redirect.addFlashAttribute("exito",
-                    "Club creado correctamente. Identificador: " + club.getId());
+                    "Club creado correctamente");
             return "redirect:/admin/clubes/" + club.getId();
         } catch (IllegalArgumentException ex) {
             result.reject("club.error", ex.getMessage());
