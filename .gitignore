@@ -2,7 +2,6 @@ target/
 .idea/
 .vscode/
 *.iml
-.env
 *.log
 .DS_Store
 .github/
