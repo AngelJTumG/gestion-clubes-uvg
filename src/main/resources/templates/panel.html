@@ -19,18 +19,19 @@
 	</aside>
 	<main class="dashboard-main">
 		<section class="dashboard-intro">
+		<div class="dashboard-intro-copy">
 			<p class="eyebrow">Información general</p>
 			<h1>Panel principal</h1>
 			<p>Un espacio para conocer la vida estudiantil y la gestión de clubes.</p>
-		</section>
-		<section class="dashboard-grid" aria-label="Módulos del portal">
-			<article class="dashboard-card featured-card"><span class="card-label">Módulo</span><h2>Clubes estudiantiles</h2><p>Administra la comunidad y sus espacios de participación.</p><a class="button club-card-action" th:if="${puedeCrearClub}" th:href="@{/admin/clubes/nuevo}">Agregar club</a><span class="card-status" th:unless="${puedeCrearClub}">Consulta de clubes: próximamente</span></article>
-			<article class="dashboard-card"><span class="card-label">Módulo</span><h2>Actividades</h2><p>Organiza eventos, reuniones y actividades universitarias.</p><span class="card-status">Próximamente</span></article>
-			<article class="dashboard-card"><span class="card-label">Módulo</span><h2>Miembros</h2><p>Consulta y gestiona la participación de estudiantes.</p><span class="card-status">Próximamente</span></article>
-			<article class="dashboard-card"><span class="card-label">Módulo</span><h2>Avisos</h2><p>Comparte información importante con la comunidad.</p><span class="card-status">Próximamente</span></article>
-		</section>
+		</div>
+		<a class="button dashboard-primary-action" th:if="${puedeCrearClub}" th:href="@{/admin/clubes/nuevo}">Agregar club</a>
+	</section>
+	<section class="clubs-content" aria-label="Clubes universitarios">
+		<p class="eyebrow">Clubes universitarios</p>
+		<h2>Listado de clubes</h2>
+		<p>En este espacio podrás consultar los clubes disponibles.</p>
+	</section>
 	</main>
 </div>
 </body>
 </html>
-

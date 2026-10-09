@@ -258,8 +258,15 @@ body.dashboard-page {
 }
 
 .dashboard-intro {
-	max-width: 700px;
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 28px;
 	margin-bottom: 38px;
+}
+
+.dashboard-intro-copy {
+	max-width: 700px;
 }
 
 .dashboard-intro h1 {
@@ -275,56 +282,28 @@ body.dashboard-page {
 	line-height: 1.65;
 }
 
-.dashboard-grid {
-	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 20px;
+.dashboard-primary-action {
+	flex-shrink: 0;
+	margin-bottom: 5px;
 }
 
-.dashboard-card {
-	min-height: 210px;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	padding: 28px;
-	background: white;
-	border: 1px solid #deebe1;
-	border-radius: 12px;
-	box-shadow: 0 8px 24px rgba(6,75,50,.06);
+.clubs-content {
+	min-height: 360px;
+	padding: 8px 0;
 }
 
-.dashboard-card h2 {
+.clubs-content h2 {
 	margin: 10px 0 8px;
 	color: var(--green-900);
 	font-size: 1.3rem;
 }
 
-.dashboard-card p {
-	max-width: 34ch;
+.clubs-content p:last-child {
 	margin: 0;
 	color: #61776b;
 	line-height: 1.55;
 }
 
-.featured-card {
-	border-top: 4px solid var(--green-500);
-}
-
-.card-label {
-	color: var(--green-700);
-	font-size: .72rem;
-	font-weight: 750;
-	text-transform: uppercase;
-	letter-spacing: .1em;
-}
-
-.card-status {
-	margin-top: auto;
-	padding-top: 22px;
-	color: #6b8274;
-	font-size: .82rem;
-	font-weight: 700;
-}
 @media (max-width: 720px) {
 	.topbar {
 		align-items: flex-start;
@@ -366,8 +345,19 @@ body.dashboard-page {
 		padding: 36px 20px 48px;
 	}
 
-	.dashboard-grid {
-		grid-template-columns: 1fr;
+	.dashboard-intro {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	.dashboard-primary-action {
+		margin-bottom: 0;
+	}
+
+	.clubs-content {
+		min-height: 280px;
+		padding: 8px 0;
 	}
 }
 
@@ -377,10 +367,6 @@ a.nav-item {
 
 a.nav-item:hover { 
 	background: rgba(255,255,255,.12); 
-}
-
-.club-card-action { 
-	margin-top: 22px; 
 }
 
 .club-main { 
