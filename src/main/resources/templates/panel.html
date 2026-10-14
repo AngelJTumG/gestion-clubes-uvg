@@ -26,11 +26,41 @@
 		</div>
 		<a class="button dashboard-primary-action" th:if="${puedeCrearClub}" th:href="@{/admin/clubes/nuevo}">Agregar club</a>
 	</section>
+	
 	<section class="clubs-content" aria-label="Clubes universitarios">
 		<p class="eyebrow">Clubes universitarios</p>
 		<h2>Listado de clubes</h2>
 		<p>En este espacio podrás consultar los clubes disponibles.</p>
+
+		<!-- Mensaje cuando todavía no hay clubes -->
+		<p th:if="${#lists.isEmpty(clubes)}">
+			Aún no hay clubes disponibles. Vuelve pronto para conocer las nuevas opciones.
+		</p>
+
+		<!-- Listado de clubes registrados -->
+		<div class="clubs-grid" th:unless="${#lists.isEmpty(clubes)}">
+
+			<article class="club-card" th:each="club : ${clubes}">
+				<h3 th:text="${club.nombre}">Nombre del club</h3>
+
+				<p class="club-category" th:text="${club.categoria}">
+					Categoría
+				</p>
+
+				<p th:text="${club.descripcion}">
+					Descripción del club
+				</p>
+
+				<a class="button"
+				th:href="@{/admin/clubes/{id}(id=${club.id})}"
+				th:if="${puedeCrearClub}">
+					Ver detalles
+				</a>
+			</article>
+
+		</div>
 	</section>
+
 	</main>
 </div>
 </body>

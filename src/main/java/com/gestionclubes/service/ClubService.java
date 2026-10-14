@@ -2,6 +2,7 @@ package com.gestionclubes.service;
 
 import java.util.Locale;
 import java.util.Optional;
+import java.util.List;
 
 import com.gestionclubes.dtos.RegistroClubDto;
 import com.gestionclubes.models.Club;
@@ -72,5 +73,10 @@ public class ClubService {
     @Transactional(readOnly = true)
     public Optional<Club> buscarPorId(Long id) {
         return clubRepository.findOneById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Club> listarClubes() {
+        return clubRepository.findAll();
     }
 }

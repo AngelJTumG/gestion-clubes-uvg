@@ -467,3 +467,56 @@ a.nav-item:hover {
     .club-main { padding: 24px 16px 40px; }
     .club-form { padding: 22px; }
 }
+
+
+/* Listado de clubes universitarios */
+
+.clubs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 28px;
+}
+
+.club-card {
+    background: white;
+    border: 1px solid #dce9df;
+    border-top: 4px solid var(--green-500);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(6, 75, 50, 0.05);
+}
+
+.club-card h3 {
+    margin: 0 0 10px;
+    color: var(--green-900);
+    font-size: 1.2rem;
+}
+
+.club-card .club-category {
+    display: inline-block;
+    margin: 0 0 12px;
+    padding: 5px 10px;
+    background: var(--green-100);
+    color: var(--green-900);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 650;
+}
+
+.club-card p {
+    color: #547063;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.club-card .button {
+    margin-top: 14px;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 720px) {
+    .clubs-grid {
+        grid-template-columns: 1fr;
+    }
+}
