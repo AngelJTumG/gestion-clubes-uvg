@@ -149,4 +149,20 @@ public class ClubService {
         club.setCoordinador(coordinador);
     }
 
+    @Transactional(readOnly = true)
+    public List<Club> listarClubesActivos() {
+        return clubRepository.findByStatusTrue();
+    }
+
+    @Transactional
+    public void desactivar(Long id) {
+        Club club = buscarPorId(id)
+            .orElseThrow(() ->
+                new EntityNotFoundException(
+                    "No existe el club solicitado"
+                )
+            );
+        club.setStatus(false);
+        clubRepository.save(club);
+    }
 }

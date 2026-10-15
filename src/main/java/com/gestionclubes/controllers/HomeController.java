@@ -29,7 +29,12 @@ public class HomeController {
         model.addAttribute("puedeCrearClub", puedeCrearClub);
 
         // Obtener los clubes registrados para mostrarlos en el panel
-        model.addAttribute("clubes", clubService.listarClubes());
+        model.addAttribute(
+            "clubes",
+            puedeCrearClub
+                ? clubService.listarClubes()
+                : clubService.listarClubesActivos()
+        );
 
         return "panel";
     }

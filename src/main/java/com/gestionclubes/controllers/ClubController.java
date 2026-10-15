@@ -78,6 +78,13 @@ public class ClubController {
             rol.getAuthority().equals("ROLE_ADMIN")
         );
 
+        if (!club.isStatus() && !puedeCrearClub) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "No existe el club solicitado"
+            );
+        }        
+
         model.addAttribute("club", club);
         model.addAttribute("puedeCrearClub", puedeCrearClub);
 
@@ -120,4 +127,27 @@ public class ClubController {
         }
         return "clubes/editar";
     }
+
+    @PostMapping("/{id}/desactivar")
+    public String desactivar(
+        @PathVariable("id") Long id,
+        RedirectAttributes redirect) {
+
+    try {
+        clubService.desactivar(id);
+    } catch (EntityNotFoundException ex) {
+        throw new ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            ex.getMessage(),
+            ex
+        );
+    }
+        redirect.addFlashAttribute(
+            "exito",
+            "Club desactivado correctamente"
+        );
+
+        return "redirect:/admin/clubes/" + id;
+    }
+
 }

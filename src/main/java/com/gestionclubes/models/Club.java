@@ -52,6 +52,9 @@ public class Club {
     @OneToMany (mappedBy = "club")
     private List<Actividad> actividades = new ArrayList<>();
 
+    @Column(nullable = false)
+    private boolean status = true;
+
     public Long getId() {
         return id;
     }
@@ -141,6 +144,14 @@ public class Club {
 
     public void setActividades(List<Actividad> actividades) {
         this.actividades = actividades;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
 }
