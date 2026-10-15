@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 public class SecurityConfig {
@@ -19,6 +20,7 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/registro", "/css/**", "/js/**", "/images/**", "/error").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/admin/clubes/{id:[0-9]+}").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/club-admin/**").hasAnyRole("ADMIN_CLUB", "ADMIN")
                         .anyRequest().authenticated())

@@ -30,9 +30,11 @@
         </dl>
     </section>
     <div class="club-actions">
-        <a class="button" th:href="@{/admin/clubes/nuevo}">Agregar otro club</a>
+        <a class="button" th:if="${puedeCrearClub}" th:href="@{/admin/clubes/{id}/editar(id=${club.id})}">Editar información</a>
+        <a class="button" th:if="${puedeCrearClub}" th:href="@{/admin/clubes/nuevo}">Agregar otro club</a>
         <a class="button secondary" th:href="@{/panel}">Volver al panel</a>
     </div>
 </main>
 </body>
 </html>
+
