@@ -53,6 +53,8 @@
 				th:href="@{/admin/clubes/{id}(id=${club.id})}">
 					Ver detalles
 				</a>
+
+				<p th:if="${puedeCrearClub and !club.status}"> Estado: desactivado </p>
 			</article>
 
 		</div>

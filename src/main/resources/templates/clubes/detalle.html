@@ -32,6 +32,12 @@
     <div class="club-actions">
         <a class="button" th:if="${puedeCrearClub}" th:href="@{/admin/clubes/{id}/editar(id=${club.id})}">Editar información</a>
         <a class="button" th:if="${puedeCrearClub}" th:href="@{/admin/clubes/nuevo}">Agregar otro club</a>
+        <form th:if="${puedeCrearClub and club.status}"
+            th:action="@{/admin/clubes/{id}/desactivar(id=${club.id})}"
+            method="post"
+            onsubmit="return confirm('¿Desactivar este club? Dejará de ser visible para los usuarios.');">
+            <button type="submit" class="button"> Desactivar club</button>
+        </form>
         <a class="button secondary" th:href="@{/panel}">Volver al panel</a>
     </div>
 </main>
