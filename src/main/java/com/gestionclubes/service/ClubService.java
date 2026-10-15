@@ -13,6 +13,8 @@ import com.gestionclubes.repository.ClubRepository;
 import com.gestionclubes.repository.CoordinadorRepository;
 import com.gestionclubes.repository.UsuarioRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,4 +81,72 @@ public class ClubService {
     public List<Club> listarClubes() {
         return clubRepository.findAll();
     }
+
+    @Transactional(readOnly = true)
+    public RegistroClubDto obtenerFormularioEdicion(Long id) {
+        Club club = obtenerClubExistente(id);
+        RegistroClubDto dto = new RegistroClubDto();
+        dto.setNombre(club.getNombre());
+        dto.setDescripcion(club.getDescripcion());
+        dto.setCategoria(club.getCategoria());
+        dto.setHorario(club.getHorario());
+        dto.setUbicacion(club.getUbicacion());
+        dto.setRequisitos(club.getRequisitos());
+        dto.setDatosContacto(club.getDatosContacto());
+        dto.setCoordinadorEmail(club.getCoordinador().getUsuario().getEmail());
+        return dto;
+    }
+
+    @Transactional
+    public Club actualizar(Long id, RegistroClubDto dto) {
+        Club club = obtenerClubExistente(id);
+        String nombre = dto.getNombre().trim();
+        if (clubRepository.existsByNombreIgnoreCaseAndIdNot(nombre, id)) {
+            throw new IllegalArgumentException("Ya existe otro club con ese nombre");
+        }
+
+        Coordinador coordinador = resolverCoordinador(dto.getCoordinadorEmail());
+        copiarDatos(club, dto, coordinador);
+        return clubRepository.saveAndFlush(club);
+    }
+
+    private Club obtenerClubExistente(Long id) {
+        return buscarPorId(id)
+                .orElseThrow(() -> new EntityNotFoundException("No existe el club solicitado"));
+    }
+
+    private Coordinador resolverCoordinador(String correo) {
+        String email = correo.trim().toLowerCase(Locale.ROOT);
+        Usuario usuario = usuarioRepository.buscarPorEmailParaActualizar(email)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "No existe una cuenta con el correo del coordinador"));
+
+        if (!usuario.isActivo()) {
+            throw new IllegalArgumentException("La cuenta del coordinador está inactiva");
+        }
+        if (usuario.getRol() != Rol.ADMIN_CLUB && usuario.getRol() != Rol.ADMIN) {
+            throw new IllegalArgumentException(
+                    "El coordinador debe tener el rol ADMIN_CLUB o ADMIN");
+        }
+
+        return coordinadorRepository.findByUsuario_Id(usuario.getId())
+                .orElseGet(() -> {
+                    Coordinador nuevo = new Coordinador();
+                    nuevo.setUsuario(usuario);
+                    return coordinadorRepository.save(nuevo);
+                });
+
+    }
+
+    private void copiarDatos(Club club, RegistroClubDto dto, Coordinador coordinador) {
+        club.setNombre(dto.getNombre().trim());
+        club.setDescripcion(dto.getDescripcion().trim());
+        club.setCategoria(dto.getCategoria().trim());
+        club.setHorario(dto.getHorario().trim());
+        club.setUbicacion(dto.getUbicacion().trim());
+        club.setRequisitos(dto.getRequisitos().trim());
+        club.setDatosContacto(dto.getDatosContacto().trim());
+        club.setCoordinador(coordinador);
+    }
+
 }

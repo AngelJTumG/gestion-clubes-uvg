@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ClubRepository extends JpaRepository<Club, Long> {
     boolean existsByNombreIgnoreCase(String nombre);
 
+    boolean existsByNombreIgnoreCaseAndIdNot(String nombre, Long id);
+    
     @EntityGraph(attributePaths = {"coordinador", "coordinador.usuario"})
     Optional<Club> findOneById(Long id);
 }

@@ -6,6 +6,7 @@ import com.gestionclubes.dtos.RegistroClubDto;
 import com.gestionclubes.models.Club;
 import com.gestionclubes.service.ClubService;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 import org.slf4j.Logger;
@@ -71,5 +72,42 @@ public class ClubController {
                         "No existe el club solicitado"));
         model.addAttribute("club", club);
         return "clubes/detalle";
+    }
+
+    @GetMapping("/{id}/editar")
+    public String formularioEdicion(@PathVariable("id") Long id, Model model) {
+        try {
+            model.addAttribute("club", clubService.obtenerFormularioEdicion(id));
+            model.addAttribute("clubId", id);
+            return "clubes/editar";
+        } catch (EntityNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
+        }
+    }
+
+    @PostMapping("/{id}/editar")
+    public String actualizar(@PathVariable("id") Long id,
+                             @Valid @ModelAttribute("club") RegistroClubDto dto,
+                             BindingResult result, Model model,
+                             RedirectAttributes redirect) {
+        model.addAttribute("clubId", id);
+        if (result.hasErrors()) return "clubes/editar";
+        try {
+            Club club = clubService.actualizar(id, dto);
+            redirect.addFlashAttribute("exito", "Información del club actualizada correctamente");
+            return "redirect:/admin/clubes/" + club.getId();
+        } catch (EntityNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
+        } catch (IllegalArgumentException ex) {
+            result.reject("club.error", ex.getMessage());
+        } catch (DataIntegrityViolationException ex) {
+            log.warn("Una restricción de integridad impidió actualizar el club {}", id, ex);
+            result.reject("club.integridad",
+                    "No se pudieron guardar los cambios. Comprueba el nombre y vuelve a intentar.");
+        } catch (TransientDataAccessException ex) {
+            log.warn("Conflicto temporal al actualizar el club {}", id, ex);
+            result.reject("club.temporal", "No se pudieron guardar los cambios. Vuelve a intentarlo.");
+        }
+        return "clubes/editar";
     }
 }
