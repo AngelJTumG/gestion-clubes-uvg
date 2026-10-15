@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.core.Authentication;
 
 @Controller
 @RequestMapping("/admin/clubes")
@@ -66,11 +67,20 @@ public class ClubController {
     }
 
     @GetMapping("/{id}")
-    public String detalle(@PathVariable("id") Long id, Model model) {
+    public String detalle(@PathVariable("id") Long id, Model model, Authentication authentication) {
         Club club = clubService.buscarPorId(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "No existe el club solicitado"));
+        
+        boolean puedeCrearClub = authentication.getAuthorities()
+            .stream()
+            .anyMatch(rol ->
+            rol.getAuthority().equals("ROLE_ADMIN")
+        );
+
         model.addAttribute("club", club);
+        model.addAttribute("puedeCrearClub", puedeCrearClub);
+
         return "clubes/detalle";
     }
 

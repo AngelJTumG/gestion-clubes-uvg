@@ -32,12 +32,10 @@
 		<h2>Listado de clubes</h2>
 		<p>En este espacio podrás consultar los clubes disponibles.</p>
 
-		<!-- Mensaje cuando todavía no hay clubes -->
 		<p th:if="${#lists.isEmpty(clubes)}">
 			Aún no hay clubes disponibles. Vuelve pronto para conocer las nuevas opciones.
 		</p>
 
-		<!-- Listado de clubes registrados -->
 		<div class="clubs-grid" th:unless="${#lists.isEmpty(clubes)}">
 
 			<article class="club-card" th:each="club : ${clubes}">
@@ -52,8 +50,7 @@
 				</p>
 
 				<a class="button"
-				th:href="@{/admin/clubes/{id}(id=${club.id})}"
-				th:if="${puedeCrearClub}">
+				th:href="@{/admin/clubes/{id}(id=${club.id})}">
 					Ver detalles
 				</a>
 			</article>
