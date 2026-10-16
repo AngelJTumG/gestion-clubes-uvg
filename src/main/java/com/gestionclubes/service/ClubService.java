@@ -165,4 +165,12 @@ public class ClubService {
         club.setStatus(false);
         clubRepository.save(club);
     }
+
+    @Transactional
+    public void activar(Long id) {
+        Club club = obtenerClubExistente(id);
+        club.setStatus(true);
+        clubRepository.save(club);
+    }
+    
 }
