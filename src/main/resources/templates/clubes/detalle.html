@@ -38,6 +38,12 @@
             onsubmit="return confirm('¿Desactivar este club? Dejará de ser visible para los usuarios.');">
             <button type="submit" class="button"> Desactivar club</button>
         </form>
+        <form th:if="${puedeCrearClub and !club.status}"
+            th:action="@{/admin/clubes/{id}/activar(id=${club.id})}"
+            method="post"
+            onsubmit="return confirm('¿Activar este club? Volverá a ser visible para los usuarios.');">
+            <button type="submit" class="button">Activar club</button>
+        </form>
         <a class="button secondary" th:href="@{/panel}">Volver al panel</a>
     </div>
 </main>

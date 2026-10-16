@@ -150,4 +150,18 @@ public class ClubController {
         return "redirect:/admin/clubes/" + id;
     }
 
+    @PostMapping("/{id}/activar")
+    public String activar(@PathVariable("id") Long id,
+                          RedirectAttributes redirect) {
+        try {
+            clubService.activar(id);
+        } catch (EntityNotFoundException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, ex.getMessage(), ex);
+        }
+
+        redirect.addFlashAttribute("exito", "Club activado correctamente");
+        return "redirect:/admin/clubes/" + id;
+    }
+
 }
