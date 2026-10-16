@@ -15,6 +15,7 @@
 <main class="club-main">
     <p class="eyebrow">Administración de clubes</p>
     <p class="alert success" role="status" th:if="${exito}" th:text="${exito}"></p>
+    <p class="alert error" role="alert" th:if="${error}" th:text="${error}"></p>
     <h1 th:text="${club.nombre}">Nombre del club</h1>
     <p class="club-intro">Datos registrados del club.</p>
     <section class="card" aria-label="Información del club">
@@ -30,6 +31,13 @@
         </dl>
     </section>
     <div class="club-actions">
+        <form th:if="${puedeSolicitar and estadoSolicitud == null}"
+            th:action="@{/clubes/{id}/solicitud(id=${club.id})}"
+            method="post">
+            <button type="submit" class="button">Solicitar ingreso</button>
+        </form>
+        <span class="club-status" th:if="${puedeSolicitar and estadoSolicitud != null}"
+            th:text="${estadoSolicitud == T(com.gestionclubes.models.EstadoSolicitud).PENDIENTE ? 'Solicitud pendiente' : (estadoSolicitud == T(com.gestionclubes.models.EstadoSolicitud).APROBADA ? 'Solicitud aprobada' : 'Solicitud rechazada')}"></span>
         <a class="button" th:if="${puedeCrearClub}" th:href="@{/admin/clubes/{id}/editar(id=${club.id})}">Editar información</a>
         <a class="button" th:if="${puedeCrearClub}" th:href="@{/admin/clubes/nuevo}">Agregar otro club</a>
         <form th:if="${puedeCrearClub and club.status}"

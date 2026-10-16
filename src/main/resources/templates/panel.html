@@ -60,6 +60,28 @@
 		</div>
 	</section>
 
+	<section class="requests-content" th:if="${puedeGestionarSolicitudes and !#lists.isEmpty(solicitudes)}" aria-label="Solicitudes de ingreso">
+		<p class="eyebrow">Gestión de clubes</p>
+		<h2>Solicitudes de ingreso</h2>
+		<div class="requests-list">
+			<article class="request-item" th:each="solicitud : ${solicitudes}">
+				<div>
+					<strong th:text="${solicitud.usuario.nombre}">Nombre del usuario</strong>
+					<span th:text="${solicitud.usuario.email}">correo@ejemplo.com</span>
+					<span>Solicita ingresar a <b th:text="${solicitud.club.nombre}">Club</b></span>
+				</div>
+				<div class="request-actions">
+					<form th:action="@{/club-admin/solicitudes/{id}/aprobar(id=${solicitud.id})}" method="post">
+						<button type="submit">Aprobar</button>
+					</form>
+					<form th:action="@{/club-admin/solicitudes/{id}/rechazar(id=${solicitud.id})}" method="post">
+						<button type="submit" class="danger-button">Rechazar</button>
+					</form>
+				</div>
+			</article>
+		</div>
+	</section>
+
 	</main>
 </div>
 </body>

@@ -2,38 +2,42 @@ package com.gestionclubes.controllers;
 
 import java.security.Principal;
 
-import com.gestionclubes.dtos.RegistroClubDto;
-import com.gestionclubes.models.Club;
-import com.gestionclubes.service.ClubService;
-
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.TransientDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.security.core.Authentication;
+
+import com.gestionclubes.dtos.RegistroClubDto;
+import com.gestionclubes.models.Club;
+import com.gestionclubes.models.EstadoSolicitud;
+import com.gestionclubes.service.ClubService;
+import com.gestionclubes.service.SolicitudIngresoService;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/admin/clubes")
 public class ClubController {
     private static final Logger log = LoggerFactory.getLogger(ClubController.class);
     private final ClubService clubService;
+    private final SolicitudIngresoService solicitudService;
 
-    public ClubController(ClubService clubService) {
+    public ClubController(ClubService clubService, SolicitudIngresoService solicitudService) {
         this.clubService = clubService;
+        this.solicitudService = solicitudService;
     }
 
     @GetMapping("/nuevo")
@@ -85,8 +89,16 @@ public class ClubController {
             );
         }        
 
+        boolean puedeSolicitar = authentication.getAuthorities().stream()
+                .anyMatch(rol -> rol.getAuthority().equals("ROLE_USUARIO"));
+        EstadoSolicitud estadoSolicitud = puedeSolicitar
+                ? solicitudService.estadoPara(id, authentication.getName()).orElse(null)
+                : null;
+
         model.addAttribute("club", club);
         model.addAttribute("puedeCrearClub", puedeCrearClub);
+        model.addAttribute("puedeSolicitar", puedeSolicitar && club.isStatus());
+        model.addAttribute("estadoSolicitud", estadoSolicitud);
 
         return "clubes/detalle";
     }

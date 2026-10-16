@@ -545,6 +545,66 @@ a.nav-item:hover {
 	margin-top: 24px; 
 }
 
+.club-status {
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	padding: 10px 14px;
+	border: 1px solid var(--border);
+	border-radius: 9px;
+	background: var(--green-050);
+	color: var(--green-900);
+	font-weight: 700;
+}
+
+.requests-content {
+	margin-top: 42px;
+}
+
+.requests-list {
+	display: grid;
+	gap: 12px;
+	margin-top: 20px;
+}
+
+.request-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 18px;
+	padding: 18px;
+	border: 1px solid var(--border);
+	border-radius: 9px;
+	background: #fff;
+}
+
+.request-item > div:first-child {
+	display: grid;
+	gap: 4px;
+}
+
+.request-item span {
+	color: #547063;
+}
+
+.request-actions {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.request-actions form {
+	margin: 0;
+}
+
+.danger-button {
+	background: #a61b1b;
+}
+
+.danger-button:hover {
+	background: #7d1111;
+}
+
 .club-details { 
 	margin: 0; 
 }
