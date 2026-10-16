@@ -28,7 +28,12 @@
             </div>
             <div>
                 <label for="categoria">Categoría</label>
-                <input type="text" id="categoria" th:field="*{categoria}" maxlength="100" required aria-describedby="categoria-error" th:errorclass="field-invalid">
+                <select id="categoria" th:field="*{categoria}" required aria-describedby="categoria-error" th:errorclass="field-invalid">
+                    <option value="">Selecciona una categoría</option>
+                    <option value="academico">Académico</option>
+                    <option value="deportivo">Deportivo</option>
+                    <option value="arte">Arte</option>
+                </select>
                 <small id="categoria-error" th:errors="*{categoria}"></small>
             </div>
             <div class="club-wide">
@@ -37,14 +42,29 @@
                 <small id="descripcion-error" th:errors="*{descripcion}"></small>
             </div>
             <div>
-                <label for="horario">Horario</label>
-                <input type="text" id="horario" th:field="*{horario}" maxlength="100" required aria-describedby="horario-error" th:errorclass="field-invalid">
-                <small id="horario-error" th:errors="*{horario}"></small>
+                <label for="horarioDias1">Horarios</label>
+                <div class="day-fields" id="horarioDias1" data-day-group="horarioDias1">
+                    <div class="day-row" th:each="indice : ${#numbers.sequence(0, club.horarioDias1.length - 1)}">
+                        <select name="horarioDias1" required aria-describedby="horario-error" th:errorclass="field-invalid">
+                            <option value="">Selecciona un día</option><option value="Lunes" th:selected="${club.horarioDias1[indice] == 'Lunes'}">Lunes</option><option value="Martes" th:selected="${club.horarioDias1[indice] == 'Martes'}">Martes</option><option value="Miércoles" th:selected="${club.horarioDias1[indice] == 'Miércoles'}">Miércoles</option><option value="Jueves" th:selected="${club.horarioDias1[indice] == 'Jueves'}">Jueves</option><option value="Viernes" th:selected="${club.horarioDias1[indice] == 'Viernes'}">Viernes</option><option value="Sábado" th:selected="${club.horarioDias1[indice] == 'Sábado'}">Sábado</option><option value="Domingo" th:selected="${club.horarioDias1[indice] == 'Domingo'}">Domingo</option>
+                        </select>
+                        <input type="time" name="horarioInicios1" th:value="${club.horarioInicios1[indice]}" aria-label="Hora inicial" required>
+                        <span>a</span>
+                        <input type="time" name="horarioFines1" th:value="${club.horarioFines1[indice]}" aria-label="Hora final" required>
+                    </div>
+                    <button type="button" class="add-day-button" data-add-day="horarioDias1">+ Más días</button>
+                </div>
+                <small id="horario-error" th:errors="*{horarioValido}"></small>
             </div>
             <div>
-                <label for="ubicacion">Ubicación</label>
-                <input type="text" id="ubicacion" th:field="*{ubicacion}" maxlength="100" required aria-describedby="ubicacion-error" th:errorclass="field-invalid">
-                <small id="ubicacion-error" th:errors="*{ubicacion}"></small>
+                <label for="ubicacionEdificio">Edificio</label>
+                <div class="location-fields">
+                    <select id="ubicacionEdificio" th:field="*{ubicacionEdificio}" required aria-describedby="ubicacion-error" th:errorclass="field-invalid">
+                        <option value="">Selecciona un edificio</option><option value="A">A</option><option value="B">B</option><option value="CIT">CIT</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option><option value="K">K</option>
+                    </select>
+                    <input type="text" id="ubicacionNumero" th:field="*{ubicacionNumero}" inputmode="numeric" pattern="[0-9]{3}" maxlength="3" placeholder="3 dígitos" required aria-describedby="ubicacion-error" th:errorclass="field-invalid">
+                </div>
+                <small id="ubicacion-error" th:errors="*{ubicacionValida}"></small>
             </div>
             <div class="club-wide">
                 <label for="requisitos">Requisitos</label>
@@ -69,5 +89,6 @@
         </div>
     </form>
 </main>
+<script th:src="@{/js/club-form.js}"></script>
 </body>
 </html>
