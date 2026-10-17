@@ -18,19 +18,25 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gestionclubes.models.Fotografia;
+import com.gestionclubes.repository.FotografiaRepository;
+
 @Service
 public class ClubService {
     private final ClubRepository clubRepository;
     private final CoordinadorRepository coordinadorRepository;
     private final UsuarioRepository usuarioRepository;
+    private final FotografiaRepository fotografiaRepository;
 
     public ClubService(ClubRepository clubRepository,
-                       CoordinadorRepository coordinadorRepository,
-                       UsuarioRepository usuarioRepository) {
+                        CoordinadorRepository coordinadorRepository,
+                        UsuarioRepository usuarioRepository,
+                        FotografiaRepository fotografiaRepository) {
         this.clubRepository = clubRepository;
         this.coordinadorRepository = coordinadorRepository;
         this.usuarioRepository = usuarioRepository;
-    }
+        this.fotografiaRepository = fotografiaRepository;
+}
 
     @Transactional
     public Club crear(RegistroClubDto dto) {
@@ -172,5 +178,11 @@ public class ClubService {
         club.setStatus(true);
         clubRepository.save(club);
     }
-    
+
+    @Transactional(readOnly = true)
+    public List<Fotografia> consultarFotografias(Long idClub) {
+        obtenerClubExistente(idClub);
+        return fotografiaRepository.findByClub_IdOrderByIdAsc(idClub);
+}
+
 }
