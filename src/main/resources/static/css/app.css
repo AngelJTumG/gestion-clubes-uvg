@@ -692,3 +692,30 @@ a.nav-item:hover {
         grid-template-columns: 1fr;
     }
 }
+
+.galeria-fotografias {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: 20px;
+}
+
+.fotografia-club {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid #dce5df;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.fotografia-club img {
+    display: block;
+    width: 100%;
+    height: 220px;
+    object-fit: contain;
+    background: #f4f7f5;
+}
+
+.fotografia-club figcaption {
+    padding: 12px;
+    overflow-wrap: anywhere;
+}

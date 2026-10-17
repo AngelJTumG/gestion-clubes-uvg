@@ -30,6 +30,30 @@
             <div><dt>Correo del coordinador</dt><dd th:text="${club.coordinador.usuario.email}"></dd></div>
         </dl>
     </section>
+
+<section class="card" aria-labelledby="titulo-fotografias">
+    <h2 id="titulo-fotografias">Fotografías del club</h2>
+
+    <p th:if="${#lists.isEmpty(fotografias)}">
+        Este club todavía no tiene fotografías.
+    </p>
+
+    <div class="galeria-fotografias"
+         th:unless="${#lists.isEmpty(fotografias)}">
+
+        <figure class="fotografia-club"
+                th:each="fotografia : ${fotografias}">
+            <img th:src="${fotografia.urlImagen}"
+                 th:alt="${fotografia.descripcion}"
+                 loading="lazy">
+
+            <figcaption th:text="${fotografia.descripcion}">
+                Descripción de la fotografía
+            </figcaption>
+        </figure>
+    </div>
+</section>
+
     <div class="club-actions">
         <form th:if="${puedeSolicitar and estadoSolicitud == null}"
             th:action="@{/clubes/{id}/solicitud(id=${club.id})}"
