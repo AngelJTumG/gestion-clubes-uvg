@@ -96,6 +96,7 @@ public class ClubController {
                 : null;
 
         model.addAttribute("club", club);
+        model.addAttribute("fotografias", clubService.consultarFotografias(id));
         model.addAttribute("puedeCrearClub", puedeCrearClub);
         model.addAttribute("puedeSolicitar", puedeSolicitar && club.isStatus());
         model.addAttribute("estadoSolicitud", estadoSolicitud);
