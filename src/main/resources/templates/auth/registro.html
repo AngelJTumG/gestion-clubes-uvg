@@ -17,6 +17,9 @@
                 <small th:errors="*{nombre}">
                 </small>
             </label>
+            <label>Carné estudiantil<input th:field="*{carne}" inputmode="numeric" pattern="[0-9]{1,30}" maxlength="30" required>
+                <small th:errors="*{carne}"></small>
+            </label>
             <label>Correo<input type="email" th:field="*{email}" autocomplete="email" required>
                 <small th:errors="*{email}"></small>
             </label>

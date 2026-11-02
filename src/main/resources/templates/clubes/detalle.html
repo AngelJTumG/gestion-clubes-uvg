@@ -22,6 +22,7 @@
         <dl class="club-details">
             <div><dt>Descripción</dt><dd th:text="${club.descripcion}"></dd></div>
             <div><dt>Categoría</dt><dd th:text="${club.categoria}"></dd></div>
+            <div><dt>Número de integrantes</dt><dd th:text="${club.numeroIntegrantes}">0</dd></div>
             <div><dt>Horario</dt><dd th:text="${club.horario}"></dd></div>
             <div><dt>Ubicación</dt><dd th:text="${club.ubicacion}"></dd></div>
             <div><dt>Requisitos</dt><dd th:text="${club.requisitos}"></dd></div>
@@ -54,8 +55,20 @@
     </div>
 </section>
 
+    <section class="card" th:if="${requiereCarne}" aria-labelledby="titulo-carne">
+        <h2 id="titulo-carne">Completa tu carné estudiantil</h2>
+        <p>Registra tu carné para solicitar ingreso. Si ya tienes solicitudes aprobadas,
+            se crearán tus membresías al guardar este dato.</p>
+        <form th:action="@{/clubes/{id}/carne(id=${club.id})}" method="post">
+            <label>Carné estudiantil
+                <input name="carne" inputmode="numeric" pattern="[0-9]{1,30}" maxlength="30" required>
+            </label>
+            <button type="submit">Guardar carné</button>
+        </form>
+    </section>
+
     <div class="club-actions">
-        <form th:if="${puedeSolicitar and estadoSolicitud == null}"
+        <form th:if="${puedeSolicitar and !requiereCarne and (estadoSolicitud == null or estadoSolicitud == T(com.gestionclubes.models.EstadoSolicitud).RECHAZADA)}"
             th:action="@{/clubes/{id}/solicitud(id=${club.id})}"
             method="post">
             <button type="submit" class="button">Solicitar ingreso</button>

@@ -23,6 +23,7 @@ import com.gestionclubes.dtos.RegistroClubDto;
 import com.gestionclubes.models.Club;
 import com.gestionclubes.models.EstadoSolicitud;
 import com.gestionclubes.service.ClubService;
+import com.gestionclubes.service.EstudianteService;
 import com.gestionclubes.service.SolicitudIngresoService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -34,10 +35,13 @@ public class ClubController {
     private static final Logger log = LoggerFactory.getLogger(ClubController.class);
     private final ClubService clubService;
     private final SolicitudIngresoService solicitudService;
+    private final EstudianteService estudianteService;
 
-    public ClubController(ClubService clubService, SolicitudIngresoService solicitudService) {
+    public ClubController(ClubService clubService, SolicitudIngresoService solicitudService,
+                          EstudianteService estudianteService) {
         this.clubService = clubService;
         this.solicitudService = solicitudService;
+        this.estudianteService = estudianteService;
     }
 
     @GetMapping("/nuevo")
@@ -100,6 +104,7 @@ public class ClubController {
         model.addAttribute("puedeCrearClub", puedeCrearClub);
         model.addAttribute("puedeSolicitar", puedeSolicitar && club.isStatus());
         model.addAttribute("estadoSolicitud", estadoSolicitud);
+        model.addAttribute("requiereCarne", puedeSolicitar && !estudianteService.tieneCarne(authentication.getName()));
 
         return "clubes/detalle";
     }

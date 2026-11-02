@@ -22,13 +22,19 @@ public class SolicitudIngresoService {
     private final SolicitudIngresoRepository solicitudRepository;
     private final ClubRepository clubRepository;
     private final UsuarioRepository usuarioRepository;
+    private final EstudianteService estudianteService;
+    private final MembresiaService membresiaService;
 
     public SolicitudIngresoService(SolicitudIngresoRepository solicitudRepository,
                                    ClubRepository clubRepository,
-                                   UsuarioRepository usuarioRepository) {
+                                   UsuarioRepository usuarioRepository,
+                                   EstudianteService estudianteService,
+                                   MembresiaService membresiaService) {
         this.solicitudRepository = solicitudRepository;
         this.clubRepository = clubRepository;
         this.usuarioRepository = usuarioRepository;
+        this.estudianteService = estudianteService;
+        this.membresiaService = membresiaService;
     }
 
     @Transactional
@@ -43,6 +49,10 @@ public class SolicitudIngresoService {
                 .orElseThrow(() -> new EntityNotFoundException("No existe el club solicitado"));
         if (!club.isStatus()) {
             throw new IllegalArgumentException("El club está inactivo");
+        }
+
+        if (!estudianteService.tieneCarne(email)) {
+            throw new IllegalArgumentException("Registra tu carné antes de solicitar ingreso a un club");
         }
 
         Optional<SolicitudIngreso> existente = solicitudRepository
@@ -81,6 +91,7 @@ public class SolicitudIngresoService {
     public void aprobar(Long solicitudId, String email, boolean administradorGlobal) {
         SolicitudIngreso solicitud = obtenerAutorizada(solicitudId, email, administradorGlobal);
         solicitud.setEstado(EstadoSolicitud.APROBADA);
+        membresiaService.registrarAprobada(solicitud);
         solicitudRepository.save(solicitud);
     }
 
@@ -91,8 +102,19 @@ public class SolicitudIngresoService {
         solicitudRepository.save(solicitud);
     }
 
+    @Transactional
+    public void completarCarne(String email, String carne) {
+        Usuario usuario = usuarioRepository.buscarPorEmailParaActualizar(email)
+                .orElseThrow(() -> new EntityNotFoundException("No existe el usuario autenticado"));
+        if (usuario.getRol() != Rol.USUARIO) {
+            throw new IllegalArgumentException("Solo las cuentas de estudiantes pueden registrar su carné aquí");
+        }
+        estudianteService.registrar(usuario, carne);
+        membresiaService.sincronizarAprobadasDe(usuario);
+    }
+
     private SolicitudIngreso obtenerAutorizada(Long solicitudId, String email, boolean administradorGlobal) {
-        SolicitudIngreso solicitud = solicitudRepository.findById(solicitudId)
+        SolicitudIngreso solicitud = solicitudRepository.buscarParaGestionar(solicitudId)
                 .orElseThrow(() -> new EntityNotFoundException("No existe la solicitud"));
         boolean esCoordinador = solicitud.getClub().getCoordinador().getUsuario().getEmail().equalsIgnoreCase(email);
         if (!administradorGlobal && !esCoordinador) {

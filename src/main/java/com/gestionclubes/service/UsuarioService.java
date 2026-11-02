@@ -17,10 +17,13 @@ import com.gestionclubes.repository.UsuarioRepository;
 public class UsuarioService implements UserDetailsService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EstudianteService estudianteService;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder,
+                          EstudianteService estudianteService) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.estudianteService = estudianteService;
     }
 
     @Transactional
@@ -37,7 +40,9 @@ public class UsuarioService implements UserDetailsService {
         usuario.setEmail(email);
         usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         usuario.setRol(Rol.USUARIO);
-        return usuarioRepository.save(usuario);
+        Usuario guardado = usuarioRepository.save(usuario);
+        estudianteService.registrar(guardado, dto.getCarne());
+        return guardado;
     }
 
     @Override

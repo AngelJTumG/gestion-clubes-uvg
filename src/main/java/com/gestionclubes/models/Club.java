@@ -1,6 +1,9 @@
 package com.gestionclubes.models;
 
 import java.util.List;
+import java.util.Collections;
+import java.time.LocalDate;
+import java.util.Objects;
 import java.util.ArrayList;
 
 import jakarta.persistence.Entity;
@@ -52,8 +55,35 @@ public class Club {
     @OneToMany (mappedBy = "club")
     private List<Actividad> actividades = new ArrayList<>();
 
+    @OneToMany(mappedBy = "club")
+    private List<Membresia> membresias = new ArrayList<>();
+
     @Column(nullable = false)
     private boolean status = true;
+
+    public List<Membresia> getMembresias() {
+        return Collections.unmodifiableList(membresias);
+    }
+
+    public int getNumeroIntegrantes() {
+        return membresias.size();
+    }
+
+    public Membresia agregarIntegrante(Estudiante estudiante, LocalDate fechaIngreso) {
+        Objects.requireNonNull(estudiante, "El integrante requiere un estudiante");
+        Objects.requireNonNull(fechaIngreso, "La membresía requiere fecha de ingreso");
+        if (estudiante.getCarne() == null || estudiante.getCarne().isBlank()) {
+            throw new IllegalArgumentException("El estudiante debe tener un carné registrado");
+        }
+        for (Membresia membresia : membresias) {
+            if (membresia.getEstudiante().getCarne().equals(estudiante.getCarne())) {
+                return membresia;
+            }
+        }
+        Membresia membresia = new Membresia(estudiante, this, fechaIngreso);
+        membresias.add(membresia);
+        return membresia;
+    }
 
     public Long getId() {
         return id;

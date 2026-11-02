@@ -11,8 +11,13 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 
     boolean existsByNombreIgnoreCaseAndIdNot(String nombre, Long id);
     
-    @EntityGraph(attributePaths = {"coordinador", "coordinador.usuario"})
+    @EntityGraph(attributePaths = {"coordinador", "coordinador.usuario", "membresias"})
     Optional<Club> findOneById(Long id);
 
+    @Override
+    @EntityGraph(attributePaths = {"membresias"})
+    List<Club> findAll();
+
+    @EntityGraph(attributePaths = {"membresias"})
     List<Club> findByStatusTrue();
 }

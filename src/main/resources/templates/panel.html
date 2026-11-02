@@ -18,6 +18,8 @@
         <div class="nav-item"><span class="nav-mark">06</span>Calendario</div>
 	</aside>
 	<main class="dashboard-main">
+        <p class="alert success" role="status" th:if="${exito}" th:text="${exito}"></p>
+        <p class="alert error" role="alert" th:if="${error}" th:text="${error}"></p>
 		<section class="dashboard-intro">
 		<div class="dashboard-intro-copy">
 			<p class="eyebrow">Información general</p>
@@ -47,6 +49,11 @@
 
 				<p th:text="${club.descripcion}">
 					Descripción del club
+				</p>
+
+				<p class="club-members">
+					<strong>Integrantes:</strong>
+					<span th:text="${club.numeroIntegrantes}">0</span>
 				</p>
 
 				<a class="button"

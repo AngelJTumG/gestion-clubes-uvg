@@ -5,6 +5,8 @@ import java.security.Principal;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,6 +21,22 @@ public class SolicitudIngresoController {
 
     public SolicitudIngresoController(SolicitudIngresoService solicitudService) {
         this.solicitudService = solicitudService;
+    }
+
+    @PostMapping("/clubes/{clubId}/carne")
+    public String completarCarne(@PathVariable Long clubId, @RequestParam String carne,
+                                 Principal principal, RedirectAttributes redirect) {
+        try {
+            solicitudService.completarCarne(principal.getName(), carne);
+            redirect.addFlashAttribute("exito", "Carné registrado. Tus ingresos ya aprobados se incorporaron a los clubes.");
+        } catch (DataIntegrityViolationException ex) {
+            redirect.addFlashAttribute("error", "Ese carné ya está registrado. Revisa tus datos.");
+        } catch (IllegalArgumentException ex) {
+            redirect.addFlashAttribute("error", ex.getMessage());
+        } catch (jakarta.persistence.EntityNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
+        }
+        return "redirect:/admin/clubes/" + clubId;
     }
 
     @PostMapping("/clubes/{clubId}/solicitud")
