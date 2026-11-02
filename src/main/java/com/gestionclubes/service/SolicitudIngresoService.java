@@ -103,6 +103,34 @@ public class SolicitudIngresoService {
     }
 
     @Transactional
+    public ResultadoAprobacionMasiva aprobarTodas(String email, boolean administradorGlobal) {
+        if (!administradorGlobal) {
+            throw new IllegalArgumentException("Solo el administrador general puede aprobar todas las solicitudes");
+        }
+
+        int aprobadas = 0;
+        int pendientesSinCarne = 0;
+        for (SolicitudIngreso pendiente : solicitudRepository.findByEstadoOrderByCreadaEnAsc(
+                EstadoSolicitud.PENDIENTE)) {
+            SolicitudIngreso solicitud = solicitudRepository.buscarParaGestionar(pendiente.getId())
+                    .orElseThrow(() -> new EntityNotFoundException("No existe la solicitud"));
+            if (solicitud.getEstado() != EstadoSolicitud.PENDIENTE) {
+                continue;
+            }
+            if (!estudianteService.tieneCarne(solicitud.getUsuario().getEmail())) {
+                pendientesSinCarne++;
+                continue;
+            }
+
+            solicitud.setEstado(EstadoSolicitud.APROBADA);
+            membresiaService.registrarAprobada(solicitud);
+            solicitudRepository.save(solicitud);
+            aprobadas++;
+        }
+        return new ResultadoAprobacionMasiva(aprobadas, pendientesSinCarne);
+    }
+
+    @Transactional
     public void completarCarne(String email, String carne) {
         Usuario usuario = usuarioRepository.buscarPorEmailParaActualizar(email)
                 .orElseThrow(() -> new EntityNotFoundException("No existe el usuario autenticado"));
@@ -124,5 +152,8 @@ public class SolicitudIngresoService {
             throw new IllegalArgumentException("La solicitud ya fue gestionada");
         }
         return solicitud;
+    }
+
+    public record ResultadoAprobacionMasiva(int aprobadas, int pendientesSinCarne) {
     }
 }

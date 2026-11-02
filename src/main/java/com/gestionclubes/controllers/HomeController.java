@@ -32,14 +32,15 @@ public class HomeController {
         boolean puedeGestionarSolicitudes = authentication.getAuthorities().stream()
             .anyMatch(rol -> rol.getAuthority().equals("ROLE_ADMIN_CLUB")
                 || rol.getAuthority().equals("ROLE_ADMIN"));
+        boolean esAdministradorGlobal = authentication.getAuthorities().stream()
+                .anyMatch(rol -> rol.getAuthority().equals("ROLE_ADMIN"));
 
         model.addAttribute("puedeCrearClub", puedeCrearClub);
         model.addAttribute("puedeGestionarSolicitudes", puedeGestionarSolicitudes);
+        model.addAttribute("puedeAprobarTodas", esAdministradorGlobal);
         if (puedeGestionarSolicitudes) {
-            boolean administradorGlobal = authentication.getAuthorities().stream()
-                .anyMatch(rol -> rol.getAuthority().equals("ROLE_ADMIN"));
             model.addAttribute("solicitudes",
-                solicitudService.pendientesPara(authentication.getName(), administradorGlobal));
+                solicitudService.pendientesPara(authentication.getName(), esAdministradorGlobal));
         }
 
         // Obtener los clubes registrados para mostrarlos en el panel

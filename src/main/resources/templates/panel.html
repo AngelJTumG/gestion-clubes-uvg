@@ -70,6 +70,9 @@
 	<section class="requests-content" th:if="${puedeGestionarSolicitudes and !#lists.isEmpty(solicitudes)}" aria-label="Solicitudes de ingreso">
 		<p class="eyebrow">Gestión de clubes</p>
 		<h2>Solicitudes de ingreso</h2>
+		<form th:if="${puedeAprobarTodas}" th:action="@{/admin/solicitudes/aprobar-todas}" method="post">
+			<button type="submit">Aprobar todas las solicitudes</button>
+		</form>
 		<div class="requests-list">
 			<article class="request-item" th:each="solicitud : ${solicitudes}">
 				<div>

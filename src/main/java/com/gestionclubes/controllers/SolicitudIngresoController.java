@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gestionclubes.models.Rol;
 import com.gestionclubes.service.SolicitudIngresoService;
+import com.gestionclubes.service.SolicitudIngresoService.ResultadoAprobacionMasiva;
 
 @Controller
 public class SolicitudIngresoController {
@@ -64,6 +65,28 @@ public class SolicitudIngresoController {
     public String rechazar(@PathVariable Long solicitudId, Authentication authentication,
                            RedirectAttributes redirect) {
         gestionar(solicitudId, authentication, redirect, false);
+        return "redirect:/panel";
+    }
+
+    @PostMapping("/admin/solicitudes/aprobar-todas")
+    public String aprobarTodas(Authentication authentication, RedirectAttributes redirect) {
+        boolean administradorGlobal = authentication.getAuthorities().stream()
+                .anyMatch(autoridad -> autoridad.getAuthority().equals("ROLE_" + Rol.ADMIN.name()));
+        try {
+            ResultadoAprobacionMasiva resultado = solicitudService.aprobarTodas(
+                    authentication.getName(), administradorGlobal);
+            if (resultado.pendientesSinCarne() == 0) {
+                redirect.addFlashAttribute("exito",
+                        resultado.aprobadas() + " solicitud(es) aprobada(s) correctamente");
+            } else {
+                redirect.addFlashAttribute("exito",
+                        resultado.aprobadas() + " solicitud(es) aprobada(s). "
+                                + resultado.pendientesSinCarne()
+                                + " quedaron pendientes porque no tienen carné registrado.");
+            }
+        } catch (IllegalArgumentException ex) {
+            redirect.addFlashAttribute("error", ex.getMessage());
+        }
         return "redirect:/panel";
     }
 
