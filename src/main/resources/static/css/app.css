@@ -318,6 +318,44 @@ body.dashboard-page {
 	line-height: 1.55;
 }
 
+.club-filters {
+	display: grid;
+	grid-template-columns: minmax(220px, 2fr) minmax(180px, 1fr) minmax(150px, 1fr) auto;
+	align-items: end;
+	gap: 12px;
+	margin: 24px 0 8px;
+	padding: 18px;
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	background: white;
+}
+
+.club-filters label {
+	gap: 6px;
+	color: var(--green-900);
+	font-size: .88rem;
+}
+
+.club-filters input,
+.club-filters select {
+	min-height: 44px;
+	margin: 0;
+}
+
+.club-filter-actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.club-filter-actions form {
+	margin: 0;
+}
+
+.club-filter-actions .button {
+	white-space: nowrap;
+}
+
 @media (max-width: 720px) {
 	.topbar {
 		align-items: flex-start;
@@ -372,6 +410,22 @@ body.dashboard-page {
 	.clubs-content {
 		min-height: 280px;
 		padding: 8px 0;
+	}
+}
+
+@media (max-width: 900px) {
+	.club-filters {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.club-filter-actions {
+		align-self: end;
+	}
+}
+
+@media (max-width: 600px) {
+	.club-filters {
+		grid-template-columns: 1fr;
 	}
 }
 

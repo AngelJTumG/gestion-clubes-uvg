@@ -3,6 +3,8 @@ package com.gestionclubes.service;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.gestionclubes.dtos.RegistroClubDto;
 import com.gestionclubes.models.Club;
@@ -158,6 +160,39 @@ public class ClubService {
     @Transactional(readOnly = true)
     public List<Club> listarClubesActivos() {
         return clubRepository.findByStatusTrue();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Club> filtrarClubes(boolean incluirInactivos, String busqueda, String categoria,
+                                    String estado) {
+        List<Club> clubes = incluirInactivos ? listarClubes() : listarClubesActivos();
+        String texto = busqueda == null ? "" : busqueda.trim().toLowerCase(Locale.ROOT);
+        String categoriaNormalizada = categoria == null ? "" : categoria.trim();
+        String estadoNormalizado = estado == null ? "todos" : estado.trim().toLowerCase(Locale.ROOT);
+
+        return clubes.stream()
+                .filter(club -> texto.isEmpty()
+                        || club.getNombre().toLowerCase(Locale.ROOT).contains(texto))
+                .filter(club -> categoriaNormalizada.isEmpty()
+                        || club.getCategoria().equalsIgnoreCase(categoriaNormalizada))
+                .filter(club -> !incluirInactivos
+                        || estadoNormalizado.equals("todos")
+                        || (estadoNormalizado.equals("activos") && club.isStatus())
+                        || (estadoNormalizado.equals("inactivos") && !club.isStatus()))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> listarCategorias(boolean incluirInactivos) {
+        List<Club> clubes = incluirInactivos ? listarClubes() : listarClubesActivos();
+        return clubes.stream()
+                .map(Club::getCategoria)
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(categoria -> !categoria.isEmpty())
+                .distinct()
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .collect(Collectors.toList());
     }
 
     @Transactional

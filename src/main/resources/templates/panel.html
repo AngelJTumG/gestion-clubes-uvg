@@ -34,8 +34,37 @@
 		<h2>Listado de clubes</h2>
 		<p>En este espacio podrás consultar los clubes disponibles.</p>
 
+		<form class="club-filters" th:action="@{/panel}" method="get" aria-label="Buscar y filtrar clubes">
+			<label>
+				<span>Buscar club</span>
+				<input type="search" name="busqueda" th:value="${busqueda}"
+					placeholder="Escribe el nombre del club" autocomplete="off">
+			</label>
+			<label>
+				<span>Categoría</span>
+				<select name="categoria">
+					<option value="">Todas las categorías</option>
+					<option th:each="categoria : ${categorias}"
+						th:value="${categoria}" th:text="${categoria}"
+						th:selected="${categoria == categoriaSeleccionada}"></option>
+				</select>
+			</label>
+			<label th:if="${puedeCrearClub}">
+				<span>Estado</span>
+				<select name="estado">
+					<option value="todos" th:selected="${estadoSeleccionado == 'todos'}">Todos</option>
+					<option value="activos" th:selected="${estadoSeleccionado == 'activos'}">Activos</option>
+					<option value="inactivos" th:selected="${estadoSeleccionado == 'inactivos'}">Inactivos</option>
+				</select>
+			</label>
+			<div class="club-filter-actions">
+				<button type="submit">Buscar</button>
+				<a class="button secondary" th:href="@{/panel}">Limpiar</a>
+			</div>
+		</form>
+
 		<p th:if="${#lists.isEmpty(clubes)}">
-			Aún no hay clubes disponibles. Vuelve pronto para conocer las nuevas opciones.
+			No se encontraron clubes con los filtros seleccionados.
 		</p>
 
 		<div class="clubs-grid" th:unless="${#lists.isEmpty(clubes)}">

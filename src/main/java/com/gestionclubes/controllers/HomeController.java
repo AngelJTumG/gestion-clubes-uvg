@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gestionclubes.service.ClubService;
 import com.gestionclubes.service.SolicitudIngresoService;
@@ -26,7 +27,10 @@ public class HomeController {
     }
 
     @GetMapping("/panel")
-    String panel(Authentication authentication, Model model) {
+    String panel(Authentication authentication, Model model,
+                 @RequestParam(defaultValue = "") String busqueda,
+                 @RequestParam(defaultValue = "") String categoria,
+                 @RequestParam(defaultValue = "todos") String estado) {
         boolean puedeCrearClub = authentication.getAuthorities().stream()
                 .anyMatch(rol -> rol.getAuthority().equals("ROLE_ADMIN"));
         boolean puedeGestionarSolicitudes = authentication.getAuthorities().stream()
@@ -43,13 +47,12 @@ public class HomeController {
                 solicitudService.pendientesPara(authentication.getName(), esAdministradorGlobal));
         }
 
-        // Obtener los clubes registrados para mostrarlos en el panel
-        model.addAttribute(
-            "clubes",
-            puedeCrearClub
-                ? clubService.listarClubes()
-                : clubService.listarClubesActivos()
-        );
+        model.addAttribute("busqueda", busqueda);
+        model.addAttribute("categoriaSeleccionada", categoria);
+        model.addAttribute("estadoSeleccionado", estado);
+        model.addAttribute("categorias", clubService.listarCategorias(puedeCrearClub));
+        model.addAttribute("clubes", clubService.filtrarClubes(
+                puedeCrearClub, busqueda, categoria, estado));
 
         return "panel";
     }
