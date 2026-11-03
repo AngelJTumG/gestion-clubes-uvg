@@ -33,7 +33,7 @@
         </a>
 
         <nav class="landing-nav" aria-label="Navegación principal">
-            <a href="#comunidad">La comunidad</a>
+            <a href="#comunidad">Cómo participar</a>
             <a th:href="@{/login}">Iniciar sesión</a>
             <a class="landing-nav-cta" th:href="@{/registro}">
                 Crear cuenta
@@ -86,11 +86,16 @@
 
         <section class="landing-community" id="comunidad"
                  aria-labelledby="titulo-pasos">
-                 <img class="jack-asomado"
-                    th:src="@{/images/jack/jack-asomado.png}"
-                    alt=""
-                     aria-hidden="true"
-                     loading="lazy">
+                <div class="community-jack" aria-hidden="true">
+                    <svg class="community-jack-doodles" viewBox="0 0 320 640" fill="none">
+                        <!-- Tres destellos junto a la cabeza -->
+                        <path d="M 180 105 L 192 80
+                                 M 200 135 L 226 127
+                                 M 203 170 L 230 176" stroke="#e8c900" stroke-width="9" stroke-linecap="round" />
+                    </svg>
+                
+                    <img class="jack-asomado" th:src="@{/images/jack/jack-asomado.png}" alt="" loading="lazy">
+                </div>
             <div class="landing-section-heading">
                 <p class="landing-kicker">Encuentra tu lugar</p>
                 <h2 id="titulo-pasos">De la curiosidad a la comunidad.</h2>

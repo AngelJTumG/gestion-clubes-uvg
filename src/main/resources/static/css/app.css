@@ -869,7 +869,7 @@ body.landing-page {
     max-width: 760px;
     font-size: clamp(2.7rem, 5.5vw, 5.5rem);
     font-weight: 900;
-    letter-spacing: -.045em;
+    letter-spacing: 0;
 }
 
 .landing-hero h1 span {
@@ -1271,5 +1271,452 @@ body.landing-page {
 @media (max-width: 600px) {
     .landing-jack .jack-character {
         transform: scale(1.2);
+    }
+}
+
+/* Jack asomado más grande */
+.landing-community .jack-asomado {
+    width: clamp(170px, 21vw, 320px);
+}
+
+/* Pie de página más pequeñito */
+.landing-page .landing-footer {
+    padding-block: 12px;
+    gap: 8px 24px;
+}
+
+.landing-page .landing-footer p {
+    margin: 0;
+}
+
+/* Composición de Jack con trazos decorativos */
+.landing-community {
+    position: relative;
+}
+
+.community-jack {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: clamp(210px, 21vw, 320px);
+    height: clamp(440px, 36vw, 600px);
+    transform: translateY(-50%);
+    pointer-events: none;
+    user-select: none;
+    isolation: isolate;
+}
+
+.community-jack-doodles {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Sustituye la posición anterior de la imagen */
+.landing-community .community-jack .jack-asomado {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: contain;
+    object-position: left center;
+    transform: none;
+    z-index: 1;
+}
+
+@media (max-width: 900px) {
+    .community-jack {
+        display: none;
+    }
+}
+
+/* Sombra suave, sin el contorno blanco artificial */
+.landing-jack .jack-character {
+    filter: drop-shadow(0 12px 14px rgb(0 0 0 / 22%));
+}
+
+/* Más espacio entre Jack y el letrero */
+.landing-jack {
+    padding-bottom: 110px;
+}
+
+/* Letrero proporcional a la ilustración */
+.landing-jack .jack-caption {
+    bottom: 0;
+    width: 95%;
+    max-width: 440px;
+    padding: 16px 20px;
+    font-size: clamp(1rem, 1.4vw, 1.25rem);
+    line-height: 1.35;
+    transform: rotate(-2deg);
+}
+
+@media (max-width: 600px) {
+    .landing-jack .jack-caption {
+        padding: 12px 14px;
+        font-size: 1rem;
+    }
+}
+
+/* Pantalla de inicio de sesión */
+body.login-page {
+    display: block;
+    margin: 0;
+    padding: 0;
+    background: white;
+    font-family: var(--font-body);
+    line-height: 1.6;
+}
+
+.login-page * {
+    box-sizing: border-box;
+}
+
+.login-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: 100vh;
+    min-height: 100svh;
+}
+
+.login-welcome {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 48px;
+    padding: 40px clamp(28px, 5vw, 80px);
+    background: var(--green-900);
+    color: white;
+}
+
+.login-home {
+    align-self: flex-start;
+    color: white;
+    text-decoration: none;
+    font-size: .9rem;
+}
+
+.login-home:hover {
+    text-decoration: underline;
+}
+
+.login-eyebrow {
+    margin: 0 0 12px;
+    color: var(--uvg-green-primary);
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+}
+
+.login-welcome .login-eyebrow {
+    color: var(--uvg-green-accent);
+}
+
+.login-welcome h2 {
+    margin: 0 0 24px;
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 4.5vw, 4.5rem);
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: 0;
+}
+
+.login-welcome h2 span {
+    color: var(--uvg-green-accent);
+}
+
+.login-welcome-copy > p:last-child {
+    max-width: 420px;
+    margin: 0;
+    color: #e0eee6;
+    font-size: 1.05rem;
+}
+
+.login-welcome-footer {
+    margin: 0;
+    color: #c4dace;
+    font-size: .8rem;
+}
+
+.login-form-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px clamp(24px, 5vw, 80px);
+}
+
+.login-form-content {
+    width: 100%;
+    max-width: 420px;
+    min-width: 0;
+}
+
+.login-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 44px;
+    color: var(--green-900);
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+.login-brand img {
+    width: 56px;
+    height: 64px;
+    object-fit: contain;
+}
+
+.login-form-content h1 {
+    margin: 0 0 12px;
+    color: var(--green-900);
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 3vw, 2.6rem);
+    line-height: 1.2;
+    letter-spacing: 0;
+}
+
+.login-intro {
+    margin: 0 0 28px;
+    color: #52645c;
+}
+
+.login-page .login-form {
+    display: grid;
+    gap: 10px;
+    margin: 28px 0;
+}
+
+.login-form label {
+    color: var(--green-900);
+    font-size: .9rem;
+    font-weight: 600;
+}
+
+.login-form input {
+    min-width: 0;
+    min-height: 48px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #f8faf9;
+    color: var(--uvg-text-dark);
+    font: inherit;
+}
+
+.login-form input::placeholder {
+    color: #66766e;
+}
+
+.login-form input + label {
+    margin-top: 12px;
+}
+
+.login-form input:focus {
+    outline: 3px solid var(--green-100);
+    border-color: var(--uvg-green-primary);
+    background: white;
+}
+
+.login-form button {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 18px;
+    border-radius: 8px;
+    background: var(--uvg-green-primary);
+    color: white;
+}
+
+.login-form button:hover {
+    background: var(--green-900);
+}
+
+.login-register {
+    margin: 0;
+    color: #52645c;
+    text-align: center;
+    font-size: .9rem;
+}
+
+.login-register a {
+    color: var(--uvg-green-primary);
+    font-weight: 700;
+}
+
+.login-page a:focus-visible,
+.login-page button:focus-visible {
+    outline: 3px solid var(--uvg-green-primary);
+    outline-offset: 4px;
+}
+
+.login-welcome a:focus-visible {
+    outline-color: var(--uvg-green-accent);
+}
+
+@media (max-width: 800px) {
+    .login-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .login-welcome {
+        gap: 28px;
+        padding: 24px;
+    }
+
+    .login-welcome h2 {
+        font-size: 2.3rem;
+    }
+
+    .login-welcome h2 br {
+        display: none;
+    }
+
+    .login-form-panel {
+        padding: 36px 24px 48px;
+    }
+
+    .login-brand {
+        margin-bottom: 28px;
+    }
+}
+
+/* Figuras del panel verde */
+.login-welcome {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+.login-shapes {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.login-shape-star {
+    position: absolute;
+    top: -75px;
+    right: -75px;
+    width: 300px;
+    aspect-ratio: 1;
+    background: var(--uvg-green-accent);
+    opacity: .2;
+    clip-path: polygon(
+        50% 0%, 61% 24%, 85% 10%, 79% 36%,
+        100% 50%, 77% 61%, 90% 87%, 63% 79%,
+        50% 100%, 39% 77%, 12% 90%, 21% 63%,
+        0% 50%, 24% 38%, 10% 12%, 37% 22%
+    );
+    transform: rotate(-12deg);
+}
+
+.login-shape-ring {
+    position: absolute;
+    bottom: -130px;
+    right: -100px;
+    width: 360px;
+    aspect-ratio: 1;
+    border: 2px dashed rgb(255 255 255 / 22%);
+    border-radius: 50%;
+}
+
+.login-shape-spark {
+    position: absolute;
+    top: 18%;
+    left: 12%;
+    color: var(--uvg-green-accent);
+    font-size: 3rem;
+    line-height: 1;
+}
+
+/* Encabezado del formulario centrado */
+.login-form-content > .login-eyebrow,
+.login-form-content > h1,
+.login-form-content > .login-intro {
+    text-align: center;
+}
+
+.login-brand {
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 800px) {
+    .login-shape-star {
+        width: 200px;
+    }
+
+    .login-shape-ring {
+        width: 240px;
+    }
+
+    .login-shape-spark {
+        display: none;
+    }
+}
+
+/* Espacio para Jack debajo del mensaje */
+.login-welcome {
+    padding-bottom: 280px;
+}
+
+.login-jack {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    width: 230px;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+}
+
+.login-welcome-footer {
+    position: relative;
+    z-index: 1;
+    max-width: calc(100% - 200px);
+}
+
+/* Recupera el espacio original del panel */
+.login-welcome {
+    padding-bottom: 40px;
+}
+
+.login-welcome-footer {
+    max-width: none;
+}
+
+/* Ventana que muestra solo la parte superior de Jack */
+.login-jack-window {
+    position: absolute;
+    right: -30px;
+    bottom: 0;
+    width: clamp(260px, 25vw, 360px);
+    height: 299px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.login-jack-window .login-jack {
+    position: absolute;
+    top: -95px;
+    right: 0;
+    bottom: auto;
+    width: 105%;
+    height: auto;
+}
+
+@media (max-width: 800px) {
+    .login-welcome {
+        padding-bottom: 24px;
+    }
+
+    .login-jack-window {
+        display: none;
     }
 }
