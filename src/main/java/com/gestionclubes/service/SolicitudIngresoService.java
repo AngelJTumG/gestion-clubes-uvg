@@ -87,6 +87,25 @@ public class SolicitudIngresoService {
                         email, EstadoSolicitud.PENDIENTE);
     }
 
+    @Transactional(readOnly = true)
+    public List<SolicitudIngreso> solicitudesDe(String email) {
+        return solicitudRepository.findByUsuario_EmailIgnoreCaseOrderByCreadaEnDesc(email);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SolicitudIngreso> notificacionesDe(String email) {
+        return solicitudesDe(email).stream()
+                .filter(solicitud -> solicitud.getEstado() != EstadoSolicitud.PENDIENTE && !solicitud.isLeida())
+                .toList();
+    }
+
+    @Transactional
+    public void marcarNotificacionesLeidas(String email) {
+        solicitudesDe(email).stream()
+                .filter(solicitud -> solicitud.getEstado() != EstadoSolicitud.PENDIENTE)
+                .forEach(solicitud -> solicitud.setLeida(true));
+    }
+
     @Transactional
     public void aprobar(Long solicitudId, String email, boolean administradorGlobal) {
         SolicitudIngreso solicitud = obtenerAutorizada(solicitudId, email, administradorGlobal);

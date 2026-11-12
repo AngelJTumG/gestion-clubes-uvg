@@ -163,6 +163,11 @@ public class ClubService {
     }
 
     @Transactional(readOnly = true)
+    public List<Club> listarPorCoordinador(String email) {
+        return clubRepository.findByCoordinador_Usuario_EmailIgnoreCase(email);
+    }
+
+    @Transactional(readOnly = true)
     public List<Club> filtrarClubes(boolean incluirInactivos, String busqueda, String categoria,
                                     String estado) {
         List<Club> clubes = incluirInactivos ? listarClubes() : listarClubesActivos();

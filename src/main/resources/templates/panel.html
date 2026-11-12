@@ -4,18 +4,24 @@
 <body class="dashboard-page">
 <header class="topbar">
 	<div class="brand"><img th:src="@{/images/Logo-UVG.png}" alt="Universidad del Valle de Guatemala"><span>Clubes Universitarios</span></div>
-	<div class="topbar-actions"><div class="topbar-context">Portal Clubes UVG</div><form th:action="@{/logout}" method="post"><button type="submit" class="logout-button">Cerrar sesión</button></form></div>
+	<div class="topbar-actions">
+        <a class="topbar-icon" th:href="@{/notificaciones}" title="Notificaciones" aria-label="Notificaciones">&#128276;<span class="notification-badge" th:if="${(notificaciones != null and !#lists.isEmpty(notificaciones)) or (notificacionesAmistad != null and !#lists.isEmpty(notificacionesAmistad))}" th:text="${#lists.size(notificaciones) + #lists.size(notificacionesAmistad)}">0</span></a>
+        <a class="topbar-icon" th:href="@{/personas}" title="Personas" aria-label="Personas">&#128101;</a>
+        <a class="profile-chip" th:href="@{/perfil}" title="Perfil" aria-label="Perfil"><span class="profile-avatar"><img th:if="${usuarioActual.fotoPerfil}" th:src="${usuarioActual.fotoPerfil}" th:alt="${usuarioActual.nombre}"><span th:unless="${usuarioActual.fotoPerfil}">&#9673;</span></span></a>
+        <form th:action="@{/logout}" method="post"><button type="submit" class="logout-button">Cerrar sesión</button></form>
+    </div>
 </header>
 <div class="dashboard-layout">
 	<aside class="sidebar" aria-label="Navegación principal">
 		<p class="sidebar-title">Menú</p>
 		<div class="nav-item active" aria-current="page"><span class="nav-mark">01</span>Inicio</div>
 		<a class="nav-item" th:if="${puedeCrearClub}" th:href="@{/admin/clubes/nuevo}"><span class="nav-mark">02</span>Agregar club</a>
-        <div class="nav-item" th:unless="${puedeCrearClub}"><span class="nav-mark">02</span>Clubes</div>
-		<div class="nav-item"><span class="nav-mark">03</span>Actividades</div>
-		<div class="nav-item"><span class="nav-mark">04</span>Miembros</div>
-		<div class="nav-item"><span class="nav-mark">05</span>Avisos</div>
-        <div class="nav-item"><span class="nav-mark">06</span>Calendario</div>
+        <a class="nav-item" th:unless="${puedeCrearClub}" th:href="@{/panel}"><span class="nav-mark">02</span>Clubes</a>
+		<a class="nav-item" th:href="@{/actividades}"><span class="nav-mark">03</span>Actividades</a>
+		<a class="nav-item" th:href="@{/mis-clubes}"><span class="nav-mark">04</span>Mis clubes</a>
+		<a class="nav-item" th:href="@{/solicitudes}"><span class="nav-mark">05</span>Solicitudes</a>
+        <a class="nav-item" th:href="@{/calendario}"><span class="nav-mark">06</span>Calendario</a>
+        <a class="nav-item" th:if="${puedeGestionarSolicitudes}" th:href="@{/panel#solicitudes}"><span class="nav-mark">07</span>Solicitudes por revisar</a>
 	</aside>
 	<main class="dashboard-main">
         <p class="alert success" role="status" th:if="${exito}" th:text="${exito}"></p>
@@ -89,6 +95,12 @@
 				th:href="@{/admin/clubes/{id}(id=${club.id})}">
 					Ver detalles
 				</a>
+                <a class="button secondary" th:if="${esCoordinador and clubesCoordinados.contains(club.id)}"
+                   th:href="@{/club-admin/clubes/{id}/actividades(id=${club.id})}">Gestionar actividades</a>
+                <a class="button secondary" th:if="${esCoordinador and clubesCoordinados.contains(club.id)}"
+                   th:href="@{/club-admin/clubes/{id}/fotografias(id=${club.id})}">Gestionar fotografías</a>
+                <a class="button secondary" th:if="${esCoordinador and clubesCoordinados.contains(club.id)}"
+                   th:href="@{/clubes/{id}/integrantes(id=${club.id})}">Consultar integrantes</a>
 
 				<p th:if="${puedeCrearClub and !club.status}"> Estado: desactivado </p>
 			</article>
@@ -96,7 +108,7 @@
 		</div>
 	</section>
 
-	<section class="requests-content" th:if="${puedeGestionarSolicitudes and !#lists.isEmpty(solicitudes)}" aria-label="Solicitudes de ingreso">
+	<section id="solicitudes" class="requests-content" th:if="${puedeGestionarSolicitudes and !#lists.isEmpty(solicitudes)}" aria-label="Solicitudes de ingreso">
 		<p class="eyebrow">Gestión de clubes</p>
 		<h2>Solicitudes de ingreso</h2>
 		<form th:if="${puedeAprobarTodas}" th:action="@{/admin/solicitudes/aprobar-todas}" method="post">

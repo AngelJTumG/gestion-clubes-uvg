@@ -39,6 +39,9 @@ public class SolicitudIngreso {
     @Column(nullable = false, updatable = false)
     private LocalDateTime creadaEn;
 
+    @Column(nullable = false)
+    private boolean leida = false;
+
     @PrePersist
     void registrarFechaCreacion() {
         creadaEn = LocalDateTime.now();
@@ -52,4 +55,6 @@ public class SolicitudIngreso {
     public EstadoSolicitud getEstado() { return estado; }
     public void setEstado(EstadoSolicitud estado) { this.estado = estado; }
     public LocalDateTime getCreadaEn() { return creadaEn; }
+    public boolean isLeida() { return leida; }
+    public void setLeida(boolean leida) { this.leida = leida; }
 }

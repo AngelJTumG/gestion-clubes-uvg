@@ -1,0 +1,7 @@
+<!doctype html><html lang="es" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Gestionar actividades | Clubes UVG</title><link rel="stylesheet" th:href="@{/css/app.css}"></head><body class="dashboard-page">
+<header class="topbar"><div class="brand"><img th:src="@{/images/Logo-UVG.png}" alt="UVG"><span>Clubes Universitarios</span></div><a th:href="@{/panel}">Panel principal</a></header>
+<main class="club-main"><p class="eyebrow" th:text="${club.nombre}">Club</p><h1>Gestionar actividades</h1><p class="alert success" th:if="${exito}" th:text="${exito}"></p><p class="alert error" th:if="${error}" th:text="${error}"></p>
+<a class="button" th:href="@{/club-admin/clubes/{id}/actividades/nueva(id=${club.id})}">Publicar actividad</a>
+<div class="card" th:if="${#lists.isEmpty(actividades)}">No hay actividades publicadas.</div>
+<div class="card" th:each="actividad : ${actividades}"><h2 th:text="${actividad.nombre}">Actividad</h2><p th:text="${actividad.fecha + ' · ' + actividad.horaInicio + ' · ' + actividad.ubicacion}">Datos</p><p th:text="${actividad.descripcion}">Descripción</p>
+<a class="button secondary" th:href="@{/club-admin/actividades/{id}/editar(id=${actividad.id})}">Actualizar</a><form style="display:inline" method="post" th:action="@{/club-admin/actividades/{id}/eliminar(id=${actividad.id})}"><button class="danger-button" type="submit">Eliminar</button></form></div></main></body></html>

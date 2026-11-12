@@ -20,4 +20,7 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 
     @EntityGraph(attributePaths = {"membresias"})
     List<Club> findByStatusTrue();
+
+    @EntityGraph(attributePaths = {"coordinador", "coordinador.usuario", "membresias"})
+    List<Club> findByCoordinador_Usuario_EmailIgnoreCase(String email);
 }

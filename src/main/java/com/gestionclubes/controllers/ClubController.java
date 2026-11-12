@@ -23,6 +23,7 @@ import com.gestionclubes.dtos.RegistroClubDto;
 import com.gestionclubes.models.Club;
 import com.gestionclubes.models.EstadoSolicitud;
 import com.gestionclubes.service.ClubService;
+import com.gestionclubes.service.ActividadService;
 import com.gestionclubes.service.EstudianteService;
 import com.gestionclubes.service.SolicitudIngresoService;
 
@@ -36,12 +37,14 @@ public class ClubController {
     private final ClubService clubService;
     private final SolicitudIngresoService solicitudService;
     private final EstudianteService estudianteService;
+    private final ActividadService actividadService;
 
     public ClubController(ClubService clubService, SolicitudIngresoService solicitudService,
-                          EstudianteService estudianteService) {
+                          EstudianteService estudianteService, ActividadService actividadService) {
         this.clubService = clubService;
         this.solicitudService = solicitudService;
         this.estudianteService = estudianteService;
+        this.actividadService = actividadService;
     }
 
     @GetMapping("/nuevo")
@@ -85,6 +88,9 @@ public class ClubController {
             .anyMatch(rol ->
             rol.getAuthority().equals("ROLE_ADMIN")
         );
+        boolean puedeGestionarClub = puedeCrearClub || authentication.getAuthorities().stream()
+                .anyMatch(rol -> rol.getAuthority().equals("ROLE_ADMIN_CLUB")
+                        && club.getCoordinador().getUsuario().getEmail().equalsIgnoreCase(authentication.getName()));
 
         if (!club.isStatus() && !puedeCrearClub) {
             throw new ResponseStatusException(
@@ -101,7 +107,9 @@ public class ClubController {
 
         model.addAttribute("club", club);
         model.addAttribute("fotografias", clubService.consultarFotografias(id));
+        model.addAttribute("actividades", actividadService.listarPorClub(id));
         model.addAttribute("puedeCrearClub", puedeCrearClub);
+        model.addAttribute("puedeGestionarClub", puedeGestionarClub);
         model.addAttribute("puedeSolicitar", puedeSolicitar && club.isStatus());
         model.addAttribute("estadoSolicitud", estadoSolicitud);
         model.addAttribute("requiereCarne", puedeSolicitar && !estudianteService.tieneCarne(authentication.getName()));
@@ -110,8 +118,9 @@ public class ClubController {
     }
 
     @GetMapping("/{id}/editar")
-    public String formularioEdicion(@PathVariable("id") Long id, Model model) {
+    public String formularioEdicion(@PathVariable("id") Long id, Model model, Authentication authentication) {
         try {
+            verificarGestion(id, authentication);
             model.addAttribute("club", clubService.obtenerFormularioEdicion(id));
             model.addAttribute("clubId", id);
             return "clubes/editar";
@@ -124,7 +133,9 @@ public class ClubController {
     public String actualizar(@PathVariable("id") Long id,
                              @Valid @ModelAttribute("club") RegistroClubDto dto,
                              BindingResult result, Model model,
+                             Authentication authentication,
                              RedirectAttributes redirect) {
+        verificarGestion(id, authentication);
         model.addAttribute("clubId", id);
         if (result.hasErrors()) return "clubes/editar";
         try {
@@ -149,9 +160,11 @@ public class ClubController {
     @PostMapping("/{id}/desactivar")
     public String desactivar(
         @PathVariable("id") Long id,
+        Authentication authentication,
         RedirectAttributes redirect) {
 
     try {
+        verificarGestion(id, authentication);
         clubService.desactivar(id);
     } catch (EntityNotFoundException ex) {
         throw new ResponseStatusException(
@@ -170,8 +183,10 @@ public class ClubController {
 
     @PostMapping("/{id}/activar")
     public String activar(@PathVariable("id") Long id,
+                          Authentication authentication,
                           RedirectAttributes redirect) {
         try {
+            verificarGestion(id, authentication);
             clubService.activar(id);
         } catch (EntityNotFoundException ex) {
             throw new ResponseStatusException(
@@ -180,6 +195,21 @@ public class ClubController {
 
         redirect.addFlashAttribute("exito", "Club activado correctamente");
         return "redirect:/admin/clubes/" + id;
+    }
+
+    private void verificarGestion(Long id, Authentication authentication) {
+        Club club = clubService.buscarPorId(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "No existe el club solicitado"));
+        boolean admin = authentication.getAuthorities().stream()
+                .anyMatch(rol -> rol.getAuthority().equals("ROLE_ADMIN"));
+        boolean coordinador = authentication.getAuthorities().stream()
+                .anyMatch(rol -> rol.getAuthority().equals("ROLE_ADMIN_CLUB"));
+        if (!admin && (!coordinador
+                || !club.getCoordinador().getUsuario().getEmail().equalsIgnoreCase(authentication.getName()))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "No tienes permiso para gestionar este club");
+        }
     }
 
 }

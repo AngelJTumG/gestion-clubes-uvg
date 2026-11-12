@@ -22,6 +22,9 @@ public interface SolicitudIngresoRepository extends JpaRepository<SolicitudIngre
 
     Optional<SolicitudIngreso> findByUsuario_EmailIgnoreCaseAndClub_Id(String email, Long clubId);
 
+    @EntityGraph(attributePaths = {"club"})
+    List<SolicitudIngreso> findByUsuario_EmailIgnoreCaseOrderByCreadaEnDesc(String email);
+
     @EntityGraph(attributePaths = {"usuario", "club"})
     List<SolicitudIngreso> findByClub_Coordinador_Usuario_EmailIgnoreCaseAndEstadoOrderByCreadaEnAsc(
             String email, EstadoSolicitud estado);

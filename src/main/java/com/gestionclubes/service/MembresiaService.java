@@ -1,10 +1,12 @@
 package com.gestionclubes.service;
 
 import java.time.LocalDate;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.gestionclubes.models.EstadoSolicitud;
 import com.gestionclubes.models.Estudiante;
+import com.gestionclubes.models.Membresia;
 import com.gestionclubes.models.SolicitudIngreso;
 import com.gestionclubes.models.Usuario;
 import com.gestionclubes.repository.EstudianteRepository;
@@ -28,6 +30,16 @@ public class MembresiaService {
         this.estudianteRepository = estudianteRepository;
         this.solicitudRepository = solicitudRepository;
         this.usuarioRepository = usuarioRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Membresia> listarPorClub(Long clubId) {
+        return membresiaRepository.findByClub_IdOrderByFechaIngresoAsc(clubId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Membresia> listarPorEstudiante(String email) {
+        return membresiaRepository.findByEstudiante_Usuario_EmailIgnoreCaseOrderByFechaIngresoAsc(email);
     }
 
     @Transactional

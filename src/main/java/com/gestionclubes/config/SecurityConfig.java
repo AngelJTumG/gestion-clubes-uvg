@@ -6,7 +6,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpMethod;
 
 
@@ -23,6 +22,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/registro", "/css/**", "/js/**", "/images/**", "/error").permitAll()
                         .requestMatchers(HttpMethod.GET, "/admin/clubes/{id:[0-9]+}").authenticated()
+                        .requestMatchers("/admin/clubes/nuevo", "/admin/clubes").hasRole("ADMIN")
+                        .requestMatchers("/admin/clubes/*/editar", "/admin/clubes/*/activar",
+                                "/admin/clubes/*/desactivar").hasAnyRole("ADMIN_CLUB", "ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/club-admin/**").hasAnyRole("ADMIN_CLUB", "ADMIN")
                         .anyRequest().authenticated())

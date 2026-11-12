@@ -1,0 +1,9 @@
+<!doctype html><html lang="es" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Fotografías | Clubes UVG</title><link rel="stylesheet" th:href="@{/css/app.css}"></head><body class="dashboard-page">
+<main class="club-main"><p class="eyebrow" th:text="${club.nombre}">Club</p><h1>Gestionar fotografías</h1><p class="alert success" th:if="${exito}" th:text="${exito}"></p><p class="alert error" th:if="${error}" th:text="${error}"></p>
+<form class="card" method="post" enctype="multipart/form-data" th:action="@{/club-admin/clubes/{id}/fotografias(id=${club.id})}" th:object="${fotografia}">
+<label>Subir fotografía desde tus archivos<input type="file" name="archivo" accept="image/png,image/jpeg,image/gif,image/webp"></label>
+<p>Puedes subir un archivo o usar una URL. La URL es opcional.</p>
+<label>URL de imagen (opcional)<input th:field="*{urlImagen}" maxlength="255"></label>
+<label>Descripción (opcional)<input th:field="*{descripcion}" maxlength="100"></label>
+<button type="submit">Agregar fotografía</button></form>
+<div class="card" th:each="foto : ${fotografias}"><img style="max-width:240px" th:src="${foto.urlImagen}" th:alt="${foto.descripcion}"><p th:text="${foto.descripcion}">Descripción</p><form method="post" th:action="@{/club-admin/fotografias/{id}/eliminar(id=${foto.id})}"><button class="danger-button" type="submit">Eliminar</button></form></div></main></body></html>

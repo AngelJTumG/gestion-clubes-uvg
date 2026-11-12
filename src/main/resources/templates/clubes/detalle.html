@@ -32,6 +32,17 @@
         </dl>
     </section>
 
+    <section class="card" aria-labelledby="titulo-actividades">
+        <h2 id="titulo-actividades">Actividades</h2>
+        <p th:if="${#lists.isEmpty(actividades)}">Este club todavía no tiene actividades publicadas.</p>
+        <div th:each="actividad : ${actividades}">
+            <h3 th:text="${actividad.nombre}">Actividad</h3>
+            <p th:text="${actividad.fecha + ' · ' + actividad.horaInicio + ' · ' + actividad.ubicacion}">Datos</p>
+            <p th:text="${actividad.descripcion}">Descripción</p>
+        </div>
+        <a class="button secondary" th:href="@{/clubes/{id}/integrantes(id=${club.id})}">Consultar integrantes</a>
+    </section>
+
 <section class="card" aria-labelledby="titulo-fotografias">
     <h2 id="titulo-fotografias">Fotografías del club</h2>
 
@@ -75,7 +86,9 @@
         </form>
         <span class="club-status" th:if="${puedeSolicitar and estadoSolicitud != null}"
             th:text="${estadoSolicitud == T(com.gestionclubes.models.EstadoSolicitud).PENDIENTE ? 'Solicitud pendiente' : (estadoSolicitud == T(com.gestionclubes.models.EstadoSolicitud).APROBADA ? 'Solicitud aprobada' : 'Solicitud rechazada')}"></span>
-        <a class="button" th:if="${puedeCrearClub}" th:href="@{/admin/clubes/{id}/editar(id=${club.id})}">Editar información</a>
+        <a class="button" th:if="${puedeGestionarClub}" th:href="@{/admin/clubes/{id}/editar(id=${club.id})}">Editar información</a>
+        <a class="button secondary" th:if="${puedeGestionarClub}" th:href="@{/club-admin/clubes/{id}/actividades(id=${club.id})}">Gestionar actividades</a>
+        <a class="button secondary" th:if="${puedeGestionarClub}" th:href="@{/club-admin/clubes/{id}/fotografias(id=${club.id})}">Gestionar fotografías</a>
         <a class="button" th:if="${puedeCrearClub}" th:href="@{/admin/clubes/nuevo}">Agregar otro club</a>
         <form th:if="${puedeCrearClub and club.status}"
             th:action="@{/admin/clubes/{id}/desactivar(id=${club.id})}"

@@ -1,0 +1,5 @@
+<!doctype html><html lang="es" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Actividad | Clubes UVG</title><link rel="stylesheet" th:href="@{/css/app.css}"></head><body class="dashboard-page">
+<main class="club-main"><h1 th:text="${actividad.id == null ? 'Publicar actividad' : 'Actualizar actividad'}">Actividad</h1>
+<form class="card" method="post" th:object="${actividad}" th:action="${actividad.id == null ? '/club-admin/clubes/' + clubId + '/actividades' : '/club-admin/actividades/' + actividad.id}">
+<label>Nombre<input th:field="*{nombre}" required maxlength="100"></label><label>Descripción<textarea th:field="*{descripcion}" required maxlength="255"></textarea></label><label>Fecha<input type="date" th:field="*{fecha}" required></label><label>Hora<input type="time" th:field="*{horaInicio}" required></label><label>Ubicación<input th:field="*{ubicacion}" required maxlength="100"></label><button type="submit">Guardar</button>
+</form></main></body></html>

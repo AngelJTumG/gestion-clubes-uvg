@@ -1,0 +1,9 @@
+<!doctype html><html lang="es" xmlns:th="http://www.thymeleaf.org"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Actividades | Clubes UVG</title><link rel="stylesheet" th:href="@{/css/app.css}"></head><body class="dashboard-page">
+<header class="topbar"><div class="brand"><img th:src="@{/images/Logo-UVG.png}" alt="UVG"><span>Clubes Universitarios</span></div><div class="topbar-actions"><a class="topbar-icon" th:href="@{/notificaciones}">&#128276;</a><a class="profile-chip" th:href="@{/perfil}" title="Perfil"><span class="profile-avatar"><img th:if="${usuarioActual.fotoPerfil}" th:src="${usuarioActual.fotoPerfil}" th:alt="${usuarioActual.nombre}"><span th:unless="${usuarioActual.fotoPerfil}">&#9673;</span></span></a><a th:href="@{/panel}">Panel principal</a></div></header>
+<main class="club-main"><p class="eyebrow">Agenda universitaria</p><h1>Actividades de los clubes</h1>
+<section class="card" th:if="${#lists.isEmpty(actividades)}">No hay actividades publicadas.</section>
+<section class="card" th:each="actividad : ${actividades}"><h2 th:text="${actividad.nombre}">Actividad</h2>
+<p><strong th:text="${actividad.club.nombre}">Club</strong> · <span th:text="${actividad.fecha}">Fecha</span> · <span th:text="${actividad.horaInicio}">Hora</span></p>
+<p th:text="${actividad.descripcion}">Descripción</p><p th:text="${actividad.ubicacion}">Ubicación</p></section></main></body></html>
