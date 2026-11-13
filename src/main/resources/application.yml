@@ -7,7 +7,7 @@ spring:
     password: ${DB_PASSWORD:clubes123}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${DDL_AUTO:update}
     open-in-view: false
     properties:
       hibernate:
@@ -24,6 +24,6 @@ app:
   upload-dir: ${UPLOAD_DIR:uploads/fotografias}
   profile-upload-dir: ${PROFILE_UPLOAD_DIR:uploads/perfiles}
   admin:
-    email: ${ADMIN_EMAIL:admin@example.com}
-    password: ${ADMIN_PASSWORD:admin123}
+    email: ${ADMIN_EMAIL:}
+    password: ${ADMIN_PASSWORD:}
 
