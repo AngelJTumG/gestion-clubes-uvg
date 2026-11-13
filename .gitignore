@@ -4,6 +4,5 @@ target/
 *.iml
 *.log
 .DS_Store
-.github/
 .env
 uploads/
