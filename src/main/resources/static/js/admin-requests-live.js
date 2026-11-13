@@ -25,6 +25,46 @@
         window.setTimeout(() => toast.classList.remove('is-visible'), 7000);
     }
 
+    function renderRequests(requests) {
+        let section = document.querySelector('[data-admin-requests]');
+        if (!requests.length) {
+            if (section) section.hidden = true;
+            return;
+        }
+
+        if (!section) {
+            section = document.createElement('section');
+            section.id = 'solicitudes';
+            section.className = 'requests-content';
+            section.dataset.adminRequests = '';
+            section.innerHTML =
+                '<p class="eyebrow">Gestión de clubes</p>' +
+                '<h2>Solicitudes de ingreso</h2>' +
+                '<div class="requests-list" data-admin-requests-list></div>';
+            const main = document.querySelector('.panel-view main');
+            if (main) main.appendChild(section);
+        }
+
+        section.hidden = false;
+        const list = section.querySelector('[data-admin-requests-list]');
+        if (!list) return;
+        list.replaceChildren(...requests.map(request => {
+            const article = document.createElement('article');
+            article.className = 'request-item';
+            article.innerHTML =
+                '<div><strong></strong><span>Solicitud pendiente</span>' +
+                '<span>Solicita ingresar a <b></b></span></div>' +
+                '<div class="request-actions">' +
+                '<form method="post" action="/club-admin/solicitudes/' + request.id + '/aprobar">' +
+                '<button type="submit">Aprobar</button></form>' +
+                '<form method="post" action="/club-admin/solicitudes/' + request.id + '/rechazar">' +
+                '<button type="submit" class="danger-button">Rechazar</button></form></div>';
+            article.querySelector('strong').textContent = request.usuario;
+            article.querySelector('b').textContent = request.club;
+            return article;
+        }));
+    }
+
     async function refresh() {
         try {
             const response = await fetch('/api/admin/solicitudes/pendientes', {
@@ -34,6 +74,7 @@
             if (!response.ok) return;
             const requests = await response.json();
             const ids = new Set(requests.map(request => String(request.id)));
+            renderRequests(requests);
             if (initialized) {
                 const newRequest = requests.find(request => !previousIds.has(String(request.id)));
                 if (newRequest) showRequest(newRequest);
@@ -46,5 +87,5 @@
     }
 
     refresh();
-    window.setInterval(refresh, 3000);
+    window.setInterval(refresh, 1000);
 })();

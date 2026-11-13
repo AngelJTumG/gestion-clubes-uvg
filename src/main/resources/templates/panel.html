@@ -16,7 +16,7 @@
     <link rel="stylesheet" th:href="@{/css/app.css}">
     <script th:src="@{/js/preferences.js}" defer></script>
     <script th:src="@{/js/notifications-live.js}" defer></script>
-    <script th:src="@{/js/admin-requests-live.js}" defer></script>
+    <script th:src="@{/js/admin-requests-live.js(v=2)}" defer></script>
 </head>
 
 <body class="dashboard-page panel-page panel-view">
@@ -430,6 +430,7 @@
             <!-- Solicitudes para administradores y coordinadores -->
             <section id="solicitudes"
                      class="requests-content"
+                     data-admin-requests
                      th:if="${puedeGestionarSolicitudes and !#lists.isEmpty(solicitudes)}"
                      aria-labelledby="requests-title">
                 <p class="eyebrow">Gestión de clubes</p>
@@ -443,7 +444,7 @@
                     </button>
                 </form>
 
-                <div class="requests-list">
+                <div class="requests-list" data-admin-requests-list>
                     <article class="request-item"
                              th:each="solicitud : ${solicitudes}">
                         <div>
