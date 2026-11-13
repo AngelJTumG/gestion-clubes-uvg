@@ -17,6 +17,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 
+/**
+ * Club disponible en la plataforma. Guarda su información, coordinador,
+ * actividades, fotografías e integrantes.
+ */
 @Entity
 @Table(name = "clubs", uniqueConstraints = @UniqueConstraint(name = "uk_club_nombre", columnNames = "nombre"))
 public class Club {
@@ -70,6 +74,9 @@ public class Club {
         return membresias.size();
     }
 
+    /**
+     * Agrega al estudiante como integrante si todavía no pertenece al club.
+     */
     public Membresia agregarIntegrante(Estudiante estudiante, LocalDate fechaIngreso) {
         Objects.requireNonNull(estudiante, "El integrante requiere un estudiante");
         Objects.requireNonNull(fechaIngreso, "La membresía requiere fecha de ingreso");

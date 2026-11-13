@@ -5,6 +5,9 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 
+/**
+ * Datos estudiantiles asociados a una cuenta; el carné identifica al estudiante.
+ */
 @Entity
 @Table(name = "estudiantes")
 public class Estudiante {

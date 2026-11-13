@@ -13,6 +13,9 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+/**
+ * Cuenta de acceso a la plataforma, con perfil, rol y estado de actividad.
+ */
 @Entity
 @Table(name = "usuarios", uniqueConstraints = @UniqueConstraint(name = "uk_usuario_email", columnNames = "email"))
 public class Usuario {

@@ -11,6 +11,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 
+/**
+ * Actividad organizada por un club, con fecha, hora y lugar de realización.
+ */
 @Entity 
 @Table(name = "actividades")
 public class Actividad {

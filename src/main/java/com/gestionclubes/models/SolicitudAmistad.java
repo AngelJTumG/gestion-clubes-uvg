@@ -15,6 +15,9 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+/**
+ * Solicitud de conexión entre dos usuarios, con estado y seguimiento de lectura.
+ */
 @Entity
 @Table(name = "solicitudes_amistad",
        uniqueConstraints = @UniqueConstraint(name = "uk_solicitud_amistad",

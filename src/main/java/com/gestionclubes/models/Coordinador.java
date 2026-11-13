@@ -11,6 +11,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+/**
+ * Usuario con responsabilidades de coordinación y gestión de uno o más clubes.
+ */
 @Entity 
 @Table(name = "coordinadores")
 public class Coordinador {

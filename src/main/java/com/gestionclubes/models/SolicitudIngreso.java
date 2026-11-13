@@ -15,6 +15,9 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+/**
+ * Solicitud de un usuario para ingresar a un club, pendiente de decisión.
+ */
 @Entity
 @Table(name = "solicitudes_ingreso",
        uniqueConstraints = @UniqueConstraint(name = "uk_solicitud_usuario_club",

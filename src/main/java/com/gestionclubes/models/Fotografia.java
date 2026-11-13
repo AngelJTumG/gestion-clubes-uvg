@@ -8,6 +8,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 
+/**
+ * Fotografía publicada en la galería de un club.
+ */
 @Entity 
 @Table(name = "fotografias")
 public class Fotografia {

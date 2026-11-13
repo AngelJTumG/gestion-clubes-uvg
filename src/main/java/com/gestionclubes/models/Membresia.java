@@ -12,6 +12,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+/**
+ * Relaciona a un estudiante con un club e indica su fecha de ingreso.
+ */
 @Entity
 @Table(name = "membresias", uniqueConstraints = @UniqueConstraint(
         name = "uk_membresia_estudiante_club", columnNames = {"estudiante_carne", "club_id"}))
