@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gestionclubes.service.MensajeService;
 import com.gestionclubes.service.AmistadService;
+import com.gestionclubes.service.SolicitudIngresoService;
 import com.gestionclubes.service.UsuarioService;
 
 @Controller
@@ -23,12 +24,15 @@ public class ChatController {
     private final MensajeService mensajeService;
     private final UsuarioService usuarioService;
     private final AmistadService amistadService;
+    private final SolicitudIngresoService solicitudIngresoService;
 
     public ChatController(MensajeService mensajeService, UsuarioService usuarioService,
-                          AmistadService amistadService) {
+                          AmistadService amistadService,
+                          SolicitudIngresoService solicitudIngresoService) {
         this.mensajeService = mensajeService;
         this.usuarioService = usuarioService;
         this.amistadService = amistadService;
+        this.solicitudIngresoService = solicitudIngresoService;
     }
 
     @GetMapping("/chats")
@@ -89,10 +93,12 @@ public class ChatController {
     public NotificationView notificacionesNoLeidas(Principal principal) {
         return new NotificationView(
                 mensajeService.noLeidos(principal.getName()).size(),
-                amistadService.notificacionesRecibidas(principal.getName()).size());
+                amistadService.notificacionesRecibidas(principal.getName()).size(),
+                solicitudIngresoService.notificacionesDe(principal.getName()).size());
     }
 
     public record MensajeView(Long id, String contenido, String enviadoEn, boolean mio) {}
 
-    public record NotificationView(int mensajes, int solicitudesAmistad) {}
+    public record NotificationView(int mensajes, int solicitudesAmistad,
+                                   int solicitudesClub) {}
 }

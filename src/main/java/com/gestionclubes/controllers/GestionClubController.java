@@ -283,6 +283,7 @@ public class GestionClubController {
         model.addAttribute("solicitudesAmistadPendientes",
                 amistadService.solicitudesPendientesRecibidas(principal.getName()));
         model.addAttribute("mensajesNoLeidos", mensajeService.noLeidos(principal.getName()));
+        solicitudService.marcarNotificacionesLeidas(principal.getName());
         amistadService.marcarNotificacionesLeidas(principal.getName());
         amistadService.marcarSolicitudesRecibidasLeidas(principal.getName());
         return "notificaciones";
