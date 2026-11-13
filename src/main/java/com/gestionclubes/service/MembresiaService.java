@@ -42,6 +42,41 @@ public class MembresiaService {
         return membresiaRepository.findByEstudiante_Usuario_EmailIgnoreCaseOrderByFechaIngresoAsc(email);
     }
 
+    @Transactional(readOnly = true)
+    public boolean esMiembro(String email, Long clubId) {
+        return membresiaRepository.findByEstudiante_Usuario_EmailIgnoreCaseAndClub_Id(email, clubId)
+                .isPresent();
+    }
+
+    @Transactional
+    public void salir(String email, Long clubId) {
+        Membresia membresia = membresiaRepository
+                .findByEstudiante_Usuario_EmailIgnoreCaseAndClub_Id(email, clubId)
+                .orElseThrow(() -> new IllegalArgumentException("No perteneces a este club"));
+        eliminarYPermitirNuevaSolicitud(membresia);
+    }
+
+    @Transactional
+    public void retirar(Long membresiaId, Long clubId) {
+        Membresia membresia = membresiaRepository.findById(membresiaId)
+                .orElseThrow(() -> new IllegalArgumentException("No existe la membresía seleccionada"));
+        if (!membresia.getClub().getId().equals(clubId)) {
+            throw new IllegalArgumentException("La membresía no pertenece a este club");
+        }
+        eliminarYPermitirNuevaSolicitud(membresia);
+    }
+
+    private void eliminarYPermitirNuevaSolicitud(Membresia membresia) {
+        solicitudRepository.findByUsuario_EmailIgnoreCaseAndClub_Id(
+                membresia.getEstudiante().getUsuario().getEmail(), membresia.getClub().getId())
+                .ifPresent(solicitud -> {
+                    solicitud.setEstado(EstadoSolicitud.RECHAZADA);
+                    solicitud.setLeida(false);
+                    solicitudRepository.save(solicitud);
+                });
+        membresiaRepository.delete(membresia);
+    }
+
     @Transactional
     public void registrarAprobada(SolicitudIngreso solicitud) {
         if (solicitud.getEstado() != EstadoSolicitud.APROBADA) {

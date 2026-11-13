@@ -163,6 +163,15 @@
                             </dd>
                         </div>
                     </dl>
+
+                    <form class="club-member-remove-form"
+                          th:action="@{/club-admin/clubes/{clubId}/integrantes/{membresiaId}/retirar(clubId=${club.id},membresiaId=${membresia.idMembresia})}"
+                          method="post"
+                          onsubmit="return confirm('¿Retirar a esta persona del club?');">
+                        <button type="submit" class="club-profile-deactivate">
+                            Retirar del club
+                        </button>
+                    </form>
                 </article>
             </div>
         </section>
