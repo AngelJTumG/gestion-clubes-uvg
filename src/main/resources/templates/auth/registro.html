@@ -3,33 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Crear cuenta</title>
-    <link rel="icon" type="image/png" th:href="@{/images/Logo-UVG.png}">
+    <title>Crear cuenta | Clubes UVG</title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
-<body>
-    <main class="container card">
-        <h1>Crear cuenta</h1><form th:action="@{/registro}" th:object="${usuario}" method="post">
-            <div th:if="${#fields.hasGlobalErrors()}" class="alert error">
-                <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
-            </div>
-            <label>Nombre<input th:field="*{nombre}" autocomplete="name" required>
-                <small th:errors="*{nombre}">
-                </small>
-            </label>
-            <label>Carné estudiantil<input th:field="*{carne}" inputmode="numeric" pattern="[0-9]{1,30}" maxlength="30" required>
-                <small th:errors="*{carne}"></small>
-            </label>
-            <label>Correo<input type="email" th:field="*{email}" autocomplete="email" required>
-                <small th:errors="*{email}"></small>
-            </label>
-            <label>Contraseña<input type="password" th:field="*{password}" autocomplete="new-password" required>
-                <small th:errors="*{password}"></small>
-            </label>
-            <label>Confirmar contraseña<input type="password" th:field="*{confirmarPassword}" autocomplete="new-password" required>
-                <small th:errors="*{confirmarPassword}"></small>
-            </label><button type="submit">Registrarme</button>
-        </form><p>¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión</a>´
+<body class="register-page">
+    <div class="register-background" aria-hidden="true">
+    <svg viewBox="0 0 1440 1000"
+         preserveAspectRatio="xMidYMid slice"
+         fill="none">
+        <!-- Espirales -->
+        <g stroke="#008752" stroke-width="5"
+           stroke-linecap="round">
+            <path d="M150 160
+                     C40 60 20 260 150 260
+                     C250 260 260 120 170 130
+                     C110 135 110 210 160 205"/>
+
+            <path d="M1260 720
+                     C1380 620 1430 850 1280 870
+                     C1160 885 1150 730 1250 740
+                     C1320 745 1320 820 1270 810"/>
+        </g>
+
+        <!-- Estrellas -->
+        <g fill="#00e676">
+            <path d="M1190 70 L1206 115 L1250 130
+                     L1206 146 L1190 190 L1174 146
+                     L1130 130 L1174 115 Z"/>
+
+            <path d="M260 650 L275 690 L315 705
+                     L275 720 L260 760 L245 720
+                     L205 705 L245 690 Z"/>
+
+            <path d="M1020 430 L1030 460 L1060 470
+                     L1030 480 L1020 510 L1010 480
+                     L980 470 L1010 460 Z"/>
+        </g>
+
+        <!-- Círculos y arco -->
+        <g stroke="#008752" stroke-width="4">
+            <circle cx="330" cy="70" r="55"/>
+            <circle cx="1350" cy="370" r="85"/>
+            <path d="M60 880 Q170 760 280 880"/>
+        </g>
+
+        <!-- Detalles morados -->
+        <g stroke="#4a148c" stroke-width="5"
+           stroke-linecap="round" stroke-linejoin="round">
+            <path d="M80 430 L120 390 L160 430 L200 390"/>
+            <path d="M1080 940 L1110 900 L1140 940 L1170 900"/>
+        </g>
+    </svg>
+</div>
+    <main class="register-shell">
+        <a class="register-back" th:href="@{/}">
+            ← Volver al inicio
+        </a>
+
+
+        <section class="register-card" aria-labelledby="register-title">
+            <a class="register-brand" th:href="@{/}"
+               aria-label="Clubes UVG, volver al inicio">
+                <img th:src="@{/images/Logo-UVG.png}"
+                     alt="Universidad del Valle de Guatemala">
+                <span>Clubes <strong>UVG</strong></span>
+            </a>
+
+            <header class="register-heading">
+                <p class="register-eyebrow">Encuentra tu comunidad</p>
+                <h1 id="register-title">Crea tu cuenta</h1>
+                <p>Da el primer paso para participar en los clubes.</p>
+            </header>
+
+            <form class="register-form"
+                  th:action="@{/registro}"
+                  th:object="${usuario}"
+                  method="post">
+
+                <div th:if="${#fields.hasGlobalErrors()}"
+                     class="alert error" role="alert">
+                    <p th:each="error : ${#fields.globalErrors()}"
+                       th:text="${error}"></p>
+                </div>
+
+                <div class="register-field">
+                    <label for="nombre">Nombre completo</label>
+                    <input id="nombre"
+                           type="text"
+                           th:field="*{nombre}"
+                           autocomplete="name"
+                           maxlength="100"
+                           th:errorclass="register-invalid"
+                           required>
+                    <small th:errors="*{nombre}"></small>
+                </div>
+
+                <div class="register-field">
+                    <label for="carne">Carné estudiantil</label>
+                    <input id="carne"
+                           type="text"
+                           th:field="*{carne}"
+                           inputmode="numeric"
+                           pattern="[0-9]{1,30}"
+                           maxlength="30"
+                           th:errorclass="register-invalid"
+                           required>
+                    <small th:errors="*{carne}"></small>
+                </div>
+
+                <div class="register-field">
+                    <label for="email">Correo electrónico</label>
+                    <input id="email"
+                           type="email"
+                           th:field="*{email}"
+                           autocomplete="email"
+                           maxlength="150"
+                           th:errorclass="register-invalid"
+                           required>
+                    <small th:errors="*{email}"></small>
+                </div>
+
+                <div class="register-field">
+                    <label for="password">Contraseña</label>
+                    <input id="password"
+                           type="password"
+                           th:field="*{password}"
+                           autocomplete="new-password"
+                           minlength="8"
+                           maxlength="72"
+                           aria-describedby="password-help"
+                           th:errorclass="register-invalid"
+                           required>
+                    <p id="password-help" class="register-help">
+                        Usa entre 8 y 72 caracteres.
+                    </p>
+                    <small th:errors="*{password}"></small>
+                </div>
+
+                <div class="register-field">
+                    <label for="confirmarPassword">
+                        Confirmar contraseña
+                    </label>
+                    <input id="confirmarPassword"
+                           type="password"
+                           th:field="*{confirmarPassword}"
+                           autocomplete="new-password"
+                           minlength="8"
+                           maxlength="72"
+                           th:errorclass="register-invalid"
+                           required>
+                    <small th:errors="*{confirmarPassword}"></small>
+                </div>
+
+                <button type="submit">Crear cuenta →</button>
+            </form>
+
+            <p class="register-login">
+                ¿Ya tienes cuenta?
+                <a th:href="@{/login}">Inicia sesión</a>
+            </p>
+        </section>
+    
+
+        <p class="register-footer">
+            Universidad del Valle de Guatemala
         </p>
     </main>
 </body>
+</html>

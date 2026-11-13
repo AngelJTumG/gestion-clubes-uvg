@@ -1,139 +1,460 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Principal</title><link rel="icon" type="image/png" th:href="@{/images/Logo-UVG.png}"><link rel="stylesheet" th:href="@{/css/app.css}"></head>
-<body class="dashboard-page">
-<header class="topbar">
-	<div class="brand"><img th:src="@{/images/Logo-UVG.png}" alt="Universidad del Valle de Guatemala"><span>Clubes Universitarios</span></div>
-	<div class="topbar-actions">
-        <a class="topbar-icon" th:href="@{/notificaciones}" title="Notificaciones" aria-label="Notificaciones">&#128276;<span class="notification-badge" th:if="${(notificaciones != null and !#lists.isEmpty(notificaciones)) or (notificacionesAmistad != null and !#lists.isEmpty(notificacionesAmistad))}" th:text="${#lists.size(notificaciones) + #lists.size(notificacionesAmistad)}">0</span></a>
-        <a class="topbar-icon" th:href="@{/personas}" title="Personas" aria-label="Personas">&#128101;</a>
-        <a class="profile-chip" th:href="@{/perfil}" title="Perfil" aria-label="Perfil"><span class="profile-avatar"><img th:if="${usuarioActual.fotoPerfil}" th:src="${usuarioActual.fotoPerfil}" th:alt="${usuarioActual.nombre}"><span th:unless="${usuarioActual.fotoPerfil}">&#9673;</span></span></a>
-        <form th:action="@{/logout}" method="post"><button type="submit" class="logout-button">Cerrar sesión</button></form>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Explorar clubes | Clubes UVG</title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body class="dashboard-page panel-page panel-view">
+    <header class="topbar">
+        <a class="brand panel-brand" th:href="@{/panel}">
+            <img th:src="@{/images/Logo-UVG.png}"
+                 alt="Universidad del Valle de Guatemala">
+            <span>Clubes <strong>UVG</strong></span>
+        </a>
+
+        <div class="topbar-actions">
+            <a class="topbar-icon"
+               th:href="@{/notificaciones}"
+               title="Notificaciones"
+               aria-label="Notificaciones">
+                <span aria-hidden="true">&#128276;</span>
+
+                <span class="notification-badge"
+                      th:with="total=${(notificaciones == null ? 0 : #lists.size(notificaciones)) + (notificacionesAmistad == null ? 0 : #lists.size(notificacionesAmistad))}"
+                      th:if="${total > 0}"
+                      th:text="${total}">
+                    0
+                </span>
+            </a>
+
+            <a class="topbar-icon"
+               th:href="@{/personas}"
+               title="Personas"
+               aria-label="Buscar personas">
+                <span aria-hidden="true">&#128101;</span>
+            </a>
+
+            <a class="profile-chip"
+               th:href="@{/perfil}"
+               title="Mi perfil"
+               aria-label="Mi perfil">
+                <span class="profile-avatar">
+                    <img th:if="${usuarioActual.fotoPerfil}"
+                         th:src="${usuarioActual.fotoPerfil}"
+                         th:alt="${usuarioActual.nombre}">
+
+                    <span th:unless="${usuarioActual.fotoPerfil}"
+                          aria-hidden="true">&#9673;</span>
+                </span>
+            </a>
+
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-button">
+                    Cerrar sesión
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <div class="dashboard-layout">
+        <aside class="sidebar panel-sidebar" aria-label="Navegación principal">
+				<!-- Iconos reutilizables del menú -->
+				<svg class="panel-icon-definitions"
+					xmlns="http://www.w3.org/2000/svg"
+					aria-hidden="true">
+					<defs>
+						<symbol id="panel-icon-home" viewBox="0 0 24 24">
+							<path d="m3 10 9-7 9 7"/>
+							<path d="M5 9v12h5v-7h4v7h5V9"/>
+						</symbol>
+
+						<symbol id="panel-icon-clubs" viewBox="0 0 24 24">
+							<path d="M8 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"/>
+							<path d="M15 3v10M10 8h10M7 15h5M7 18h8"/>
+						</symbol>
+
+						<symbol id="panel-icon-activities" viewBox="0 0 24 24">
+							<path d="m13 2-9 12h7l-1 8 10-12h-7l1-8Z"/>
+						</symbol>
+
+						<symbol id="panel-icon-members" viewBox="0 0 24 24">
+							<circle cx="9" cy="8" r="3"/>
+							<path d="M3 21v-2a6 6 0 0 1 12 0v2"/>
+							<path d="M16 5a3 3 0 0 1 0 6M18 15a5 5 0 0 1 3 4v2"/>
+						</symbol>
+
+						<symbol id="panel-icon-requests" viewBox="0 0 24 24">
+							<path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-3"/>
+							<rect x="8" y="2" width="8" height="4" rx="1"/>
+							<path d="M7 11h10M7 16h6"/>
+						</symbol>
+
+						<symbol id="panel-icon-calendar" viewBox="0 0 24 24">
+							<rect x="3" y="5" width="18" height="16" rx="2"/>
+							<path d="M16 3v4M8 3v4M3 11h18M8 15h2M14 15h2"/>
+						</symbol>
+
+						<symbol id="panel-icon-review" viewBox="0 0 24 24">
+							<path d="M12 3 3 7v6c0 4 5 7 9 9 4-2 9-5 9-9V7l-9-4Z"/>
+							<path d="m8 12 3 3 5-6"/>
+						</symbol>
+					</defs>
+				</svg>
+
+				<p class="panel-menu-title">Tu espacio</p>
+
+				<nav class="panel-menu" aria-label="Secciones del portal">
+					<a class="panel-menu-link is-active"
+					th:href="@{/panel}"
+					aria-current="page">
+						<svg class="panel-menu-icon" aria-hidden="true">
+							<use href="#panel-icon-home"></use>
+						</svg>
+						<span>Inicio</span>
+					</a>
+
+					<a class="panel-menu-link"
+					th:if="${puedeCrearClub}"
+					th:href="@{/admin/clubes/nuevo}">
+						<svg class="panel-menu-icon" aria-hidden="true">
+							<use href="#panel-icon-clubs"></use>
+						</svg>
+						<span>Agregar club</span>
+					</a>
+
+					<a class="panel-menu-link"
+					th:unless="${puedeCrearClub}"
+					href="#explorar-clubes">
+						<svg class="panel-menu-icon" aria-hidden="true">
+							<use href="#panel-icon-clubs"></use>
+						</svg>
+						<span>Explorar clubes</span>
+					</a>
+
+					<a class="panel-menu-link" th:href="@{/actividades}">
+						<svg class="panel-menu-icon" aria-hidden="true">
+							<use href="#panel-icon-activities"></use>
+						</svg>
+						<span>Actividades</span>
+					</a>
+
+					<a class="panel-menu-link" th:href="@{/mis-clubes}">
+						<svg class="panel-menu-icon" aria-hidden="true">
+							<use href="#panel-icon-members"></use>
+						</svg>
+						<span>Mis clubes</span>
+					</a>
+
+					<a class="panel-menu-link" th:href="@{/solicitudes}">
+						<svg class="panel-menu-icon" aria-hidden="true">
+							<use href="#panel-icon-requests"></use>
+						</svg>
+						<span>Solicitudes</span>
+					</a>
+
+					<a class="panel-menu-link" th:href="@{/calendario}">
+						<svg class="panel-menu-icon" aria-hidden="true">
+							<use href="#panel-icon-calendar"></use>
+						</svg>
+						<span>Calendario</span>
+					</a>
+				</nav>
+
+				<div class="panel-menu-admin"
+					th:if="${puedeGestionarSolicitudes}">
+					<p class="panel-menu-title">Administración</p>
+
+					<nav class="panel-menu" aria-label="Administración de clubes">
+						<a class="panel-menu-link" href="#solicitudes">
+							<svg class="panel-menu-icon" aria-hidden="true">
+								<use href="#panel-icon-review"></use>
+							</svg>
+							<span>Solicitudes por revisar</span>
+						</a>
+					</nav>
+				</div>
+			</aside>
+    
+
+        <main class="dashboard-main">
+            <p class="alert success"
+               role="status"
+               th:if="${exito}"
+               th:text="${exito}"></p>
+
+            <p class="alert error"
+               role="alert"
+               th:if="${error}"
+               th:text="${error}"></p>
+
+            <!-- Bienvenida -->
+            <section class="dashboard-intro"
+                     aria-labelledby="panel-title">
+                <div class="dashboard-intro-copy">
+                    <p class="eyebrow">Tu comunidad UVG</p>
+                    <h1 id="panel-title">Encuentra tu próximo club.</h1>
+                    <p>
+                        Explora tus intereses, conoce nuevas personas
+                        y participa en la vida universitaria.
+                    </p>
+
+                    <a class="button dashboard-primary-action"
+                       th:if="${puedeCrearClub}"
+                       th:href="@{/admin/clubes/nuevo}">
+                        Agregar club →
+                    </a>
+                </div>
+
+                <div class="panel-welcome-art" aria-hidden="true">
+                    <span class="panel-welcome-star"></span>
+                    <span class="panel-welcome-ring"></span>
+                    <img th:src="@{/images/jack/jack-musica.png}"
+                         alt="">
+                </div>
+            </section>
+
+            <!-- Explorar clubes -->
+            <section id="explorar-clubes"
+                     class="clubs-content"
+                     aria-labelledby="clubs-title">
+                <div class="panel-section-heading">
+                    <div>
+                        <p class="eyebrow">Encuentra tu lugar</p>
+                        <h2 id="clubs-title">Explora los clubes</h2>
+                        <p>
+                            Descubre un espacio para compartir
+                            lo que te gusta.
+                        </p>
+                    </div>
+
+                    <span class="panel-result-count"
+                          th:text="${#lists.size(clubes) == 1
+                              ? '1 club encontrado'
+                              : #lists.size(clubes) + ' clubes encontrados'}">
+                        0 clubes encontrados
+                    </span>
+                </div>
+
+                <!-- Filtros -->
+                <form class="club-filters"
+                      th:action="@{/panel}"
+                      method="get"
+                      aria-label="Buscar y filtrar clubes">
+                    <label for="club-search">
+                        <span>¿Qué club buscas?</span>
+                        <input id="club-search"
+                               type="search"
+                               name="busqueda"
+                               th:value="${busqueda}"
+                               placeholder="Escribe el nombre de un club"
+                               autocomplete="off">
+                    </label>
+
+                    <label for="club-category">
+                        <span>Categoría</span>
+                        <select id="club-category" name="categoria">
+                            <option value="">Todas las categorías</option>
+                            <option th:each="categoria : ${categorias}"
+                                    th:value="${categoria}"
+                                    th:text="${categoria}"
+                                    th:selected="${categoria == categoriaSeleccionada}">
+                            </option>
+                        </select>
+                    </label>
+
+                    <label for="club-status"
+                           th:if="${puedeCrearClub}">
+                        <span>Estado</span>
+                        <select id="club-status" name="estado">
+                            <option value="todos"
+                                    th:selected="${estadoSeleccionado == 'todos'}">
+                                Todos
+                            </option>
+                            <option value="activos"
+                                    th:selected="${estadoSeleccionado == 'activos'}">
+                                Activos
+                            </option>
+                            <option value="inactivos"
+                                    th:selected="${estadoSeleccionado == 'inactivos'}">
+                                Inactivos
+                            </option>
+                        </select>
+                    </label>
+
+                    <div class="club-filter-actions">
+                        <button type="submit">Buscar</button>
+                        <a class="button secondary" th:href="@{/panel}">
+                            Limpiar
+                        </a>
+                    </div>
+                </form>
+
+                <!-- Sin resultados -->
+                <div class="panel-empty"
+                     th:if="${#lists.isEmpty(clubes)}">
+                    <span class="panel-empty-symbol"
+                          aria-hidden="true">✦</span>
+                    <h3>No encontramos clubes</h3>
+                    <p>
+                        Prueba con otro nombre o cambia los filtros
+                        para seguir explorando.
+                    </p>
+                    <a class="button secondary" th:href="@{/panel}">
+                        Ver todos los clubes
+                    </a>
+                </div>
+
+                <!-- Tarjetas -->
+                <div class="panel-club-grid"
+                     th:unless="${#lists.isEmpty(clubes)}">
+                    <article class="panel-club-card"
+                             th:each="club : ${clubes}"
+                             th:with="tieneFotos=${!#lists.isEmpty(club.fotografias)}">
+
+                        <div class="panel-club-cover">
+                            <!-- Primera foto registrada del club -->
+                            <img class="panel-club-photo"
+                                 th:if="${tieneFotos}"
+                                 th:src="${club.fotografias[0].urlImagen}"
+                                 th:alt="${club.fotografias[0].descripcion}"
+                                 loading="lazy">
+
+                            <!-- Portada alternativa -->
+                            <div class="panel-club-placeholder"
+                                 th:unless="${tieneFotos}">
+                                <span aria-hidden="true"
+                                      class="panel-cover-star">✦</span>
+                                <img th:src="@{/images/jack/jack-musica.png}"
+                                     alt=""
+                                     loading="lazy">
+                                <span>Tu próxima comunidad</span>
+                            </div>
+
+                            <span class="panel-club-category"
+                                  th:text="${club.categoria}">
+                                Categoría
+                            </span>
+
+                            <span class="panel-club-inactive"
+                                  th:if="${puedeCrearClub and !club.status}">
+                                Inactivo
+                            </span>
+                        </div>
+
+                        <div class="panel-club-body">
+                            <h3 th:text="${club.nombre}">
+                                Nombre del club
+                            </h3>
+
+                            <p class="panel-club-description"
+                               th:text="${club.descripcion}">
+                                Descripción del club.
+                            </p>
+
+                            <p class="panel-club-members">
+                                <span class="panel-member-dot"
+                                      aria-hidden="true"></span>
+                                <span th:text="${club.numeroIntegrantes == 1
+                                    ? '1 integrante'
+                                    : club.numeroIntegrantes + ' integrantes'}">
+                                    0 integrantes
+                                </span>
+                            </p>
+
+                            <a class="button panel-club-link"
+                               th:href="@{/admin/clubes/{id}(id=${club.id})}"
+                               th:aria-label="${'Conocer el club ' + club.nombre}">
+                                Conocer club
+                                <span aria-hidden="true">↗</span>
+                            </a>
+
+                            <!-- Acciones del coordinador -->
+                            <div class="panel-club-management"
+                                 th:if="${esCoordinador and clubesCoordinados.contains(club.id)}">
+                                <p>Administrar este club</p>
+
+                                <a th:href="@{/club-admin/clubes/{id}/actividades(id=${club.id})}">
+                                    Actividades →
+                                </a>
+
+                                <a th:href="@{/club-admin/clubes/{id}/fotografias(id=${club.id})}">
+                                    Fotografías →
+                                </a>
+
+                                <a th:href="@{/clubes/{id}/integrantes(id=${club.id})}">
+                                    Integrantes →
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Solicitudes para administradores y coordinadores -->
+            <section id="solicitudes"
+                     class="requests-content"
+                     th:if="${puedeGestionarSolicitudes and !#lists.isEmpty(solicitudes)}"
+                     aria-labelledby="requests-title">
+                <p class="eyebrow">Gestión de clubes</p>
+                <h2 id="requests-title">Solicitudes de ingreso</h2>
+
+                <form th:if="${puedeAprobarTodas}"
+                      th:action="@{/admin/solicitudes/aprobar-todas}"
+                      method="post">
+                    <button type="submit">
+                        Aprobar todas las solicitudes
+                    </button>
+                </form>
+
+                <div class="requests-list">
+                    <article class="request-item"
+                             th:each="solicitud : ${solicitudes}">
+                        <div>
+                            <strong th:text="${solicitud.usuario.nombre}">
+                                Nombre del usuario
+                            </strong>
+
+                            <span th:text="${solicitud.usuario.email}">
+                                correo@ejemplo.com
+                            </span>
+
+                            <span>
+                                Solicita ingresar a
+                                <b th:text="${solicitud.club.nombre}">
+                                    Club
+                                </b>
+                            </span>
+                        </div>
+
+                        <div class="request-actions">
+                            <form th:action="@{/club-admin/solicitudes/{id}/aprobar(id=${solicitud.id})}"
+                                  method="post">
+                                <button type="submit">Aprobar</button>
+                            </form>
+
+                            <form th:action="@{/club-admin/solicitudes/{id}/rechazar(id=${solicitud.id})}"
+                                  method="post">
+                                <button type="submit" class="danger-button">
+                                    Rechazar
+                                </button>
+                            </form>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </main>
     </div>
-</header>
-<div class="dashboard-layout">
-	<aside class="sidebar" aria-label="Navegación principal">
-		<p class="sidebar-title">Menú</p>
-		<div class="nav-item active" aria-current="page"><span class="nav-mark">01</span>Inicio</div>
-		<a class="nav-item" th:if="${puedeCrearClub}" th:href="@{/admin/clubes/nuevo}"><span class="nav-mark">02</span>Agregar club</a>
-        <a class="nav-item" th:unless="${puedeCrearClub}" th:href="@{/panel}"><span class="nav-mark">02</span>Clubes</a>
-		<a class="nav-item" th:href="@{/actividades}"><span class="nav-mark">03</span>Actividades</a>
-		<a class="nav-item" th:href="@{/mis-clubes}"><span class="nav-mark">04</span>Mis clubes</a>
-		<a class="nav-item" th:href="@{/solicitudes}"><span class="nav-mark">05</span>Solicitudes</a>
-        <a class="nav-item" th:href="@{/calendario}"><span class="nav-mark">06</span>Calendario</a>
-        <a class="nav-item" th:if="${puedeGestionarSolicitudes}" th:href="@{/panel#solicitudes}"><span class="nav-mark">07</span>Solicitudes por revisar</a>
-	</aside>
-	<main class="dashboard-main">
-        <p class="alert success" role="status" th:if="${exito}" th:text="${exito}"></p>
-        <p class="alert error" role="alert" th:if="${error}" th:text="${error}"></p>
-		<section class="dashboard-intro">
-		<div class="dashboard-intro-copy">
-			<p class="eyebrow">Información general</p>
-			<h1>Panel principal</h1>
-			<p>Un espacio para conocer la vida estudiantil y la gestión de clubes.</p>
-		</div>
-		<a class="button dashboard-primary-action" th:if="${puedeCrearClub}" th:href="@{/admin/clubes/nuevo}">Agregar club</a>
-	</section>
-	
-	<section class="clubs-content" aria-label="Clubes universitarios">
-		<p class="eyebrow">Clubes universitarios</p>
-		<h2>Listado de clubes</h2>
-		<p>En este espacio podrás consultar los clubes disponibles.</p>
-
-		<form class="club-filters" th:action="@{/panel}" method="get" aria-label="Buscar y filtrar clubes">
-			<label>
-				<span>Buscar club</span>
-				<input type="search" name="busqueda" th:value="${busqueda}"
-					placeholder="Escribe el nombre del club" autocomplete="off">
-			</label>
-			<label>
-				<span>Categoría</span>
-				<select name="categoria">
-					<option value="">Todas las categorías</option>
-					<option th:each="categoria : ${categorias}"
-						th:value="${categoria}" th:text="${categoria}"
-						th:selected="${categoria == categoriaSeleccionada}"></option>
-				</select>
-			</label>
-			<label th:if="${puedeCrearClub}">
-				<span>Estado</span>
-				<select name="estado">
-					<option value="todos" th:selected="${estadoSeleccionado == 'todos'}">Todos</option>
-					<option value="activos" th:selected="${estadoSeleccionado == 'activos'}">Activos</option>
-					<option value="inactivos" th:selected="${estadoSeleccionado == 'inactivos'}">Inactivos</option>
-				</select>
-			</label>
-			<div class="club-filter-actions">
-				<button type="submit">Buscar</button>
-				<a class="button secondary" th:href="@{/panel}">Limpiar</a>
-			</div>
-		</form>
-
-		<p th:if="${#lists.isEmpty(clubes)}">
-			No se encontraron clubes con los filtros seleccionados.
-		</p>
-
-		<div class="clubs-grid" th:unless="${#lists.isEmpty(clubes)}">
-
-			<article class="club-card" th:each="club : ${clubes}">
-				<h3 th:text="${club.nombre}">Nombre del club</h3>
-
-				<p class="club-category" th:text="${club.categoria}">
-					Categoría
-				</p>
-
-				<p th:text="${club.descripcion}">
-					Descripción del club
-				</p>
-
-				<p class="club-members">
-					<strong>Integrantes:</strong>
-					<span th:text="${club.numeroIntegrantes}">0</span>
-				</p>
-
-				<a class="button"
-				th:href="@{/admin/clubes/{id}(id=${club.id})}">
-					Ver detalles
-				</a>
-                <a class="button secondary" th:if="${esCoordinador and clubesCoordinados.contains(club.id)}"
-                   th:href="@{/club-admin/clubes/{id}/actividades(id=${club.id})}">Gestionar actividades</a>
-                <a class="button secondary" th:if="${esCoordinador and clubesCoordinados.contains(club.id)}"
-                   th:href="@{/club-admin/clubes/{id}/fotografias(id=${club.id})}">Gestionar fotografías</a>
-                <a class="button secondary" th:if="${esCoordinador and clubesCoordinados.contains(club.id)}"
-                   th:href="@{/clubes/{id}/integrantes(id=${club.id})}">Consultar integrantes</a>
-
-				<p th:if="${puedeCrearClub and !club.status}"> Estado: desactivado </p>
-			</article>
-
-		</div>
-	</section>
-
-	<section id="solicitudes" class="requests-content" th:if="${puedeGestionarSolicitudes and !#lists.isEmpty(solicitudes)}" aria-label="Solicitudes de ingreso">
-		<p class="eyebrow">Gestión de clubes</p>
-		<h2>Solicitudes de ingreso</h2>
-		<form th:if="${puedeAprobarTodas}" th:action="@{/admin/solicitudes/aprobar-todas}" method="post">
-			<button type="submit">Aprobar todas las solicitudes</button>
-		</form>
-		<div class="requests-list">
-			<article class="request-item" th:each="solicitud : ${solicitudes}">
-				<div>
-					<strong th:text="${solicitud.usuario.nombre}">Nombre del usuario</strong>
-					<span th:text="${solicitud.usuario.email}">correo@ejemplo.com</span>
-					<span>Solicita ingresar a <b th:text="${solicitud.club.nombre}">Club</b></span>
-				</div>
-				<div class="request-actions">
-					<form th:action="@{/club-admin/solicitudes/{id}/aprobar(id=${solicitud.id})}" method="post">
-						<button type="submit">Aprobar</button>
-					</form>
-					<form th:action="@{/club-admin/solicitudes/{id}/rechazar(id=${solicitud.id})}" method="post">
-						<button type="submit" class="danger-button">Rechazar</button>
-					</form>
-				</div>
-			</article>
-		</div>
-	</section>
-
-	</main>
-</div>
 </body>
 </html>
