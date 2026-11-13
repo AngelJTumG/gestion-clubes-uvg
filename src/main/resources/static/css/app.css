@@ -133,6 +133,37 @@
     pointer-events: auto;
 }
 
+.live-admin-request-toast {
+    position: fixed;
+    left: 24px;
+    bottom: 24px;
+    z-index: 20;
+    display: grid;
+    gap: 4px;
+    min-width: min(360px, calc(100vw - 48px));
+    padding: 16px 20px;
+    border-radius: 14px;
+    background: #0b5d3b;
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 8px 26px rgb(0 0 0 / 28%);
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+}
+
+.live-admin-request-toast.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.live-admin-request-toast span,
+.live-admin-request-toast small {
+    color: #d9ffe6;
+}
+
 .chat-message {
     width: fit-content;
     max-width: min(75%, 520px);
