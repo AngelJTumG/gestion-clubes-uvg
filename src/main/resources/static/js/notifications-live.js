@@ -29,10 +29,12 @@
             const data = await response.json();
             const total = Number(data.mensajes) || 0;
             const solicitudes = Number(data.solicitudesAmistad) || 0;
+            const solicitudesClub = Number(data.solicitudesClub) || 0;
             updateBadge('[data-chat-badge]', total);
-            updateBadge('[data-notification-badge]', total + solicitudes);
-            if (previous !== null && total + solicitudes > previous) showToast();
-            previous = total + solicitudes;
+            const notificationTotal = total + solicitudes + solicitudesClub;
+            updateBadge('[data-notification-badge]', notificationTotal);
+            if (previous !== null && notificationTotal > previous) showToast();
+            previous = notificationTotal;
         } catch (_) {
             // La navegación continúa aunque una consulta periódica falle.
         }
