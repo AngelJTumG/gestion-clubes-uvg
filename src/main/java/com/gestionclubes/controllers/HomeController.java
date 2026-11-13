@@ -13,6 +13,9 @@ import com.gestionclubes.service.AmistadService;
 import com.gestionclubes.service.SolicitudIngresoService;
 import com.gestionclubes.service.UsuarioService;
 
+/**
+ * Muestra la portada pública y el panel principal con clubes y notificaciones.
+ */
 @Controller
 public class HomeController {
 
@@ -29,11 +32,13 @@ public class HomeController {
         this.usuarioService = usuarioService;
     }
 
+    /** Muestra la página pública de inicio. */
     @GetMapping("/")
     String inicio() {
         return "index";
     }
 
+    /** Carga clubes filtrados y datos del panel según el usuario y sus permisos. */
     @GetMapping("/panel")
     String panel(Authentication authentication, Model model,
                  @RequestParam(defaultValue = "") String busqueda,

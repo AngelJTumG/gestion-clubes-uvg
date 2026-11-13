@@ -13,6 +13,9 @@ import com.gestionclubes.service.UsuarioService;
 
 import jakarta.validation.Valid;
 
+/**
+ * Atiende las páginas de inicio de sesión y registro de usuarios.
+ */
 @Controller
 public class AuthController {
     private final UsuarioService usuarioService;
@@ -21,15 +24,18 @@ public class AuthController {
         this.usuarioService = usuarioService;
     }
 
+    /** Muestra el formulario de inicio de sesión. */
     @GetMapping("/login")
     String login() { return "auth/login"; }
 
+    /** Prepara el formulario y su DTO para registrar una cuenta. */
     @GetMapping("/registro")
     String registro(Model model) {
         model.addAttribute("usuario", new RegistroUsuarioDto());
         return "auth/registro";
     }
 
+    /** Valida y registra la cuenta; si hay errores, vuelve a mostrar el formulario. */
     @PostMapping("/registro")
     String registrar(@Valid @ModelAttribute("usuario") RegistroUsuarioDto dto,
                     BindingResult result) {

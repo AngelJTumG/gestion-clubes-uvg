@@ -26,6 +26,10 @@ import com.gestionclubes.service.MembresiaService;
 import com.gestionclubes.service.SolicitudIngresoService;
 import com.gestionclubes.service.UsuarioService;
 
+/**
+ * Atiende las páginas de actividades, membresías, perfil, calendario y notificaciones,
+ * además de las operaciones de gestión de clubes.
+ */
 @Controller
 public class GestionClubController {
     private final ActividadService actividadService;
@@ -54,12 +58,14 @@ public class GestionClubController {
         this.amistadService = amistadService;
     }
 
+    /** Muestra las actividades publicadas en todos los clubes. */
     @GetMapping("/actividades")
     public String actividades(Model model) {
         model.addAttribute("actividades", actividadService.listarTodas());
         return "actividades";
     }
 
+    /** Verifica el acceso y prepara el formulario para una actividad nueva. */
     @GetMapping("/club-admin/clubes/{clubId}/actividades/nueva")
     public String nuevaActividad(@PathVariable Long clubId, Model model, Principal principal) {
         verificarClub(clubId, principal);
@@ -69,6 +75,7 @@ public class GestionClubController {
         return "clubes/actividad-form";
     }
 
+    /** Crea una actividad para el club y regresa a su lista de actividades. */
     @PostMapping("/club-admin/clubes/{clubId}/actividades")
     public String crearActividad(@PathVariable Long clubId, @ModelAttribute Actividad actividad,
                                  Principal principal, RedirectAttributes redirect) {
@@ -81,6 +88,7 @@ public class GestionClubController {
         return "redirect:/club-admin/clubes/" + clubId + "/actividades";
     }
 
+    /** Muestra las actividades del club para que su responsable las gestione. */
     @GetMapping("/club-admin/clubes/{clubId}/actividades")
     public String actividadesClub(@PathVariable Long clubId, Model model, Principal principal) {
         verificarClub(clubId, principal);
@@ -91,6 +99,7 @@ public class GestionClubController {
         return "clubes/actividades-gestion";
     }
 
+    /** Prepara el formulario de edición después de verificar el club de la actividad. */
     @GetMapping("/club-admin/actividades/{id}/editar")
     public String editarActividad(@PathVariable Long id, Model model, Principal principal) {
         Actividad actividad = actividadService.buscar(id);
@@ -100,6 +109,7 @@ public class GestionClubController {
         return "clubes/actividad-form";
     }
 
+    /** Actualiza la actividad y regresa a la lista de su club. */
     @PostMapping("/club-admin/actividades/{id}")
     public String actualizarActividad(@PathVariable Long id, @ModelAttribute Actividad actividad,
                                       Principal principal, RedirectAttributes redirect) {
@@ -113,6 +123,7 @@ public class GestionClubController {
         return "redirect:/club-admin/clubes/" + existente.getClub().getId() + "/actividades";
     }
 
+    /** Elimina una actividad y regresa a la lista de su club. */
     @PostMapping("/club-admin/actividades/{id}/eliminar")
     public String eliminarActividad(@PathVariable Long id, Principal principal, RedirectAttributes redirect) {
         Actividad actividad = actividadService.buscar(id);
@@ -126,6 +137,7 @@ public class GestionClubController {
         return "redirect:/club-admin/clubes/" + clubId + "/actividades";
     }
 
+    /** Muestra la galería y el formulario para agregar fotografías al club. */
     @GetMapping("/club-admin/clubes/{clubId}/fotografias")
     public String fotografias(@PathVariable Long clubId, Model model, Principal principal) {
         verificarClub(clubId, principal);
@@ -136,6 +148,7 @@ public class GestionClubController {
         return "clubes/fotografias";
     }
 
+    /** Guarda una fotografía cargada y vuelve a la galería del club. */
     @PostMapping("/club-admin/clubes/{clubId}/fotografias")
     public String agregarFotografia(@PathVariable Long clubId, @ModelAttribute Fotografia fotografia,
                                     @org.springframework.web.bind.annotation.RequestParam(value = "archivo", required = false)
@@ -153,6 +166,7 @@ public class GestionClubController {
         return "redirect:/club-admin/clubes/" + clubId + "/fotografias";
     }
 
+    /** Elimina una fotografía del club y su archivo asociado cuando corresponde. */
     @PostMapping("/club-admin/fotografias/{id}/eliminar")
     public String eliminarFotografia(@PathVariable Long id, Principal principal, RedirectAttributes redirect) {
         Fotografia fotografia = fotografiaService.buscar(id);
@@ -169,6 +183,7 @@ public class GestionClubController {
         return "redirect:/club-admin/clubes/" + clubId + "/fotografias";
     }
 
+    /** Muestra los integrantes registrados para el club. */
     @GetMapping("/clubes/{clubId}/integrantes")
     public String integrantes(@PathVariable Long clubId, Model model) {
         model.addAttribute("club", clubService.buscarPorId(clubId)
@@ -177,12 +192,14 @@ public class GestionClubController {
         return "clubes/integrantes";
     }
 
+    /** Muestra las solicitudes de ingreso del usuario autenticado. */
     @GetMapping({"/solicitudes", "/mis-solicitudes"})
     public String misSolicitudes(Principal principal, Model model) {
         model.addAttribute("solicitudes", solicitudService.solicitudesDe(principal.getName()));
         return "solicitudes";
     }
 
+    /** Muestra los clubes a los que pertenece el usuario y sus solicitudes. */
     @GetMapping("/mis-clubes")
     public String misClubes(Principal principal, Model model) {
         model.addAttribute("membresias", membresiaService.listarPorEstudiante(principal.getName()));
@@ -190,6 +207,7 @@ public class GestionClubController {
         return "membresias";
     }
 
+    /** Muestra las actividades organizadas en el calendario del mes actual. */
     @GetMapping("/calendario")
     public String calendario(Model model) {
         CalendarioService.CalendarioMensual calendario = calendarioService.mesActual();
@@ -198,12 +216,14 @@ public class GestionClubController {
         return "calendario";
     }
 
+    /** Muestra los datos del perfil del usuario autenticado. */
     @GetMapping("/perfil")
     public String perfil(Principal principal, Model model) {
         model.addAttribute("usuario", usuarioService.buscarPorEmail(principal.getName()));
         return "perfil";
     }
 
+    /** Actualiza nombre, descripción y fotografía del perfil. */
     @PostMapping("/perfil")
     public String actualizarPerfil(Principal principal,
                                    @org.springframework.web.bind.annotation.RequestParam String nombre,
@@ -222,6 +242,7 @@ public class GestionClubController {
         return "redirect:/perfil";
     }
 
+    /** Muestra las notificaciones y las marca como leídas. */
     @GetMapping("/notificaciones")
     public String notificaciones(Principal principal, Model model) {
         model.addAttribute("notificaciones", solicitudService.notificacionesDe(principal.getName()));
@@ -234,6 +255,7 @@ public class GestionClubController {
         return "notificaciones";
     }
 
+    /** Permite la gestión solo al administrador global o al coordinador del club. */
     private void verificarClub(Long clubId, Principal principal) {
         var club = clubService.buscarPorId(clubId)
                 .orElseThrow(() -> noEncontrado("No existe el club solicitado"));
@@ -243,12 +265,14 @@ public class GestionClubController {
         }
     }
 
+    /** Indica si el usuario autenticado tiene el rol de administrador global. */
     private boolean esAdministrador(Principal principal) {
         return principal instanceof org.springframework.security.core.Authentication authentication
                 && authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_" + Rol.ADMIN.name()));
     }
 
+    /** Crea una respuesta HTTP 404 con el mensaje indicado. */
     private ResponseStatusException noEncontrado(String mensaje) {
         return new ResponseStatusException(HttpStatus.NOT_FOUND, mensaje);
     }
