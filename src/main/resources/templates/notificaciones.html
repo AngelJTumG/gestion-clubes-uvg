@@ -53,7 +53,8 @@
         <!-- Sin notificaciones -->
         <section class="updates-empty"
                  th:if="${#lists.isEmpty(notificaciones)
-                     and #lists.isEmpty(notificacionesAmistad)}"
+                     and #lists.isEmpty(notificacionesAmistad)
+                     and #lists.isEmpty(solicitudesAmistadPendientes)}"
                  aria-labelledby="updates-empty-title">
             <span aria-hidden="true">✦</span>
             <h2 id="updates-empty-title">Estás al día</h2>
@@ -119,6 +120,48 @@
                         <a class="update-link" th:href="@{/solicitudes}">
                             Consultar mis solicitudes →
                         </a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Solicitudes de amistad recibidas -->
+        <section class="updates-section"
+                 th:unless="${#lists.isEmpty(solicitudesAmistadPendientes)}"
+                 aria-labelledby="pending-friends-title">
+            <header class="updates-section-heading">
+                <h2 id="pending-friends-title">Solicitudes de amistad</h2>
+                <span th:text="${#lists.size(solicitudesAmistadPendientes)}">0</span>
+            </header>
+
+            <div class="updates-list">
+                <article class="update-item update-friend"
+                         th:each="solicitud : ${solicitudesAmistadPendientes}">
+                    <span class="update-symbol" aria-hidden="true">&#128101;</span>
+                    <div class="update-copy">
+                        <p class="update-type">Nueva conexión</p>
+                        <h3>Solicitud de amistad recibida</h3>
+                        <p>
+                            <strong th:text="${solicitud.solicitante.nombre}">
+                                Nombre de la persona
+                            </strong>
+                            quiere conectar contigo.
+                        </p>
+                        <p class="update-date">
+                            Enviada el
+                            <time th:datetime="${solicitud.creadaEn}"
+                                  th:text="${#temporals.format(solicitud.creadaEn, 'dd/MM/yyyy HH:mm')}">
+                                Fecha de solicitud
+                            </time>
+                        </p>
+                        <div class="request-actions">
+                            <form th:action="@{/amistades/{id}/aprobar(id=${solicitud.id})}" method="post">
+                                <button type="submit">Aceptar</button>
+                            </form>
+                            <form th:action="@{/amistades/{id}/rechazar(id=${solicitud.id})}" method="post">
+                                <button type="submit" class="danger-button">Rechazar</button>
+                            </form>
+                        </div>
                     </div>
                 </article>
             </div>

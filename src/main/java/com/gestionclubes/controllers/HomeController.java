@@ -67,6 +67,8 @@ public class HomeController {
         model.addAttribute("estadoSeleccionado", estado);
         model.addAttribute("notificaciones", solicitudService.notificacionesDe(authentication.getName()));
         model.addAttribute("notificacionesAmistad", amistadService.notificaciones(authentication.getName()));
+        model.addAttribute("notificacionesAmistadRecibidas",
+                amistadService.notificacionesRecibidas(authentication.getName()));
         model.addAttribute("usuarioActual", usuarioService.buscarPorEmail(authentication.getName()));
         model.addAttribute("categorias", clubService.listarCategorias(puedeCrearClub));
         model.addAttribute("clubes", clubService.filtrarClubes(

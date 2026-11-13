@@ -32,7 +32,7 @@
                 <span aria-hidden="true">&#128276;</span>
 
                 <span class="notification-badge"
-                      th:with="total=${(notificaciones == null ? 0 : #lists.size(notificaciones)) + (notificacionesAmistad == null ? 0 : #lists.size(notificacionesAmistad))}"
+                      th:with="total=${(notificaciones == null ? 0 : #lists.size(notificaciones)) + (notificacionesAmistad == null ? 0 : #lists.size(notificacionesAmistad)) + (notificacionesAmistadRecibidas == null ? 0 : #lists.size(notificacionesAmistadRecibidas))}"
                       th:if="${total > 0}"
                       th:text="${total}">
                     0

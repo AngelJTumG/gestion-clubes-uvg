@@ -37,6 +37,19 @@ public class AmistadService {
     }
 
     @Transactional(readOnly = true)
+    public List<SolicitudAmistad> solicitudesPendientesRecibidas(String email) {
+        return solicitudRepository.findByDestinatario_EmailIgnoreCaseAndEstadoOrderByCreadaEnDesc(
+                email, EstadoSolicitud.PENDIENTE);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SolicitudAmistad> notificacionesRecibidas(String email) {
+        return solicitudesPendientesRecibidas(email).stream()
+                .filter(solicitud -> !solicitud.isLeida())
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public List<SolicitudAmistad> notificaciones(String email) {
         return solicitudRepository.findBySolicitante_EmailIgnoreCaseAndEstadoOrderByCreadaEnDesc(
                 email, EstadoSolicitud.APROBADA).stream()
@@ -48,6 +61,11 @@ public class AmistadService {
     public void marcarNotificacionesLeidas(String email) {
         solicitudRepository.findBySolicitante_EmailIgnoreCaseAndEstadoOrderByCreadaEnDesc(
                 email, EstadoSolicitud.APROBADA).forEach(solicitud -> solicitud.setLeida(true));
+    }
+
+    @Transactional
+    public void marcarSolicitudesRecibidasLeidas(String email) {
+        solicitudesPendientesRecibidas(email).forEach(solicitud -> solicitud.setLeida(true));
     }
 
     @Transactional

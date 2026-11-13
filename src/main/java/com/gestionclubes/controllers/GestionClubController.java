@@ -226,8 +226,11 @@ public class GestionClubController {
     public String notificaciones(Principal principal, Model model) {
         model.addAttribute("notificaciones", solicitudService.notificacionesDe(principal.getName()));
         model.addAttribute("notificacionesAmistad", amistadService.notificaciones(principal.getName()));
+        model.addAttribute("solicitudesAmistadPendientes",
+                amistadService.solicitudesPendientesRecibidas(principal.getName()));
         solicitudService.marcarNotificacionesLeidas(principal.getName());
         amistadService.marcarNotificacionesLeidas(principal.getName());
+        amistadService.marcarSolicitudesRecibidasLeidas(principal.getName());
         return "notificaciones";
     }
 
