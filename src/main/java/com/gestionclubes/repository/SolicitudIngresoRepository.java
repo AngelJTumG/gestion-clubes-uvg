@@ -13,7 +13,11 @@ import jakarta.persistence.LockModeType;
 import com.gestionclubes.models.EstadoSolicitud;
 import com.gestionclubes.models.SolicitudIngreso;
 
+/**
+ * Consultas de solicitudes de ingreso por usuario, club y estado.
+ */
 public interface SolicitudIngresoRepository extends JpaRepository<SolicitudIngreso, Long> {
+    /** Obtiene y bloquea una solicitud para evitar cambios simultáneos al gestionarla. */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select s from SolicitudIngreso s where s.id = :id")
     Optional<SolicitudIngreso> buscarParaGestionar(@Param("id") Long id);

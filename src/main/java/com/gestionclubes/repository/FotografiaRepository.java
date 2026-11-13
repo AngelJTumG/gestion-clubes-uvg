@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.EntityGraph;
 
 import com.gestionclubes.models.Fotografia;
 
+/**
+ * Consultas de fotografías publicadas en los clubes.
+ */
 public interface FotografiaRepository
         extends JpaRepository<Fotografia, Long> {
 

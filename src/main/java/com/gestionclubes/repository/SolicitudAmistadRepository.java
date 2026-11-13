@@ -11,6 +11,9 @@ import org.springframework.data.repository.query.Param;
 import com.gestionclubes.models.EstadoSolicitud;
 import com.gestionclubes.models.SolicitudAmistad;
 
+/**
+ * Consultas de solicitudes de amistad por participantes y estado.
+ */
 public interface SolicitudAmistadRepository extends JpaRepository<SolicitudAmistad, Long> {
     @EntityGraph(attributePaths = {"solicitante", "destinatario"})
     List<SolicitudAmistad> findByDestinatario_EmailIgnoreCaseOrderByCreadaEnDesc(String email);
@@ -20,6 +23,7 @@ public interface SolicitudAmistadRepository extends JpaRepository<SolicitudAmist
 
     Optional<SolicitudAmistad> findBySolicitante_IdAndDestinatario_Id(Long solicitanteId, Long destinatarioId);
 
+    /** Busca una solicitud entre dos usuarios, sin importar quién la envió. */
     @Query("""
         select s from SolicitudAmistad s
         where (s.solicitante.id = :primero and s.destinatario.id = :segundo)

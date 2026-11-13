@@ -6,6 +6,10 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
+/**
+ * Consultas de clubes; carga relaciones necesarias para mostrar coordinadores
+ * e integrantes sin consultas adicionales en las vistas.
+ */
 public interface ClubRepository extends JpaRepository<Club, Long> {
     boolean existsByNombreIgnoreCase(String nombre);
 
