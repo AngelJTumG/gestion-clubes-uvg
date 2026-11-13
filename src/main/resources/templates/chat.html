@@ -3,49 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="${'Chat con ' + amigo.nombre}">Chat | Clubes UVG</title>
-    <link rel="icon" type="image/png" th:href="@{/images/Logo-UVG.png}">
+    <title th:text="${'Chat con ' + amigo.nombre + ' | Clubes UVG'}">
+        Chat | Clubes UVG
+    </title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
     <link rel="stylesheet" th:href="@{/css/app.css}">
     <script th:src="@{/js/preferences.js}" defer></script>
+
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
-<body class="dashboard-page chat-page">
+
+<body class="dashboard-page direct-chat-page">
     <header class="topbar">
-        <a class="brand" th:href="@{/panel}"><img th:src="@{/images/Logo-UVG.png}" alt="UVG"><span>Clubes <strong>UVG</strong></span></a>
+        <a class="brand direct-chat-brand" th:href="@{/panel}">
+            <img th:src="@{/images/Logo-UVG.png}"
+                 alt="Universidad del Valle de Guatemala">
+            <span>Clubes <strong>UVG</strong></span>
+        </a>
+
         <div class="topbar-actions">
             <a th:href="@{/personas}">Personas</a>
             <a th:href="@{/notificaciones}">Notificaciones</a>
-            <a th:href="@{/configuracion}" aria-label="Configuración">⚙</a>
+            <a th:href="@{/configuracion}"
+               aria-label="Configuración"
+               title="Configuración">
+                <span aria-hidden="true">⚙</span>
+            </a>
             <a th:href="@{/panel}">Ir al panel</a>
         </div>
     </header>
-    <main class="chat-shell">
-        <a class="activity-editor-back" th:href="@{/personas}">← Volver a personas</a>
-        <section class="chat-card">
-            <header class="chat-heading">
-                <div class="community-person-avatar"><span aria-hidden="true">◎</span></div>
-                <div><p class="activity-editor-eyebrow">Amistad UVG</p><h1 th:text="${amigo.nombre}">Amigo</h1></div>
+
+    <main class="direct-chat-main">
+        <a class="direct-chat-back" th:href="@{/chats}">
+            ← Volver a mis chats
+        </a>
+
+        <section class="direct-chat-card"
+                 aria-labelledby="direct-chat-title">
+
+            <!-- Contacto -->
+            <header class="direct-chat-heading">
+                <div class="direct-chat-avatar">
+                    <img th:if="${!#strings.isEmpty(amigo.fotoPerfil)}"
+                         th:src="${amigo.fotoPerfil}"
+                         alt="">
+
+                    <svg th:if="${#strings.isEmpty(amigo.fotoPerfil)}"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         aria-hidden="true">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M4 22v-2a8 8 0 0 1 16 0v2"/>
+                    </svg>
+                </div>
+
+                <div class="direct-chat-contact">
+                    <p>Amistad UVG</p>
+                    <h1 id="direct-chat-title"
+                        th:text="${amigo.nombre}">
+                        Nombre del contacto
+                    </h1>
+                </div>
             </header>
-            <p class="alert error" th:if="${error}" th:text="${error}"></p>
-            <div class="chat-messages" id="chat-messages"
-                 th:attr="data-usuario-id=${amigo.id}" aria-live="polite">
-                <p class="chat-empty" th:if="${#lists.isEmpty(mensajes)}">Inicia la conversación con un mensaje.</p>
+
+            <p class="alert error direct-chat-error"
+               role="alert"
+               th:if="${error}"
+               th:text="${error}"></p>
+
+            <!-- Mensajes: conserva los atributos del script -->
+            <div class="chat-messages"
+                 id="chat-messages"
+                 th:attr="data-usuario-id=${amigo.id}"
+                 role="log"
+                 aria-label="Mensajes de la conversación"
+                 aria-live="polite"
+                 aria-relevant="additions"
+                 tabindex="0">
+
+                <div class="chat-empty"
+                     th:if="${#lists.isEmpty(mensajes)}">
+                    <span aria-hidden="true">✦</span>
+                    <h2>Todo empieza con un hola</h2>
+                    <p>Escribe el primer mensaje para iniciar la conversación.</p>
+                </div>
+
                 <article th:each="mensaje : ${mensajes}"
                          th:attr="data-mensaje-id=${mensaje.id}"
-                         th:class="${mensaje.remitente.email == usuarioActual.email ? 'chat-message is-mine' : 'chat-message'}">
+                         th:class="${mensaje.remitente.email == usuarioActual.email
+                             ? 'chat-message is-mine'
+                             : 'chat-message'}">
                     <p th:text="${mensaje.contenido}">Mensaje</p>
-                    <time th:text="${#temporals.format(mensaje.enviadoEn, 'dd/MM HH:mm')}">Ahora</time>
+
+                    <time th:datetime="${mensaje.enviadoEn}"
+                          th:text="${#temporals.format(mensaje.enviadoEn, 'dd/MM HH:mm')}">
+                        Fecha y hora
+                    </time>
                 </article>
             </div>
-            <form class="chat-compose" id="chat-compose"
-                  th:action="@{/chat/{id}/mensajes(id=${amigo.id})}" method="post">
-                <label class="sr-only" for="contenido">Mensaje</label>
-                <input id="contenido" name="contenido" maxlength="1000" placeholder="Escribe un mensaje..." required>
-                <button type="submit">Enviar</button>
-            </form>
+
+            <!-- Envío -->
+            <footer class="direct-chat-footer">
+                <form class="chat-compose"
+                      id="chat-compose"
+                      th:action="@{/chat/{id}/mensajes(id=${amigo.id})}"
+                      method="post">
+                    <label class="direct-chat-sr-only" for="contenido">
+                        Escribe tu mensaje
+                    </label>
+
+                    <input id="contenido"
+                           type="text"
+                           name="contenido"
+                           maxlength="1000"
+                           placeholder="Escribe un mensaje…"
+                           autocomplete="off"
+                           required>
+
+                    <button type="submit">
+                        Enviar <span aria-hidden="true">↗</span>
+                    </button>
+                </form>
+
+                <p class="direct-chat-hint">
+                    Presiona Enter para enviar · Hasta 1000 caracteres
+                </p>
+            </footer>
         </section>
     </main>
+
     <script th:src="@{/js/chat-live.js}" defer></script>
 </body>
 </html>

@@ -3,47 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Chats | Clubes UVG</title>
-    <link rel="icon" type="image/png" th:href="@{/images/Logo-UVG.png}">
+    <title>Mis chats | Clubes UVG</title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
     <link rel="stylesheet" th:href="@{/css/app.css}">
     <script th:src="@{/js/preferences.js}" defer></script>
 </head>
-<body class="dashboard-page chat-page chats-list-page">
+
+<body class="dashboard-page activity-editor-page conversations-page">
     <header class="topbar">
-        <a class="brand" th:href="@{/panel}">
-            <img th:src="@{/images/Logo-UVG.png}" alt="UVG">
+        <a class="brand activity-editor-brand" th:href="@{/panel}">
+            <img th:src="@{/images/Logo-UVG.png}"
+                 alt="Universidad del Valle de Guatemala">
             <span>Clubes <strong>UVG</strong></span>
         </a>
+
         <div class="topbar-actions">
             <a th:href="@{/personas}">Personas</a>
             <a th:href="@{/notificaciones}">Notificaciones</a>
-            <a th:href="@{/configuracion}" aria-label="Configuración">⚙</a>
+            <a th:href="@{/configuracion}"
+               aria-label="Configuración"
+               title="Configuración">
+                <span aria-hidden="true">⚙</span>
+            </a>
             <a th:href="@{/panel}">Ir al panel</a>
         </div>
     </header>
-    <main class="chat-shell">
-        <a class="activity-editor-back" th:href="@{/panel}">← Volver al panel</a>
-        <section class="chat-card">
-            <header class="chat-heading">
+
+    <main class="conversations-main">
+        <a class="activity-editor-back" th:href="@{/panel}">
+            ← Volver al panel
+        </a>
+
+        <section class="activity-editor-banner"
+                 aria-labelledby="conversations-title">
+            <div>
+                <p class="activity-editor-eyebrow">Mensajería</p>
+                <h1 id="conversations-title">Las conexiones siguen aquí.</h1>
+                <p>
+                    Conversa con tus amistades y comparte
+                    lo que sucede en tu comunidad.
+                </p>
+            </div>
+
+            <span class="activity-editor-spark"
+                  aria-hidden="true">✦</span>
+        </section>
+
+        <section class="conversations-card"
+                 aria-labelledby="conversations-list-title">
+            <header class="conversations-heading">
                 <div>
-                    <p class="activity-editor-eyebrow">Mensajería</p>
-                    <h1>Mis chats</h1>
+                    <p class="activity-editor-eyebrow">Tu comunidad</p>
+                    <h2 id="conversations-list-title">Mis chats</h2>
                 </div>
+
+                <span class="conversations-count"
+                      th:unless="${#lists.isEmpty(amistades)}"
+                      th:text="${#lists.size(amistades) == 1
+                          ? '1 contacto'
+                          : #lists.size(amistades) + ' contactos'}">
+                    0 contactos
+                </span>
             </header>
-            <p class="chat-empty" th:if="${#lists.isEmpty(amistades)}">
-                Aún no tienes conversaciones. Conecta con otras personas desde Personas.
-            </p>
-            <div class="chat-list" th:unless="${#lists.isEmpty(amistades)}">
-                <a class="chat-list-item"
+
+            <!-- Sin amistades disponibles para conversar -->
+            <div class="conversations-empty"
+                 th:if="${#lists.isEmpty(amistades)}">
+                <div class="conversations-empty-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l-2 2V11.5A8.5 8.5 0 0 1 10.5 3h2A8.5 8.5 0 0 1 21 11.5Z"/>
+                        <path d="M7 10h9M7 14h6"/>
+                    </svg>
+                </div>
+
+                <h3>Una conversación puede ser el comienzo</h3>
+                <p>
+                    Conecta con otras personas desde «Personas».
+                    Cuando tengan una amistad aceptada,
+                    podrán conversar aquí.
+                </p>
+
+                <a class="button" th:href="@{/personas}">
+                    Conocer personas →
+                </a>
+            </div>
+
+            <!-- Contactos -->
+            <div class="conversations-list"
+                 th:unless="${#lists.isEmpty(amistades)}">
+                <a class="conversation-contact"
                    th:each="amistad : ${amistades}"
-                   th:with="contacto=${amistad.solicitante.email == usuarioActual.email ? amistad.destinatario : amistad.solicitante}"
-                   th:href="@{/chat/{id}(id=${contacto.id})}">
-                    <span class="community-person-avatar" aria-hidden="true">◎</span>
-                    <span>
-                        <strong th:text="${contacto.nombre}">Contacto</strong>
-                        <small>Amistad UVG · Abrir conversación</small>
+                   th:with="contacto=${amistad.solicitante.email == usuarioActual.email
+                       ? amistad.destinatario
+                       : amistad.solicitante}"
+                   th:href="@{/chat/{id}(id=${contacto.id})}"
+                   th:aria-label="${'Abrir conversación con ' + contacto.nombre}">
+
+                    <span class="conversation-avatar">
+                        <img th:if="${!#strings.isEmpty(contacto.fotoPerfil)}"
+                             th:src="${contacto.fotoPerfil}"
+                             alt=""
+                             loading="lazy">
+
+                        <svg th:if="${#strings.isEmpty(contacto.fotoPerfil)}"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             aria-hidden="true">
+                            <circle cx="12" cy="8" r="4"/>
+                            <path d="M4 22v-2a8 8 0 0 1 16 0v2"/>
+                        </svg>
                     </span>
-                    <span aria-hidden="true">→</span>
+
+                    <span class="conversation-contact-copy">
+                        <strong th:text="${contacto.nombre}">
+                            Nombre del contacto
+                        </strong>
+                        <span>Amistad UVG · Abrir conversación</span>
+                    </span>
+
+                    <span class="conversation-arrow"
+                          aria-hidden="true">↗</span>
                 </a>
             </div>
         </section>
