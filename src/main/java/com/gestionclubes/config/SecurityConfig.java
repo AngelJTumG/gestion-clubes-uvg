@@ -8,14 +8,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.http.HttpMethod;
 
-
+/**
+ * Configura el cifrado de contraseñas y el acceso a las rutas de la aplicación.
+ */
 @Configuration
 public class SecurityConfig {
+        /** Proporciona el codificador BCrypt usado para almacenar y verificar contraseñas. */
         @Bean
         PasswordEncoder passwordEncoder() {
                 return new BCryptPasswordEncoder();
         }
 
+        /** Define permisos por ruta, inicio de sesión con formulario y cierre de sesión. */
         @Bean
         SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http

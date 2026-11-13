@@ -6,6 +6,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import com.gestionclubes.service.MembresiaService;
 
+/**
+ * Sincroniza al iniciar la aplicación las solicitudes aprobadas con sus membresías.
+ */
 @Component
 public class MembresiaInitializer implements CommandLineRunner {
     private static final Logger log = LoggerFactory.getLogger(MembresiaInitializer.class);
@@ -15,6 +18,7 @@ public class MembresiaInitializer implements CommandLineRunner {
         this.membresiaService = membresiaService;
     }
 
+    /** Registra las membresías posibles e informa si quedan solicitudes sin carné. */
     @Override
     public void run(String... args) {
         int pendientes = membresiaService.sincronizarAprobadas();
