@@ -1,55 +1,102 @@
 # Gestión de Clubes
 
-Aplicación web orientada a objetos para la gestion de usuarios, clubes y actividades de dichos clubes. La primera versión incluye registro, inicio de sesión y autorización para tres roles: `USUARIO`, `ADMIN_CLUB` y `ADMIN`.
+Plataforma web desarrollada en Java mediante programación orientada a objetos para la gestión de clubes, solicitudes de ingreso y actividades.
 
-## Tecnologías
+El proyecto utiliza la arquitectura Modelo-Vista-Controlador (MVC) y está siendo desarrollado de forma colaborativa con GitHub.
 
-- Java 17 y Spring Boot 4.1.1
-- Spring MVC, Security y Data JPA
-- Thymeleaf, HTML y CSS
-- MySQL 8.4
-- Maven y Docker
+> [!IMPORTANT]
+> El código fuente en desarrollo se encuentra actualmente en la rama [`develop`](../../tree/develop).
+>
+> La rama `main` está reservada para versiones estables, revisadas y preparadas para publicación.
 
-## Ejecutar en desarrollo
+## Estado del proyecto
 
-Requisitos: JDK 21, Maven 3.9+ y Docker.
+El proyecto se encuentra en desarrollo.
 
-1. Inicia MySQL:
+Roles iniciales:
 
-   ```bash
-   docker compose up -d mysql
-   ```
+- `USUARIO`
+- `ADMIN_CLUB`
+- `ADMIN`
 
-Puedes comprobar las instalaciones con:
+## Consultar el código
+
+Puedes acceder al código más reciente desde la rama:
+
+### [`Ver rama develop`](../../tree/develop)
+
+También puedes seleccionar la rama `develop` desde el menú de ramas de GitHub.
+
+## Clonar el proyecto
+
+Clona el repositorio:
 
 ```bash
-java -version
-mvn -version
-docker --version
-docker compose version
-git --version
+git clone URL_DEL_REPOSITORIO
 ```
 
-2. Opcionalmente puedes configura el administrador inicial:
+Reemplaza `URL_DEL_REPOSITORIO` por el enlace real del repositorio.
 
-   ```bash
-   export ADMIN_EMAIL=admin@clubes.local
-   export ADMIN_PASSWORD='UnaClaveSegura123!'
-   ```
+Entra en la carpeta:
 
-3. Ejecuta la aplicación:
+```bash
+cd gestion-clubes
+```
 
-   ```cmd
-   mvn spring-boot:run
-   ```
+Descarga la información de todas las ramas:
 
-4. Visita [http://localhost:8080](http://localhost:8080).
+```bash
+git fetch origin
+```
 
+Cambia a la rama de desarrollo:
 
-## Ruta de desarrollo
+```bash
+git switch develop
+```
 
-1. Autenticación y roles.
-2. CRUD de clubes y asignación de administradores.
-3. Solicitudes de ingreso a clubes.
-4. Actividades y participación.
-5. Pruebas, CI y despliegue.
+Actualiza el código:
+
+```bash
+git pull origin develop
+```
+
+Comprueba la rama actual:
+
+```bash
+git branch
+```
+
+El resultado debe mostrar:
+
+```text
+* develop
+  main
+```
+
+## Tecnologías principales
+
+- Java 17
+- Spring Boot 4.1.1
+- Spring MVC
+- Spring Security
+- Spring Data JPA
+- Thymeleaf
+- HTML, CSS 
+- MySQL 8.4
+- Maven
+- GitHub
+- Docker y Docker Compose
+- Railway para el futuro despliegue
+
+### Rama `main`
+
+Contiene únicamente versiones estables, revisadas y listas para desplegar.
+
+No se debe trabajar directamente sobre esta rama.
+
+### Rama `develop`
+
+Contiene el código integrado de la versión que se encuentra actualmente en desarrollo.
+
+Esta es la rama que los integrantes deben utilizar como base para crear nuevas funcionalidades.
