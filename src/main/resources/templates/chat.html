@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${'Chat con ' + amigo.nombre}">Chat | Clubes UVG</title>
+    <link rel="icon" type="image/png" th:href="@{/images/Logo-UVG.png}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/preferences.js}" defer></script>
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+</head>
+<body class="dashboard-page chat-page">
+    <header class="topbar">
+        <a class="brand" th:href="@{/panel}"><img th:src="@{/images/Logo-UVG.png}" alt="UVG"><span>Clubes <strong>UVG</strong></span></a>
+        <div class="topbar-actions">
+            <a th:href="@{/personas}">Personas</a>
+            <a th:href="@{/notificaciones}">Notificaciones</a>
+            <a th:href="@{/configuracion}" aria-label="Configuración">⚙</a>
+            <a th:href="@{/panel}">Ir al panel</a>
+        </div>
+    </header>
+    <main class="chat-shell">
+        <a class="activity-editor-back" th:href="@{/personas}">← Volver a personas</a>
+        <section class="chat-card">
+            <header class="chat-heading">
+                <div class="community-person-avatar"><span aria-hidden="true">◎</span></div>
+                <div><p class="activity-editor-eyebrow">Amistad UVG</p><h1 th:text="${amigo.nombre}">Amigo</h1></div>
+            </header>
+            <p class="alert error" th:if="${error}" th:text="${error}"></p>
+            <div class="chat-messages" id="chat-messages"
+                 th:attr="data-usuario-id=${amigo.id}" aria-live="polite">
+                <p class="chat-empty" th:if="${#lists.isEmpty(mensajes)}">Inicia la conversación con un mensaje.</p>
+                <article th:each="mensaje : ${mensajes}"
+                         th:attr="data-mensaje-id=${mensaje.id}"
+                         th:class="${mensaje.remitente.email == usuarioActual.email ? 'chat-message is-mine' : 'chat-message'}">
+                    <p th:text="${mensaje.contenido}">Mensaje</p>
+                    <time th:text="${#temporals.format(mensaje.enviadoEn, 'dd/MM HH:mm')}">Ahora</time>
+                </article>
+            </div>
+            <form class="chat-compose" id="chat-compose"
+                  th:action="@{/chat/{id}/mensajes(id=${amigo.id})}" method="post">
+                <label class="sr-only" for="contenido">Mensaje</label>
+                <input id="contenido" name="contenido" maxlength="1000" placeholder="Escribe un mensaje..." required>
+                <button type="submit">Enviar</button>
+            </form>
+        </section>
+    </main>
+    <script th:src="@{/js/chat-live.js}" defer></script>
+</body>
+</html>

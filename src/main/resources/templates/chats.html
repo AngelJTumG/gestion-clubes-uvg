@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chats | Clubes UVG</title>
+    <link rel="icon" type="image/png" th:href="@{/images/Logo-UVG.png}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/preferences.js}" defer></script>
+</head>
+<body class="dashboard-page chat-page chats-list-page">
+    <header class="topbar">
+        <a class="brand" th:href="@{/panel}">
+            <img th:src="@{/images/Logo-UVG.png}" alt="UVG">
+            <span>Clubes <strong>UVG</strong></span>
+        </a>
+        <div class="topbar-actions">
+            <a th:href="@{/personas}">Personas</a>
+            <a th:href="@{/notificaciones}">Notificaciones</a>
+            <a th:href="@{/configuracion}" aria-label="Configuración">⚙</a>
+            <a th:href="@{/panel}">Ir al panel</a>
+        </div>
+    </header>
+    <main class="chat-shell">
+        <a class="activity-editor-back" th:href="@{/panel}">← Volver al panel</a>
+        <section class="chat-card">
+            <header class="chat-heading">
+                <div>
+                    <p class="activity-editor-eyebrow">Mensajería</p>
+                    <h1>Mis chats</h1>
+                </div>
+            </header>
+            <p class="chat-empty" th:if="${#lists.isEmpty(amistades)}">
+                Aún no tienes conversaciones. Conecta con otras personas desde Personas.
+            </p>
+            <div class="chat-list" th:unless="${#lists.isEmpty(amistades)}">
+                <a class="chat-list-item"
+                   th:each="amistad : ${amistades}"
+                   th:with="contacto=${amistad.solicitante.email == usuarioActual.email ? amistad.destinatario : amistad.solicitante}"
+                   th:href="@{/chat/{id}(id=${contacto.id})}">
+                    <span class="community-person-avatar" aria-hidden="true">◎</span>
+                    <span>
+                        <strong th:text="${contacto.nombre}">Contacto</strong>
+                        <small>Amistad UVG · Abrir conversación</small>
+                    </span>
+                    <span aria-hidden="true">→</span>
+                </a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

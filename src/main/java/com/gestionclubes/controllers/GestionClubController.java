@@ -2,11 +2,14 @@ package com.gestionclubes.controllers;
 
 import java.security.Principal;
 import java.io.IOException;
+import java.time.DateTimeException;
+import java.time.YearMonth;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +26,7 @@ import com.gestionclubes.service.CalendarioService;
 import com.gestionclubes.service.ClubService;
 import com.gestionclubes.service.FotografiaService;
 import com.gestionclubes.service.MembresiaService;
+import com.gestionclubes.service.MensajeService;
 import com.gestionclubes.service.SolicitudIngresoService;
 import com.gestionclubes.service.UsuarioService;
 
@@ -40,6 +44,7 @@ public class GestionClubController {
     private final SolicitudIngresoService solicitudService;
     private final UsuarioService usuarioService;
     private final AmistadService amistadService;
+    private final MensajeService mensajeService;
 
     public GestionClubController(ActividadService actividadService, ClubService clubService,
                                  FotografiaService fotografiaService,
@@ -47,7 +52,8 @@ public class GestionClubController {
     MembresiaService membresiaService,
     SolicitudIngresoService solicitudService,
     UsuarioService usuarioService,
-    AmistadService amistadService) {
+    AmistadService amistadService,
+    MensajeService mensajeService) {
         this.actividadService = actividadService;
         this.clubService = clubService;
         this.fotografiaService = fotografiaService;
@@ -56,6 +62,7 @@ public class GestionClubController {
         this.solicitudService = solicitudService;
         this.usuarioService = usuarioService;
         this.amistadService = amistadService;
+        this.mensajeService = mensajeService;
     }
 
     /** Muestra las actividades publicadas en todos los clubes. */
@@ -209,10 +216,23 @@ public class GestionClubController {
 
     /** Muestra las actividades organizadas en el calendario del mes actual. */
     @GetMapping("/calendario")
-    public String calendario(Model model) {
-        CalendarioService.CalendarioMensual calendario = calendarioService.mesActual();
+    public String calendario(@RequestParam(required = false) Integer year,
+                             @RequestParam(required = false) Integer month,
+                             Model model) {
+        YearMonth mes = YearMonth.now();
+        if (year != null && month != null) {
+            try {
+                mes = YearMonth.of(year, month);
+            } catch (DateTimeException ex) {
+                throw new IllegalArgumentException("El mes solicitado no es válido", ex);
+            }
+        }
+        CalendarioService.CalendarioMensual calendario = calendarioService.mes(mes);
         model.addAttribute("dias", calendario.dias());
         model.addAttribute("mesActual", calendario.nombreMes());
+        model.addAttribute("mesAnterior", mes.minusMonths(1));
+        model.addAttribute("mesSiguiente", mes.plusMonths(1));
+        model.addAttribute("mesActualSeleccionado", mes);
         return "calendario";
     }
 
@@ -249,6 +269,7 @@ public class GestionClubController {
         model.addAttribute("notificacionesAmistad", amistadService.notificaciones(principal.getName()));
         model.addAttribute("solicitudesAmistadPendientes",
                 amistadService.solicitudesPendientesRecibidas(principal.getName()));
+        model.addAttribute("mensajesNoLeidos", mensajeService.noLeidos(principal.getName()));
         solicitudService.marcarNotificacionesLeidas(principal.getName());
         amistadService.marcarNotificacionesLeidas(principal.getName());
         amistadService.marcarSolicitudesRecibidasLeidas(principal.getName());

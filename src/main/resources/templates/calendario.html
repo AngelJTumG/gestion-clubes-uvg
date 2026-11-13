@@ -14,6 +14,7 @@
           rel="stylesheet">
 
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/preferences.js}" defer></script>
 </head>
 
 <body class="dashboard-page activity-editor-page campus-calendar-page">
@@ -80,10 +81,32 @@
                     </h2>
                 </div>
 
+                <nav class="campus-calendar-navigation" aria-label="Navegación del calendario">
+                    <a class="button secondary"
+                       th:href="@{/calendario(year=${mesAnterior.year},month=${mesAnterior.monthValue})}"
+                       aria-label="Ver mes anterior">
+                        ←
+                    </a>
+                    <a class="button secondary campus-calendar-today"
+                       th:href="@{/calendario}"
+                       th:if="${mesActualSeleccionado != null
+                           and mesActualSeleccionado != T(java.time.YearMonth).now()}"
+                       aria-label="Volver al mes actual">
+                        Hoy
+                    </a>
+                    <a class="button secondary"
+                       th:href="@{/calendario(year=${mesSiguiente.year},month=${mesSiguiente.monthValue})}"
+                       aria-label="Ver mes siguiente">
+                        →
+                    </a>
+                </nav>
+            </header>
+
+            <div class="campus-calendar-actions">
                 <a class="button secondary" th:href="@{/actividades}">
                     Ver todas las actividades →
                 </a>
-            </header>
+            </div>
 
             <div class="campus-calendar-guide">
                 <p>

@@ -164,11 +164,11 @@ public class RegistroClubDto {
         return tieneHorario;
     }
 
-    /** Comprueba que el edificio esté permitido y que el aula tenga tres dígitos. */
+    /** Comprueba que el edificio sea válido y que el aula tenga tres dígitos. */
     @AssertTrue(message = "La ubicación debe tener un edificio válido y exactamente 3 dígitos")
     public boolean isUbicacionValida() {
         return ubicacionEdificio != null
-                && ubicacionEdificio.matches("CIT|[ABDEFGHIJK]")
+                && ubicacionEdificio.matches("[A-Za-z0-9][A-Za-z0-9 _-]{0,29}")
                 && ubicacionNumero != null
                 && ubicacionNumero.matches("\\d{3}");
     }

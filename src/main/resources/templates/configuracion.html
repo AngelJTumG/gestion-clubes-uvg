@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Configuración | Clubes UVG</title>
+    <link rel="icon" type="image/png" th:href="@{/images/Logo-UVG.png}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/preferences.js}" defer></script>
+</head>
+<body class="dashboard-page settings-page">
+    <header class="topbar">
+        <a class="brand" th:href="@{/panel}"><img th:src="@{/images/Logo-UVG.png}" alt="UVG"><span>Clubes <strong>UVG</strong></span></a>
+        <div class="topbar-actions"><a th:href="@{/panel}">Ir al panel</a></div>
+    </header>
+    <main class="settings-shell">
+        <a class="activity-editor-back" th:href="@{/panel}">← Volver al panel</a>
+        <section class="settings-card">
+            <p class="activity-editor-eyebrow">Preferencias</p>
+            <h1>Configuración</h1>
+            <p>Personaliza tu experiencia sin cambiar la estructura visual de Clubes UVG.</p>
+            <div class="settings-option">
+                <div><h2>Modo oscuro</h2><p>Reduce el brillo y conserva la navegación actual.</p></div>
+                <button type="button" class="button" data-theme-toggle aria-pressed="false">Activar / cambiar tema</button>
+            </div>
+            <div class="settings-option"><div><h2>Notificaciones</h2><p>Consulta solicitudes y novedades desde el ícono de notificaciones.</p></div><a class="button secondary" th:href="@{/notificaciones}">Ver notificaciones</a></div>
+            <div class="settings-option"><div><h2>Perfil</h2><p>Mantén actualizado tu nombre, descripción y foto.</p></div><a class="button secondary" th:href="@{/perfil}">Editar perfil</a></div>
+        </section>
+    </main>
+</body>
+</html>

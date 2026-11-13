@@ -119,7 +119,6 @@
                                 <option value="deportivo">Deportivo</option>
                                 <option value="arte">Arte</option>
                             </select>
-
                             <small id="categoria-error"
                                    th:errors="*{categoria}"></small>
                         </div>
@@ -249,6 +248,7 @@
                                     Selecciona un edificio
                                 </option>
 
+                                <!-- Para agregar edificios, añade su código/nombre a esta lista separada por comas. -->
                                 <option th:each="edificio : ${#strings.arraySplit('A,B,CIT,D,E,F,G,H,I,J,K', ',')}"
                                         th:value="${edificio}"
                                         th:text="${edificio}">
@@ -361,5 +361,6 @@
     </main>
 
     <script th:src="@{/js/club-form.js}"></script>
+    <script th:src="@{/js/preferences.js}"></script>
 </body>
 </html>

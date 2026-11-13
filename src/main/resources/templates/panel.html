@@ -14,6 +14,8 @@
           rel="stylesheet">
 
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/preferences.js}" defer></script>
+    <script th:src="@{/js/notifications-live.js}" defer></script>
 </head>
 
 <body class="dashboard-page panel-page panel-view">
@@ -32,8 +34,9 @@
                 <span aria-hidden="true">&#128276;</span>
 
                 <span class="notification-badge"
-                      th:with="total=${(notificaciones == null ? 0 : #lists.size(notificaciones)) + (notificacionesAmistad == null ? 0 : #lists.size(notificacionesAmistad)) + (notificacionesAmistadRecibidas == null ? 0 : #lists.size(notificacionesAmistadRecibidas))}"
-                      th:if="${total > 0}"
+                      data-notification-badge
+                      th:with="total=${(notificaciones == null ? 0 : #lists.size(notificaciones)) + (notificacionesAmistad == null ? 0 : #lists.size(notificacionesAmistad)) + (notificacionesAmistadRecibidas == null ? 0 : #lists.size(notificacionesAmistadRecibidas)) + (mensajesNoLeidos == null ? 0 : #lists.size(mensajesNoLeidos))}"
+                      th:hidden="${total == 0}"
                       th:text="${total}">
                     0
                 </span>
@@ -45,6 +48,22 @@
                aria-label="Buscar personas">
                 <span aria-hidden="true">&#128101;</span>
             </a>
+
+            <a class="topbar-icon"
+               th:href="@{/chats}"
+               title="Chats"
+               aria-label="Abrir chats">
+                <span aria-hidden="true">&#128172;</span>
+                <span class="notification-badge"
+                      data-chat-badge
+                      th:hidden="${mensajesNoLeidos == null or #lists.isEmpty(mensajesNoLeidos)}"
+                      th:text="${#lists.size(mensajesNoLeidos)}">0</span>
+            </a>
+
+            <a class="topbar-icon"
+               th:href="@{/configuracion}"
+               title="Configuración"
+               aria-label="Configuración">⚙</a>
 
             <a class="profile-chip"
                th:href="@{/perfil}"
@@ -169,6 +188,11 @@
 							<use href="#panel-icon-calendar"></use>
 						</svg>
 						<span>Calendario</span>
+					</a>
+
+					<a class="panel-menu-link" th:href="@{/configuracion}">
+						<span aria-hidden="true">⚙</span>
+						<span>Configuración</span>
 					</a>
 				</nav>
 
@@ -456,5 +480,6 @@
             </section>
         </main>
     </div>
+<script th:src="@{/js/preferences.js}"></script>
 </body>
 </html>

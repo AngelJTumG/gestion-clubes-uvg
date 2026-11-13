@@ -18,6 +18,10 @@ import com.gestionclubes.service.UsuarioService;
  */
 @Controller
 public class HomeController {
+    @GetMapping("/configuracion")
+    public String configuracion() {
+        return "configuracion";
+    }
 
     private final ClubService clubService;
     private final SolicitudIngresoService solicitudService;
