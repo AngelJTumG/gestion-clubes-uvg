@@ -1,4 +1,170 @@
-<!doctype html><html lang="es" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Integrantes | Clubes UVG</title><link rel="stylesheet" th:href="@{/css/app.css}"></head><body class="dashboard-page">
-<header class="topbar"><div class="brand"><img th:src="@{/images/Logo-UVG.png}" alt="UVG"><span>Clubes Universitarios</span></div><div class="topbar-actions"><a class="topbar-icon" th:href="@{/notificaciones}">&#128276;</a><a class="profile-chip" th:href="@{/perfil}" title="Perfil"><span class="profile-avatar"><img th:if="${usuarioActual.fotoPerfil}" th:src="${usuarioActual.fotoPerfil}" th:alt="${usuarioActual.nombre}"><span th:unless="${usuarioActual.fotoPerfil}">&#9673;</span></span></a><a th:href="@{/panel}">Panel principal</a></div></header>
-<main class="club-main"><p class="eyebrow" th:text="${club.nombre}">Club</p><h1>Integrantes</h1><div class="card" th:if="${#lists.isEmpty(integrantes)}">Este club todavía no tiene integrantes.</div>
-<div class="card" th:each="membresia : ${integrantes}"><h2 th:text="${membresia.estudiante.usuario.nombre}">Nombre</h2><p th:text="${membresia.estudiante.usuario.email}">Correo</p><p>Carné: <span th:text="${membresia.estudiante.carne}">Carné</span> · Ingreso: <span th:text="${#temporals.format(membresia.fechaIngreso, 'dd/MM/yyyy')}">12/11/2026</span></p></div></main></body></html>
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Integrantes del club | Clubes UVG</title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body class="dashboard-page activity-editor-page club-members-page">
+    <header class="topbar">
+        <a class="brand activity-editor-brand" th:href="@{/panel}">
+            <img th:src="@{/images/Logo-UVG.png}"
+                 alt="Universidad del Valle de Guatemala">
+            <span>Clubes <strong>UVG</strong></span>
+        </a>
+
+        <div class="topbar-actions">
+            <a class="topbar-icon"
+               th:href="@{/notificaciones}"
+               title="Notificaciones"
+               aria-label="Notificaciones">
+                <span aria-hidden="true">&#128276;</span>
+            </a>
+
+            <a class="profile-chip"
+               th:href="@{/perfil}"
+               title="Mi perfil"
+               aria-label="Mi perfil">
+                <span class="profile-avatar">
+                    <img th:if="${usuarioActual.fotoPerfil}"
+                         th:src="${usuarioActual.fotoPerfil}"
+                         th:alt="${usuarioActual.nombre}">
+                    <span th:unless="${usuarioActual.fotoPerfil}"
+                          aria-hidden="true">&#9673;</span>
+                </span>
+            </a>
+
+            <a th:href="@{/panel}">Ir al panel</a>
+        </div>
+    </header>
+
+    <main class="club-members-main">
+        <a class="activity-editor-back"
+           th:href="@{/admin/clubes/{id}(id=${club.id})}">
+            ← Volver al club
+        </a>
+
+        <section class="activity-editor-banner"
+                 aria-labelledby="club-members-title">
+            <div>
+                <p class="activity-editor-eyebrow"
+                   th:text="${club.nombre}">
+                    Nombre del club
+                </p>
+
+                <h1 id="club-members-title">
+                    Las personas hacen la comunidad.
+                </h1>
+
+                <p>
+                    Conoce a quienes comparten los intereses
+                    y las actividades de este club.
+                </p>
+            </div>
+
+            <span class="activity-editor-spark"
+                  aria-hidden="true">✦</span>
+        </section>
+
+        <section class="club-members-content"
+                 aria-labelledby="club-members-list-title">
+            <header class="club-members-heading">
+                <div>
+                    <p class="activity-editor-eyebrow">Nuestra comunidad</p>
+                    <h2 id="club-members-list-title">Integrantes del club</h2>
+                </div>
+
+                <span class="club-members-count"
+                      th:text="${#lists.size(integrantes) == 1
+                          ? '1 integrante'
+                          : #lists.size(integrantes) + ' integrantes'}">
+                    0 integrantes
+                </span>
+            </header>
+
+            <!-- Estado vacío -->
+            <div class="club-members-empty"
+                 th:if="${#lists.isEmpty(integrantes)}">
+                <span aria-hidden="true">✦</span>
+                <h3>Una comunidad por construir</h3>
+                <p>
+                    Este club todavía no tiene integrantes registrados.
+                    Aquí aparecerán cuando se creen sus membresías.
+                </p>
+
+                <a class="button secondary"
+                   th:href="@{/admin/clubes/{id}(id=${club.id})}">
+                    Volver al club
+                </a>
+            </div>
+
+            <!-- Integrantes -->
+            <div class="club-members-grid"
+                 th:unless="${#lists.isEmpty(integrantes)}">
+                <article class="club-member-card"
+                         th:each="membresia : ${integrantes}"
+                         th:with="persona=${membresia.estudiante.usuario}">
+
+                    <div class="club-member-identity">
+                        <div class="club-member-avatar">
+                            <img th:if="${!#strings.isEmpty(persona.fotoPerfil)}"
+                                 th:src="${persona.fotoPerfil}"
+                                 alt=""
+                                 loading="lazy">
+
+                            <svg th:if="${#strings.isEmpty(persona.fotoPerfil)}"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 aria-hidden="true">
+                                <circle cx="12" cy="8" r="4"/>
+                                <path d="M4 22v-2a8 8 0 0 1 16 0v2"/>
+                            </svg>
+                        </div>
+
+                        <div class="club-member-name">
+                            <h3 th:text="${persona.nombre}">
+                                Nombre del integrante
+                            </h3>
+                            <p>Integrante del club</p>
+                        </div>
+                    </div>
+
+                    <dl class="club-member-details">
+                        <div>
+                            <dt>Correo electrónico</dt>
+                            <dd th:text="${persona.email}">
+                                correo@ejemplo.com
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Carné estudiantil</dt>
+                            <dd th:text="${membresia.estudiante.carne}">
+                                Carné
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Miembro desde</dt>
+                            <dd th:text="${#temporals.format(membresia.fechaIngreso, 'dd/MM/yyyy')}">
+                                Fecha de ingreso
+                            </dd>
+                        </div>
+                    </dl>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

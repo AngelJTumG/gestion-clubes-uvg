@@ -168,23 +168,47 @@ public class ClubService {
     }
 
     @Transactional(readOnly = true)
-    public List<Club> filtrarClubes(boolean incluirInactivos, String busqueda, String categoria,
-                                    String estado) {
-        List<Club> clubes = incluirInactivos ? listarClubes() : listarClubesActivos();
-        String texto = busqueda == null ? "" : busqueda.trim().toLowerCase(Locale.ROOT);
-        String categoriaNormalizada = categoria == null ? "" : categoria.trim();
-        String estadoNormalizado = estado == null ? "todos" : estado.trim().toLowerCase(Locale.ROOT);
+    public List<Club> filtrarClubes(boolean incluirInactivos,
+                                String busqueda,
+                                String categoria,
+                                String estado) {
+        List<Club> clubes = incluirInactivos
+                ? listarClubes()
+                : listarClubesActivos();
 
-        return clubes.stream()
+        String texto = busqueda == null
+                ? ""
+                : busqueda.trim().toLowerCase(Locale.ROOT);
+
+        String categoriaNormalizada = categoria == null
+                ? ""
+                : categoria.trim();
+
+        String estadoNormalizado = estado == null
+                ? "todos"
+                : estado.trim().toLowerCase(Locale.ROOT);
+
+        List<Club> resultados = clubes.stream()
                 .filter(club -> texto.isEmpty()
-                        || club.getNombre().toLowerCase(Locale.ROOT).contains(texto))
+                        || club.getNombre().toLowerCase(Locale.ROOT)
+                                .contains(texto))
                 .filter(club -> categoriaNormalizada.isEmpty()
-                        || club.getCategoria().equalsIgnoreCase(categoriaNormalizada))
+                        || club.getCategoria()
+                                .equalsIgnoreCase(categoriaNormalizada))
                 .filter(club -> !incluirInactivos
                         || estadoNormalizado.equals("todos")
-                        || (estadoNormalizado.equals("activos") && club.isStatus())
-                        || (estadoNormalizado.equals("inactivos") && !club.isStatus()))
+                        || (estadoNormalizado.equals("activos")
+                                && club.isStatus())
+                        || (estadoNormalizado.equals("inactivos")
+                                && !club.isStatus()))
                 .collect(Collectors.toList());
+
+        // Carga las fotografías antes de salir de la transacción.
+        for (Club club : resultados) {
+            club.getFotografias().size();
+        }
+
+        return resultados;
     }
 
     @Transactional(readOnly = true)

@@ -50,6 +50,7 @@ public class Club {
     private Coordinador coordinador;
 
     @OneToMany (mappedBy = "club")
+    @jakarta.persistence.OrderBy("id ASC")
     private List<Fotografia> fotografias = new ArrayList<>();
 
     @OneToMany (mappedBy = "club")
