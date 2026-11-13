@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calendario | Clubes UVG</title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body class="dashboard-page activity-editor-page campus-calendar-page">
+    <header class="topbar">
+        <a class="brand activity-editor-brand" th:href="@{/panel}">
+            <img th:src="@{/images/Logo-UVG.png}"
+                 alt="Universidad del Valle de Guatemala">
+            <span>Clubes <strong>UVG</strong></span>
+        </a>
+
+        <div class="topbar-actions">
+            <a class="topbar-icon"
+               th:href="@{/notificaciones}"
+               aria-label="Notificaciones"
+               title="Notificaciones">
+                <span aria-hidden="true">&#128276;</span>
+            </a>
+
+            <a class="profile-chip"
+               th:href="@{/perfil}"
+               title="Mi perfil"
+               aria-label="Mi perfil">
+                <span class="profile-avatar">
+                    <img th:if="${usuarioActual.fotoPerfil}"
+                         th:src="${usuarioActual.fotoPerfil}"
+                         th:alt="${usuarioActual.nombre}">
+                    <span th:unless="${usuarioActual.fotoPerfil}"
+                          aria-hidden="true">&#9673;</span>
+                </span>
+            </a>
+
+            <a th:href="@{/panel}">Ir al panel</a>
+        </div>
+    </header>
+
+    <main class="campus-calendar-main">
+        <a class="activity-editor-back" th:href="@{/panel}">
+            ← Volver al panel
+        </a>
+
+        <section class="activity-editor-banner"
+                 aria-labelledby="campus-calendar-title">
+            <div>
+                <p class="activity-editor-eyebrow">Organiza tu participación</p>
+                <h1 id="campus-calendar-title">Haz espacio para tu comunidad.</h1>
+                <p>
+                    Consulta las fechas de las actividades
+                    y encuentra un momento para participar.
+                </p>
+            </div>
+
+            <span class="activity-editor-spark"
+                  aria-hidden="true">✦</span>
+        </section>
+
+        <section class="campus-calendar-card"
+                 aria-labelledby="campus-calendar-month">
+            <header class="campus-calendar-heading">
+                <div>
+                    <p class="activity-editor-eyebrow">Calendario del mes</p>
+                    <h2 id="campus-calendar-month"
+                        th:text="${mesActual}">
+                        Noviembre 2026
+                    </h2>
+                </div>
+
+                <a class="button secondary" th:href="@{/actividades}">
+                    Ver todas las actividades →
+                </a>
+            </header>
+
+            <div class="campus-calendar-guide">
+                <p>
+                    <span class="campus-calendar-dot"
+                          aria-hidden="true"></span>
+                    Actividades de los clubes
+                </p>
+                <p class="campus-calendar-mobile-hint">
+                    Desliza horizontalmente para ver toda la semana.
+                </p>
+            </div>
+
+            <div class="campus-calendar-scroll"
+                 tabindex="0"
+                 role="region"
+                 aria-labelledby="campus-calendar-month">
+                <div class="campus-calendar-board">
+                    <div class="campus-calendar-weekdays"
+                         aria-hidden="true">
+                        <span>LUN</span>
+                        <span>MAR</span>
+                        <span>MIÉ</span>
+                        <span>JUE</span>
+                        <span>VIE</span>
+                        <span>SÁB</span>
+                        <span>DOM</span>
+                    </div>
+
+                    <div class="campus-calendar-grid">
+                        <article class="campus-calendar-day"
+                                 th:each="dia : ${dias}"
+                                 th:classappend="${dia.fecha == null
+                                     ? 'campus-calendar-day-empty'
+                                     : ''}"
+                                 th:attr="aria-label=${dia.fecha != null
+                                     ? #temporals.format(dia.fecha, 'EEEE dd/MM/yyyy')
+                                     : null},
+                                     aria-hidden=${dia.fecha == null ? 'true' : null}">
+
+                            <time class="campus-calendar-number"
+                                  th:if="${dia.fecha != null}"
+                                  th:datetime="${dia.fecha}"
+                                  th:text="${dia.fecha.dayOfMonth}">
+                                1
+                            </time>
+
+                            <div class="campus-calendar-events">
+                                <a class="campus-calendar-event"
+                                   th:each="actividad : ${dia.actividades}"
+                                   th:href="@{/admin/clubes/{id}(id=${actividad.club.id})}"
+                                   th:aria-label="${actividad.nombre
+                                       + ', '
+                                       + #temporals.format(actividad.horaInicio, 'HH:mm')
+                                       + ', club '
+                                       + actividad.club.nombre}">
+                                    <time th:datetime="${actividad.horaInicio}"
+                                          th:text="${#temporals.format(actividad.horaInicio, 'HH:mm')}">
+                                        14:00
+                                    </time>
+
+                                    <strong th:text="${actividad.nombre}">
+                                        Nombre de la actividad
+                                    </strong>
+
+                                    <span th:text="${actividad.club.nombre}">
+                                        Club organizador
+                                    </span>
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+            <p class="campus-calendar-note">
+                Selecciona una actividad para conocer el club que la organiza.
+                Los días sin tarjetas no tienen actividades registradas.
+            </p>
+        </section>
+    </main>
+</body>
+</html>

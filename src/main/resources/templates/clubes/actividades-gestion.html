@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestionar actividades | Clubes UVG</title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body class="dashboard-page activity-editor-page activity-management-page">
+    <header class="topbar">
+        <a class="brand activity-editor-brand" th:href="@{/panel}">
+            <img th:src="@{/images/Logo-UVG.png}"
+                 alt="Universidad del Valle de Guatemala">
+            <span>Clubes <strong>UVG</strong></span>
+        </a>
+
+        <div class="topbar-actions">
+            <a th:href="@{/panel}">Ir al panel</a>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-button">
+                    Cerrar sesión
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <main class="activity-editor-main">
+        <a class="activity-editor-back"
+           th:href="@{/admin/clubes/{id}(id=${club.id})}">
+            ← Volver al club
+        </a>
+
+        <section class="activity-editor-banner"
+                 aria-labelledby="activity-management-title">
+            <div>
+                <p class="activity-editor-eyebrow"
+                   th:text="${club.nombre}">
+                    Nombre del club
+                </p>
+
+                <h1 id="activity-management-title">
+                    Crea momentos para compartir.
+                </h1>
+
+                <p>
+                    Publica encuentros y mantén a tu comunidad
+                    informada sobre las actividades del club.
+                </p>
+            </div>
+
+            <span class="activity-editor-spark"
+                  aria-hidden="true">✦</span>
+        </section>
+
+        <p class="alert success" role="status"
+           th:if="${exito}" th:text="${exito}"></p>
+
+        <p class="alert error" role="alert"
+           th:if="${error}" th:text="${error}"></p>
+
+        <section class="activity-management-content"
+                 aria-labelledby="activity-list-title">
+            <div class="activity-management-heading">
+                <div>
+                    <p class="activity-editor-eyebrow">Organiza tu comunidad</p>
+                    <h2 id="activity-list-title">Actividades del club</h2>
+
+                    <p th:text="${#lists.size(actividades) == 1
+                        ? '1 actividad publicada'
+                        : #lists.size(actividades) + ' actividades publicadas'}">
+                        0 actividades publicadas
+                    </p>
+                </div>
+
+                <a class="button"
+                   th:href="@{/club-admin/clubes/{id}/actividades/nueva(id=${club.id})}">
+                    + Publicar actividad
+                </a>
+            </div>
+
+            <!-- Estado vacío -->
+            <div class="activity-management-empty"
+                 th:if="${#lists.isEmpty(actividades)}">
+                <span aria-hidden="true">✦</span>
+                <h3>Todo empieza con un encuentro</h3>
+                <p>
+                    Todavía no hay actividades publicadas.
+                    Crea la primera e invita a tu comunidad a participar.
+                </p>
+
+                <a class="button secondary"
+                   th:href="@{/club-admin/clubes/{id}/actividades/nueva(id=${club.id})}">
+                    Crear primera actividad
+                </a>
+            </div>
+
+            <!-- Lista de actividades -->
+            <div class="activity-management-list"
+                 th:unless="${#lists.isEmpty(actividades)}">
+
+                <article class="managed-activity"
+                         th:each="actividad : ${actividades}">
+                    <div class="managed-activity-date"
+                         aria-label="Fecha de la actividad">
+                        <span class="managed-activity-day"
+                              th:text="${#temporals.format(actividad.fecha, 'dd')}">
+                            12
+                        </span>
+                        <span class="managed-activity-month"
+                              th:text="${#temporals.format(actividad.fecha, 'MMM')}">
+                            nov
+                        </span>
+                        <span class="managed-activity-year"
+                              th:text="${#temporals.format(actividad.fecha, 'yyyy')}">
+                            2026
+                        </span>
+                    </div>
+
+                    <div class="managed-activity-copy">
+                        <h3 th:text="${actividad.nombre}">
+                            Nombre de la actividad
+                        </h3>
+
+                        <p class="managed-activity-description"
+                           th:text="${actividad.descripcion}">
+                            Descripción de la actividad.
+                        </p>
+
+                        <dl class="managed-activity-details">
+                            <div>
+                                <dt>Hora</dt>
+                                <dd th:text="${#temporals.format(actividad.horaInicio, 'HH:mm')}">
+                                    14:00
+                                </dd>
+                            </div>
+                            <div>
+                                <dt>Lugar</dt>
+                                <dd th:text="${actividad.ubicacion}">
+                                    Lugar de encuentro
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+
+                    <div class="managed-activity-actions">
+                        <a class="button secondary"
+                           th:href="@{/club-admin/actividades/{id}/editar(id=${actividad.id})}"
+                           th:aria-label="${'Editar actividad: ' + actividad.nombre}">
+                            Editar
+                        </a>
+
+                        <form method="post"
+                              th:action="@{/club-admin/actividades/{id}/eliminar(id=${actividad.id})}"
+                              onsubmit="return confirm('¿Eliminar esta actividad? Esta acción no se puede deshacer.');">
+                            <button class="managed-activity-delete"
+                                    type="submit"
+                                    th:aria-label="${'Eliminar actividad: ' + actividad.nombre}">
+                                Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

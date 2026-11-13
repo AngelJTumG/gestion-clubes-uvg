@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${club.nombre + ' | Clubes UVG'}">
+        Detalle del club | Clubes UVG
+    </title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body class="dashboard-page activity-editor-page club-profile-page">
+    <header class="topbar">
+        <a class="brand activity-editor-brand" th:href="@{/panel}">
+            <img th:src="@{/images/Logo-UVG.png}"
+                 alt="Universidad del Valle de Guatemala">
+            <span>Clubes <strong>UVG</strong></span>
+        </a>
+
+        <div class="topbar-actions">
+            <a th:href="@{/panel}">Ir al panel</a>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-button">
+                    Cerrar sesión
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <main class="club-profile-main">
+        <a class="activity-editor-back" th:href="@{/panel}">
+            ← Volver a explorar clubes
+        </a>
+
+        <p class="alert success" role="status"
+           th:if="${exito}" th:text="${exito}"></p>
+        <p class="alert error" role="alert"
+           th:if="${error}" th:text="${error}"></p>
+
+        <!-- Presentación -->
+        <section class="activity-editor-banner"
+                 aria-labelledby="club-profile-title">
+            <div>
+                <p class="activity-editor-eyebrow">Conoce tu comunidad</p>
+
+                <h1 id="club-profile-title" th:text="${club.nombre}">
+                    Nombre del club
+                </h1>
+
+                <div class="club-profile-badges">
+                    <span th:text="${club.categoria}">Categoría</span>
+
+                    <span th:text="${club.numeroIntegrantes == 1
+                        ? '1 integrante'
+                        : club.numeroIntegrantes + ' integrantes'}">
+                        0 integrantes
+                    </span>
+
+                    <span class="club-profile-inactive"
+                          th:if="${!club.status}">
+                        Club inactivo
+                    </span>
+                </div>
+            </div>
+
+            <span class="activity-editor-spark"
+                  aria-hidden="true">✦</span>
+        </section>
+
+        <div class="club-profile-layout">
+            <!-- Información principal -->
+            <div class="club-profile-content">
+                <section class="club-profile-card"
+                         aria-labelledby="club-about-title">
+                    <p class="activity-editor-eyebrow">Encuentra tu lugar</p>
+                    <h2 id="club-about-title">Sobre el club</h2>
+
+                    <p class="club-profile-description"
+                       th:text="${club.descripcion}">
+                        Descripción del club.
+                    </p>
+
+                    <div class="club-profile-requirements">
+                        <h3>¿Qué necesitas para participar?</h3>
+                        <p th:text="${club.requisitos}">
+                            Requisitos de ingreso.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Actividades -->
+                <section class="club-profile-card"
+                         aria-labelledby="club-activities-title">
+                    <p class="activity-editor-eyebrow">Nos encontramos aquí</p>
+                    <h2 id="club-activities-title">Actividades del club</h2>
+
+                    <p class="club-profile-empty"
+                       th:if="${#lists.isEmpty(actividades)}">
+                        Este club todavía no tiene actividades publicadas.
+                    </p>
+
+                    <div class="club-profile-events"
+                         th:unless="${#lists.isEmpty(actividades)}">
+                        <article class="club-profile-event"
+                                 th:each="actividad : ${actividades}">
+                            <p class="club-profile-event-date"
+                               th:text="${#temporals.format(actividad.fecha, 'dd/MM/yyyy')
+                                   + ' · '
+                                   + #temporals.format(actividad.horaInicio, 'HH:mm')}">
+                                Fecha y hora
+                            </p>
+
+                            <h3 th:text="${actividad.nombre}">
+                                Actividad
+                            </h3>
+
+                            <p th:text="${actividad.descripcion}">
+                                Descripción.
+                            </p>
+
+                            <p class="club-profile-event-location">
+                                <strong>Lugar:</strong>
+                                <span th:text="${actividad.ubicacion}">
+                                    Lugar de encuentro
+                                </span>
+                            </p>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- Fotografías -->
+                <section class="club-profile-card"
+                         aria-labelledby="club-photos-title">
+                    <p class="activity-editor-eyebrow">Momentos compartidos</p>
+                    <h2 id="club-photos-title">Así se vive nuestro club</h2>
+
+                    <p class="club-profile-empty"
+                       th:if="${#lists.isEmpty(fotografias)}">
+                        Este club todavía no tiene fotografías.
+                    </p>
+
+                    <div class="club-profile-gallery"
+                         th:unless="${#lists.isEmpty(fotografias)}">
+                        <figure th:each="fotografia : ${fotografias}">
+                            <a th:href="${fotografia.urlImagen}"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               th:aria-label="${'Abrir fotografía: '
+                                   + fotografia.descripcion
+                                   + ' (nueva pestaña)'}">
+                                <img th:src="${fotografia.urlImagen}"
+                                     th:alt="${fotografia.descripcion}"
+                                     loading="lazy">
+                            </a>
+
+                            <figcaption th:text="${fotografia.descripcion}">
+                                Descripción de la fotografía
+                            </figcaption>
+                        </figure>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Información práctica -->
+            <aside class="club-profile-side"
+                   aria-label="Información práctica y participación">
+                <section class="club-profile-card"
+                         aria-labelledby="club-meeting-title">
+                    <p class="activity-editor-eyebrow">Organiza tu visita</p>
+                    <h2 id="club-meeting-title">Cuándo y dónde</h2>
+
+                    <dl class="club-profile-details">
+                        <div>
+                            <dt>Horario</dt>
+                            <dd th:text="${club.horario}"></dd>
+                        </div>
+                        <div>
+                            <dt>Ubicación</dt>
+                            <dd th:text="${club.ubicacion}"></dd>
+                        </div>
+                    </dl>
+
+                    <a class="button secondary club-profile-full-button"
+                       th:href="@{/clubes/{id}/integrantes(id=${club.id})}">
+                        Conocer integrantes →
+                    </a>
+                </section>
+
+                <section class="club-profile-card"
+                         aria-labelledby="club-contact-title">
+                    <p class="activity-editor-eyebrow">Resuelve tus dudas</p>
+                    <h2 id="club-contact-title">Contacto</h2>
+
+                    <dl class="club-profile-details">
+                        <div>
+                            <dt>Coordinador</dt>
+                            <dd th:text="${club.coordinador.usuario.nombre}"></dd>
+                        </div>
+                        <div>
+                            <dt>Correo del coordinador</dt>
+                            <dd th:text="${club.coordinador.usuario.email}"></dd>
+                        </div>
+                        <div>
+                            <dt>Información de contacto</dt>
+                            <dd th:text="${club.datosContacto}"></dd>
+                        </div>
+                    </dl>
+                </section>
+
+                <!-- Solicitud de ingreso -->
+                <section class="club-profile-card club-profile-join"
+                         th:if="${puedeSolicitar}"
+                         aria-labelledby="club-join-title">
+                    <p class="activity-editor-eyebrow">Da el siguiente paso</p>
+                    <h2 id="club-join-title">Forma parte del club</h2>
+
+                    <p>
+                        Envía tu solicitud para que el equipo
+                        del club pueda revisarla.
+                    </p>
+
+                    <p class="club-profile-status"
+                       role="status"
+                       th:if="${estadoSolicitud != null}"
+                       th:text="${estadoSolicitud == T(com.gestionclubes.models.EstadoSolicitud).PENDIENTE
+                           ? 'Tu solicitud está pendiente de revisión.'
+                           : (estadoSolicitud == T(com.gestionclubes.models.EstadoSolicitud).APROBADA
+                               ? 'Tu solicitud fue aprobada.'
+                               : 'Tu solicitud fue rechazada. Puedes volver a solicitar ingreso.')}">
+                    </p>
+
+                    <div th:if="${requiereCarne}">
+                        <h3>Completa tu carné estudiantil</h3>
+                        <p>
+                            Necesitamos tu carné para solicitar ingreso.
+                            Si ya tienes solicitudes aprobadas, se crearán
+                            tus membresías al guardarlo.
+                        </p>
+
+                        <form class="club-profile-carne-form"
+                              th:action="@{/clubes/{id}/carne(id=${club.id})}"
+                              method="post">
+                            <label for="club-carne">Carné estudiantil</label>
+                            <input id="club-carne"
+                                   type="text"
+                                   name="carne"
+                                   inputmode="numeric"
+                                   pattern="[0-9]{1,30}"
+                                   maxlength="30"
+                                   required>
+                            <button type="submit">Guardar carné</button>
+                        </form>
+                    </div>
+
+                    <form class="club-profile-request-form"
+                          th:if="${!requiereCarne and (estadoSolicitud == null
+                              or estadoSolicitud == T(com.gestionclubes.models.EstadoSolicitud).RECHAZADA)}"
+                          th:action="@{/clubes/{id}/solicitud(id=${club.id})}"
+                          method="post">
+                        <button type="submit">
+                            Solicitar ingreso →
+                        </button>
+                    </form>
+                </section>
+            </aside>
+        </div>
+
+        <!-- Gestión: visible según los permisos existentes -->
+        <section class="club-profile-card club-profile-management"
+                 th:if="${puedeGestionarClub or puedeCrearClub}"
+                 aria-labelledby="club-management-title">
+            <div>
+                <p class="activity-editor-eyebrow">Administración</p>
+                <h2 id="club-management-title">Gestiona tu club</h2>
+                <p>Actualiza la información y organiza sus contenidos.</p>
+            </div>
+
+            <div class="club-profile-management-actions">
+                <a class="button"
+                   th:if="${puedeGestionarClub}"
+                   th:href="@{/admin/clubes/{id}/editar(id=${club.id})}">
+                    Editar información
+                </a>
+
+                <a class="button secondary"
+                   th:if="${puedeGestionarClub}"
+                   th:href="@{/club-admin/clubes/{id}/actividades(id=${club.id})}">
+                    Gestionar actividades
+                </a>
+
+                <a class="button secondary"
+                   th:if="${puedeGestionarClub}"
+                   th:href="@{/club-admin/clubes/{id}/fotografias(id=${club.id})}">
+                    Gestionar fotografías
+                </a>
+
+                <a class="button secondary"
+                   th:if="${puedeCrearClub}"
+                   th:href="@{/admin/clubes/nuevo}">
+                    Agregar otro club
+                </a>
+
+                <form th:if="${puedeCrearClub and club.status}"
+                      th:action="@{/admin/clubes/{id}/desactivar(id=${club.id})}"
+                      method="post"
+                      onsubmit="return confirm('¿Desactivar este club? Dejará de ser visible para los usuarios.');">
+                    <button type="submit" class="club-profile-deactivate">
+                        Desactivar club
+                    </button>
+                </form>
+
+                <form th:if="${puedeCrearClub and !club.status}"
+                      th:action="@{/admin/clubes/{id}/activar(id=${club.id})}"
+                      method="post"
+                      onsubmit="return confirm('¿Activar este club? Volverá a ser visible para los usuarios.');">
+                    <button type="submit">Activar club</button>
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: gestion-clubes
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/gestion_clubes?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${DB_USERNAME:clubes}
+    password: ${DB_PASSWORD:clubes123}
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update}
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  thymeleaf:
+    cache: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+server:
+  port: ${PORT:8080}
+app:
+  upload-dir: ${UPLOAD_DIR:uploads/fotografias}
+  profile-upload-dir: ${PROFILE_UPLOAD_DIR:uploads/perfiles}
+  admin:
+    email: ${ADMIN_EMAIL:}
+    password: ${ADMIN_PASSWORD:}
+

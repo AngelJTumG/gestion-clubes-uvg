@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Notificaciones | Clubes UVG</title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body class="dashboard-page activity-editor-page updates-page">
+    <header class="topbar">
+        <a class="brand activity-editor-brand" th:href="@{/panel}">
+            <img th:src="@{/images/Logo-UVG.png}"
+                 alt="Universidad del Valle de Guatemala">
+            <span>Clubes <strong>UVG</strong></span>
+        </a>
+
+        <div class="topbar-actions">
+            <a th:href="@{/personas}">Personas</a>
+            <a th:href="@{/panel}">Ir al panel</a>
+        </div>
+    </header>
+
+    <main class="updates-main">
+        <a class="activity-editor-back" th:href="@{/panel}">
+            ← Volver al panel
+        </a>
+
+        <section class="activity-editor-banner"
+                 aria-labelledby="updates-title">
+            <div>
+                <p class="activity-editor-eyebrow">Mantente al tanto</p>
+                <h1 id="updates-title">Novedades de tu comunidad.</h1>
+                <p>
+                    Consulta las respuestas a tus solicitudes
+                    y las nuevas conexiones con otras personas.
+                </p>
+            </div>
+
+            <span class="activity-editor-spark"
+                  aria-hidden="true">✦</span>
+        </section>
+
+        <!-- Sin notificaciones -->
+        <section class="updates-empty"
+                 th:if="${#lists.isEmpty(notificaciones)
+                     and #lists.isEmpty(notificacionesAmistad)
+                     and #lists.isEmpty(solicitudesAmistadPendientes)}"
+                 aria-labelledby="updates-empty-title">
+            <span aria-hidden="true">✦</span>
+            <h2 id="updates-empty-title">Estás al día</h2>
+            <p>
+                No tienes notificaciones nuevas.
+                Puedes seguir explorando los clubes y sus actividades.
+            </p>
+
+            <a class="button secondary" th:href="@{/panel}">
+                Explorar clubes →
+            </a>
+        </section>
+
+        <!-- Respuestas de clubes -->
+        <section class="updates-section"
+                 th:unless="${#lists.isEmpty(notificaciones)}"
+                 aria-labelledby="updates-clubs-title">
+            <header class="updates-section-heading">
+                <h2 id="updates-clubs-title">Solicitudes a clubes</h2>
+                <span th:text="${#lists.size(notificaciones)}">0</span>
+            </header>
+
+            <div class="updates-list">
+                <article class="update-item"
+                         th:each="solicitud : ${notificaciones}"
+                         th:attr="data-state=${solicitud.estado}">
+
+                    <span class="update-symbol" aria-hidden="true"
+                          th:text="${solicitud.estado.name() == 'APROBADA'
+                              ? '✓' : '×'}">
+                        ✓
+                    </span>
+
+                    <div class="update-copy">
+                        <p class="update-type">Solicitud de ingreso</p>
+
+                        <h3 th:text="${solicitud.estado.name() == 'APROBADA'
+                            ? '¡Tu solicitud fue aprobada!'
+                            : 'Tu solicitud fue rechazada'}">
+                            Respuesta a tu solicitud
+                        </h3>
+
+                        <p>
+                            Tu solicitud para
+                            <strong th:text="${solicitud.club.nombre}">
+                                Nombre del club
+                            </strong>
+                            fue
+                            <span th:text="${solicitud.estado.name() == 'APROBADA'
+                                ? 'aprobada' : 'rechazada'}">
+                                aprobada
+                            </span>.
+                        </p>
+
+                        <p class="update-date">
+                            Solicitud enviada el
+                            <time th:datetime="${solicitud.creadaEn}"
+                                  th:text="${#temporals.format(solicitud.creadaEn, 'dd/MM/yyyy HH:mm')}">
+                                Fecha de solicitud
+                            </time>
+                        </p>
+
+                        <a class="update-link" th:href="@{/solicitudes}">
+                            Consultar mis solicitudes →
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Solicitudes de amistad recibidas -->
+        <section class="updates-section"
+                 th:unless="${#lists.isEmpty(solicitudesAmistadPendientes)}"
+                 aria-labelledby="pending-friends-title">
+            <header class="updates-section-heading">
+                <h2 id="pending-friends-title">Solicitudes de amistad</h2>
+                <span th:text="${#lists.size(solicitudesAmistadPendientes)}">0</span>
+            </header>
+
+            <div class="updates-list">
+                <article class="update-item update-friend"
+                         th:each="solicitud : ${solicitudesAmistadPendientes}">
+                    <span class="update-symbol" aria-hidden="true">&#128101;</span>
+                    <div class="update-copy">
+                        <p class="update-type">Nueva conexión</p>
+                        <h3>Solicitud de amistad recibida</h3>
+                        <p>
+                            <strong th:text="${solicitud.solicitante.nombre}">
+                                Nombre de la persona
+                            </strong>
+                            quiere conectar contigo.
+                        </p>
+                        <p class="update-date">
+                            Enviada el
+                            <time th:datetime="${solicitud.creadaEn}"
+                                  th:text="${#temporals.format(solicitud.creadaEn, 'dd/MM/yyyy HH:mm')}">
+                                Fecha de solicitud
+                            </time>
+                        </p>
+                        <div class="request-actions">
+                            <form th:action="@{/amistades/{id}/aprobar(id=${solicitud.id})}" method="post">
+                                <button type="submit">Aceptar</button>
+                            </form>
+                            <form th:action="@{/amistades/{id}/rechazar(id=${solicitud.id})}" method="post">
+                                <button type="submit" class="danger-button">Rechazar</button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Respuestas de amistad -->
+        <section class="updates-section"
+                 th:unless="${#lists.isEmpty(notificacionesAmistad)}"
+                 aria-labelledby="updates-friends-title">
+            <header class="updates-section-heading">
+                <h2 id="updates-friends-title">Conexiones y amistades</h2>
+                <span th:text="${#lists.size(notificacionesAmistad)}">0</span>
+            </header>
+
+            <div class="updates-list">
+                <article class="update-item update-friend"
+                         th:each="solicitud : ${notificacionesAmistad}">
+                    <span class="update-symbol" aria-hidden="true">✓</span>
+
+                    <div class="update-copy">
+                        <p class="update-type">Tu comunidad crece</p>
+                        <h3>Solicitud de amistad aceptada</h3>
+
+                        <p>
+                            <strong th:text="${solicitud.destinatario.nombre}">
+                                Nombre de la persona
+                            </strong>
+                            aceptó tu solicitud de amistad.
+                        </p>
+
+                        <p class="update-date">
+                            Solicitud enviada el
+                            <time th:datetime="${solicitud.creadaEn}"
+                                  th:text="${#temporals.format(solicitud.creadaEn, 'dd/MM/yyyy HH:mm')}">
+                                Fecha de solicitud
+                            </time>
+                        </p>
+
+                        <a class="update-link" th:href="@{/personas}">
+                            Ir a personas →
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

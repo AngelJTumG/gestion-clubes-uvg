@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Clubes Estudiantiles | UVG</title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="landing-page">
+    <a class="landing-skip" href="#contenido">Saltar al contenido</a>
+
+    <div class="landing-utility">
+        Universidad del Valle de Guatemala · Vida estudiantil
+    </div>
+
+    <header class="landing-header">
+        <a class="landing-brand" th:href="@{/}"
+           aria-label="Clubes UVG, inicio">
+            <span class="landing-logo">
+                <img th:src="@{/images/Logo-UVG.png}"
+                     alt="Universidad del Valle de Guatemala">
+            </span>
+            <span>Clubes <strong>UVG</strong></span>
+        </a>
+
+        <nav class="landing-nav" aria-label="Navegación principal">
+            <a href="#comunidad">Cómo participar</a>
+            <a th:href="@{/login}">Iniciar sesión</a>
+            <a class="landing-nav-cta" th:href="@{/registro}">
+                Crear cuenta
+            </a>
+        </nav>
+    </header>
+
+    <main id="contenido">
+        <section class="landing-hero" aria-labelledby="titulo-inicio">
+            <div class="landing-hero-copy">
+                <p class="landing-kicker">Tu próxima comunidad empieza aquí</p>
+                <h1 id="titulo-inicio">
+                    Comparte lo que
+                    <span>te mueve.</span>
+                </h1>
+                <p class="landing-description">
+                    Descubre los clubes universitarios, conoce sus actividades
+                    y encuentra un espacio para compartir tus intereses.
+                </p>
+
+                <div class="landing-actions">
+                    <a class="landing-button landing-button-lime"
+                       th:href="@{/login}">
+                        Explorar clubes <span aria-hidden="true">↗</span>
+                    </a>
+                    <a class="landing-button landing-button-outline"
+                       th:href="@{/registro}">
+                        Crear mi cuenta
+                    </a>
+                </div>
+
+                <p class="landing-note">
+                    Inicia sesión para consultar los clubes y solicitar tu ingreso.
+                </p>
+            </div>
+
+            <div class="landing-jack">
+    <span class="jack-star" aria-hidden="true"></span>
+    <span class="jack-ring" aria-hidden="true"></span>
+    <span class="jack-spark jack-spark-one" aria-hidden="true">✦</span>
+    <span class="jack-spark jack-spark-two" aria-hidden="true">✧</span>
+
+    <img class="jack-character"
+         th:src="@{/images/jack/jack-bienvenida.png}"
+         alt="Jack, la mascota de UVG, saludando">
+
+    <span class="jack-caption">¡Aquí empieza tu comunidad!</span>
+            </div>
+        </section>
+
+        <section class="landing-community" id="comunidad"
+                 aria-labelledby="titulo-pasos">
+                <div class="community-jack" aria-hidden="true">
+                    <svg class="community-jack-doodles" viewBox="0 0 320 640" fill="none">
+                        <!-- Tres destellos junto a la cabeza -->
+                        <path d="M 180 105 L 192 80
+                                 M 200 135 L 226 127
+                                 M 203 170 L 230 176" stroke="#e8c900" stroke-width="9" stroke-linecap="round" />
+                    </svg>
+                
+                    <img class="jack-asomado" th:src="@{/images/jack/jack-asomado.png}" alt="" loading="lazy">
+                </div>
+            <div class="landing-section-heading">
+                <p class="landing-kicker">Encuentra tu lugar</p>
+                <h2 id="titulo-pasos">De la curiosidad a la comunidad.</h2>
+                <p>Empieza a formar parte de la vida de los clubes.</p>
+            </div>
+
+            <div class="landing-steps">
+                <article class="landing-step">
+                    <span class="landing-step-number">01</span>
+                    <h3>Descubre</h3>
+                    <p>
+                        Consulta los clubes disponibles y conoce
+                        su descripción, horarios y requisitos.
+                    </p>
+                </article>
+
+                <article class="landing-step">
+                    <span class="landing-step-number">02</span>
+                    <h3>Encuentra tu espacio</h3>
+                    <p>
+                        Revisa la información de cada club y elige
+                        el que conecte con tus intereses.
+                    </p>
+                </article>
+
+                <article class="landing-step">
+                    <span class="landing-step-number">03</span>
+                    <h3>Da el primer paso</h3>
+                    <p>
+                        Crea tu cuenta, inicia sesión y envía
+                        una solicitud de ingreso.
+                    </p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="landing-footer">
+        <span>Clubes UVG</span>
+        <p>Un espacio para conectar y participar.</p>
+        <a th:href="@{/login}">Ingresar al portal →</a>
+    </footer>
+</body>
+</html>

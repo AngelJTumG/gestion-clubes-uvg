@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Editar club | Clubes UVG</title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body class="dashboard-page activity-editor-page club-editor-page">
+    <header class="topbar">
+        <a class="brand activity-editor-brand" th:href="@{/panel}">
+            <img th:src="@{/images/Logo-UVG.png}"
+                 alt="Universidad del Valle de Guatemala">
+            <span>Clubes <strong>UVG</strong></span>
+        </a>
+
+        <div class="topbar-actions">
+            <a th:href="@{/panel}">Ir al panel</a>
+
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-button">
+                    Cerrar sesión
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <main class="activity-editor-main">
+        <a class="activity-editor-back"
+           th:href="@{/admin/clubes/{id}(id=${clubId})}">
+            ← Volver al club
+        </a>
+
+        <section class="activity-editor-banner"
+                 aria-labelledby="club-editor-title">
+            <div>
+                <p class="activity-editor-eyebrow">Cuida tu comunidad</p>
+                <h1 id="club-editor-title">Mantén tu club al día.</h1>
+                <p>
+                    Actualiza su información para que más estudiantes
+                    puedan conocerlo y participar.
+                </p>
+            </div>
+
+            <span class="activity-editor-spark"
+                  aria-hidden="true">✦</span>
+        </section>
+
+        <!-- Jack y formulario -->
+        <div class="club-editor-wrap">
+            <img class="club-editor-jack"
+                 th:src="@{/images/jack/jack-asomado.png}"
+                 alt=""
+                 aria-hidden="true">
+
+            <form class="club-editor-form"
+                  th:action="@{/admin/clubes/{id}/editar(id=${clubId})}"
+                  th:object="${club}"
+                  method="post">
+
+                <div class="alert error"
+                     role="alert"
+                     th:if="${#fields.hasGlobalErrors()}">
+                    <p th:each="error : ${#fields.globalErrors()}"
+                       th:text="${error}"></p>
+                </div>
+
+                <!-- Información general -->
+                <section class="club-editor-section"
+                         aria-labelledby="club-general-title">
+                    <header class="club-editor-section-heading">
+                        <span class="club-editor-number"
+                              aria-hidden="true">01</span>
+
+                        <div>
+                            <h2 id="club-general-title">Identidad del club</h2>
+                            <p>Cuenta qué hace especial a tu comunidad.</p>
+                        </div>
+                    </header>
+
+                    <div class="club-editor-fields">
+                        <div class="club-editor-field">
+                            <label for="nombre">Nombre del club</label>
+
+                            <input id="nombre"
+                                   type="text"
+                                   th:field="*{nombre}"
+                                   maxlength="100"
+                                   required
+                                   aria-describedby="nombre-error"
+                                   th:errorclass="field-invalid">
+
+                            <small id="nombre-error"
+                                   th:errors="*{nombre}"></small>
+                        </div>
+
+                        <div class="club-editor-field">
+                            <label for="categoria">Categoría</label>
+
+                            <select id="categoria"
+                                    th:field="*{categoria}"
+                                    required
+                                    aria-describedby="categoria-error"
+                                    th:errorclass="field-invalid">
+                                <option value="">
+                                    Selecciona una categoría
+                                </option>
+                                <option value="academico">Académico</option>
+                                <option value="deportivo">Deportivo</option>
+                                <option value="arte">Arte</option>
+                            </select>
+
+                            <small id="categoria-error"
+                                   th:errors="*{categoria}"></small>
+                        </div>
+
+                        <div class="club-editor-field club-editor-wide">
+                            <label for="descripcion">Descripción</label>
+
+                            <textarea id="descripcion"
+                                      th:field="*{descripcion}"
+                                      rows="4"
+                                      maxlength="255"
+                                      required
+                                      aria-describedby="descripcion-help descripcion-error"
+                                      th:errorclass="field-invalid"></textarea>
+
+                            <p id="descripcion-help" class="club-editor-help">
+                                Describe sus intereses y actividades
+                                en un máximo de 255 caracteres.
+                            </p>
+
+                            <small id="descripcion-error"
+                                   th:errors="*{descripcion}"></small>
+                        </div>
+
+                        <div class="club-editor-field club-editor-wide">
+                            <label for="requisitos">
+                                Requisitos para participar
+                            </label>
+
+                            <textarea id="requisitos"
+                                      th:field="*{requisitos}"
+                                      rows="3"
+                                      maxlength="100"
+                                      required
+                                      aria-describedby="requisitos-error"
+                                      th:errorclass="field-invalid"></textarea>
+
+                            <small id="requisitos-error"
+                                   th:errors="*{requisitos}"></small>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Horarios y ubicación -->
+                <section class="club-editor-section"
+                         aria-labelledby="club-meetings-title">
+                    <header class="club-editor-section-heading">
+                        <span class="club-editor-number"
+                              aria-hidden="true">02</span>
+
+                        <div>
+                            <h2 id="club-meetings-title">
+                                Puntos de encuentro
+                            </h2>
+                            <p>Define cuándo y dónde se reúne el club.</p>
+                        </div>
+                    </header>
+
+                    <fieldset class="club-editor-schedule">
+                        <legend>Horarios de reunión</legend>
+
+                        <p class="club-editor-help">
+                            Selecciona el día y las horas de inicio y fin.
+                            Puedes agregar más días.
+                        </p>
+
+                        <div class="day-fields"
+                             id="horarioDias1"
+                             data-day-group="horarioDias1">
+
+                            <div class="day-row"
+                                 th:each="indice : ${#numbers.sequence(0, club.horarioDias1.length - 1)}">
+
+                                <select name="horarioDias1"
+                                        aria-label="Día de reunión"
+                                        aria-describedby="horario-error"
+                                        required>
+                                    <option value="">
+                                        Selecciona un día
+                                    </option>
+
+                                    <option th:each="dia : ${#strings.arraySplit('Lunes,Martes,Miércoles,Jueves,Viernes,Sábado,Domingo', ',')}"
+                                            th:value="${dia}"
+                                            th:text="${dia}"
+                                            th:selected="${club.horarioDias1[indice] == dia}">
+                                    </option>
+                                </select>
+
+                                <input type="time"
+                                       name="horarioInicios1"
+                                       th:value="${club.horarioInicios1[indice]}"
+                                       aria-label="Hora inicial"
+                                       aria-describedby="horario-error"
+                                       required>
+
+                                <span>a</span>
+
+                                <input type="time"
+                                       name="horarioFines1"
+                                       th:value="${club.horarioFines1[indice]}"
+                                       aria-label="Hora final"
+                                       aria-describedby="horario-error"
+                                       required>
+                            </div>
+
+                            <button type="button"
+                                    class="add-day-button"
+                                    data-add-day="horarioDias1">
+                                + Más días
+                            </button>
+                        </div>
+
+                        <small id="horario-error"
+                               th:errors="*{horarioValido}"></small>
+                    </fieldset>
+
+                    <div class="club-editor-fields club-editor-location">
+                        <div class="club-editor-field">
+                            <label for="ubicacionEdificio">Edificio</label>
+
+                            <select id="ubicacionEdificio"
+                                    th:field="*{ubicacionEdificio}"
+                                    required
+                                    aria-describedby="ubicacion-error"
+                                    th:errorclass="field-invalid">
+                                <option value="">
+                                    Selecciona un edificio
+                                </option>
+
+                                <option th:each="edificio : ${#strings.arraySplit('A,B,CIT,D,E,F,G,H,I,J,K', ',')}"
+                                        th:value="${edificio}"
+                                        th:text="${edificio}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="club-editor-field">
+                            <label for="ubicacionNumero">
+                                Número de salón
+                            </label>
+
+                            <input id="ubicacionNumero"
+                                   type="text"
+                                   th:field="*{ubicacionNumero}"
+                                   inputmode="numeric"
+                                   pattern="[0-9]{3}"
+                                   maxlength="3"
+                                   placeholder="Ejemplo: 203"
+                                   required
+                                   aria-describedby="ubicacion-error"
+                                   th:errorclass="field-invalid">
+                        </div>
+                    </div>
+
+                    <small id="ubicacion-error"
+                           th:errors="*{ubicacionValida}"></small>
+                </section>
+
+                <!-- Contacto -->
+                <section class="club-editor-section"
+                         aria-labelledby="club-contact-title">
+                    <header class="club-editor-section-heading">
+                        <span class="club-editor-number"
+                              aria-hidden="true">03</span>
+
+                        <div>
+                            <h2 id="club-contact-title">
+                                Contacto y coordinación
+                            </h2>
+                            <p>
+                                Facilita que los estudiantes
+                                se comuniquen contigo.
+                            </p>
+                        </div>
+                    </header>
+
+                    <div class="club-editor-fields">
+                        <div class="club-editor-field club-editor-wide">
+                            <label for="datosContacto">
+                                Información de contacto
+                            </label>
+
+                            <textarea id="datosContacto"
+                                      th:field="*{datosContacto}"
+                                      rows="3"
+                                      maxlength="255"
+                                      required
+                                      aria-describedby="datosContacto-error"
+                                      th:errorclass="field-invalid"></textarea>
+
+                            <small id="datosContacto-error"
+                                   th:errors="*{datosContacto}"></small>
+                        </div>
+
+                        <div class="club-editor-field club-editor-wide">
+                            <label for="coordinadorEmail">
+                                Correo del coordinador
+                            </label>
+
+                            <input id="coordinadorEmail"
+                                   type="email"
+                                   th:field="*{coordinadorEmail}"
+                                   maxlength="150"
+                                   required
+                                   aria-describedby="coordinador-help coordinadorEmail-error"
+                                   th:errorclass="field-invalid">
+
+                            <p id="coordinador-help" class="club-editor-help">
+                                Usa una cuenta activa con rol ADMIN_CLUB
+                                o ADMIN. Puedes utilizar tu propia
+                                cuenta de administrador.
+                            </p>
+
+                            <small id="coordinadorEmail-error"
+                                   th:errors="*{coordinadorEmail}"></small>
+                        </div>
+                    </div>
+                </section>
+
+                <footer class="club-editor-save">
+                    <p>
+                        Todos los campos son obligatorios.
+                        Los cambios se aplicarán al guardar.
+                    </p>
+
+                    <div>
+                        <a class="button secondary"
+                           th:href="@{/admin/clubes/{id}(id=${clubId})}">
+                            Cancelar
+                        </a>
+
+                        <button type="submit">
+                            Guardar cambios →
+                        </button>
+                    </div>
+                </footer>
+            </form>
+        </div>
+    </main>
+
+    <script th:src="@{/js/club-form.js}"></script>
+</body>
+</html>

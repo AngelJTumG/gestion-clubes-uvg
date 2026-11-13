@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mis solicitudes | Clubes UVG</title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body class="dashboard-page activity-editor-page applications-page">
+    <header class="topbar">
+        <a class="brand activity-editor-brand" th:href="@{/panel}">
+            <img th:src="@{/images/Logo-UVG.png}"
+                 alt="Universidad del Valle de Guatemala">
+            <span>Clubes <strong>UVG</strong></span>
+        </a>
+
+        <div class="topbar-actions">
+            <a class="topbar-icon"
+               th:href="@{/notificaciones}"
+               title="Notificaciones"
+               aria-label="Notificaciones">
+                <span aria-hidden="true">&#128276;</span>
+            </a>
+
+            <a class="profile-chip"
+               th:href="@{/perfil}"
+               title="Mi perfil"
+               aria-label="Mi perfil">
+                <span class="profile-avatar">
+                    <img th:if="${usuarioActual.fotoPerfil}"
+                         th:src="${usuarioActual.fotoPerfil}"
+                         th:alt="${usuarioActual.nombre}">
+                    <span th:unless="${usuarioActual.fotoPerfil}"
+                          aria-hidden="true">&#9673;</span>
+                </span>
+            </a>
+
+            <a th:href="@{/panel}">Ir al panel</a>
+        </div>
+    </header>
+
+    <main class="applications-main"
+          th:with="
+              pendientes=${solicitudes.?[estado.name() == 'PENDIENTE']},
+              aprobadas=${solicitudes.?[estado.name() == 'APROBADA']},
+              rechazadas=${solicitudes.?[estado.name() == 'RECHAZADA']}">
+
+        <a class="activity-editor-back" th:href="@{/panel}">
+            ← Volver al panel
+        </a>
+
+        <section class="activity-editor-banner"
+                 aria-labelledby="applications-title">
+            <div>
+                <p class="activity-editor-eyebrow">Tu participación</p>
+                <h1 id="applications-title">Sigue tu próximo paso.</h1>
+                <p>
+                    Consulta el estado de tus solicitudes de ingreso
+                    y las respuestas de los clubes.
+                </p>
+            </div>
+
+            <span class="activity-editor-spark"
+                  aria-hidden="true">✦</span>
+        </section>
+
+        <!-- Resumen -->
+        <div class="applications-summary"
+             th:unless="${#lists.isEmpty(solicitudes)}">
+            <div class="applications-stat" data-state="PENDIENTE">
+                <span>Pendientes</span>
+                <strong th:text="${#lists.size(pendientes)}">0</strong>
+                <p>En espera de revisión</p>
+            </div>
+
+            <div class="applications-stat" data-state="APROBADA">
+                <span>Aprobadas</span>
+                <strong th:text="${#lists.size(aprobadas)}">0</strong>
+                <p>Con respuesta favorable</p>
+            </div>
+
+            <div class="applications-stat" data-state="RECHAZADA">
+                <span>Rechazadas</span>
+                <strong th:text="${#lists.size(rechazadas)}">0</strong>
+                <p>No aprobadas por el club</p>
+            </div>
+        </div>
+
+        <section class="applications-content"
+                 aria-labelledby="applications-list-title">
+            <header class="applications-heading">
+                <div>
+                    <p class="activity-editor-eyebrow">Tus solicitudes</p>
+                    <h2 id="applications-list-title">Estado de solicitudes</h2>
+                </div>
+
+                <a class="button secondary" th:href="@{/mis-clubes}">
+                    Ver mis clubes →
+                </a>
+            </header>
+
+            <!-- Estado vacío -->
+            <div class="applications-empty"
+                 th:if="${#lists.isEmpty(solicitudes)}">
+                <span aria-hidden="true">✦</span>
+                <h3>Todo empieza con una solicitud</h3>
+                <p>
+                    Todavía no has enviado solicitudes.
+                    Conoce los clubes y encuentra uno
+                    que comparta tus intereses.
+                </p>
+
+                <a class="button" th:href="@{/panel}">
+                    Explorar clubes →
+                </a>
+            </div>
+
+            <!-- Solicitudes -->
+            <div class="applications-list"
+                 th:unless="${#lists.isEmpty(solicitudes)}">
+                <article class="application-item"
+                         th:each="solicitud : ${solicitudes}">
+                    <div class="application-copy">
+                        <p class="application-label">Solicitud de ingreso</p>
+
+                        <h3 th:text="${solicitud.club.nombre}">
+                            Nombre del club
+                        </h3>
+
+                        <p class="application-date">
+                            Enviada el
+                            <time th:datetime="${solicitud.creadaEn}"
+                                  th:text="${#temporals.format(solicitud.creadaEn, 'dd/MM/yyyy HH:mm')}">
+                                Fecha de solicitud
+                            </time>
+                        </p>
+
+                        <p class="application-message"
+                           th:text="${solicitud.estado.name() == 'PENDIENTE'
+                               ? 'El equipo del club todavía está revisando tu solicitud.'
+                               : (solicitud.estado.name() == 'APROBADA'
+                                   ? 'Tu solicitud de ingreso fue aprobada.'
+                                   : 'El club no aprobó esta solicitud. Puedes consultar su información y requisitos.')}">
+                            Estado de tu solicitud.
+                        </p>
+                    </div>
+
+                    <div class="application-actions">
+                        <span class="application-status"
+                              th:attr="data-state=${solicitud.estado}"
+                              th:text="${solicitud.estado.name() == 'PENDIENTE'
+                                  ? 'Pendiente'
+                                  : (solicitud.estado.name() == 'APROBADA'
+                                      ? 'Aprobada'
+                                      : 'Rechazada')}">
+                            Pendiente
+                        </span>
+
+                        <a th:if="${solicitud.club.status}"
+                           th:href="@{/admin/clubes/{id}(id=${solicitud.club.id})}"
+                           th:aria-label="${'Ver el club ' + solicitud.club.nombre}">
+                            Ver club →
+                        </a>
+
+                        <span class="application-unavailable"
+                              th:unless="${solicitud.club.status}">
+                            Club inactivo
+                        </span>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

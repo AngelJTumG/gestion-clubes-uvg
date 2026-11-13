@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${actividad.id == null
+        ? 'Publicar actividad | Clubes UVG'
+        : 'Editar actividad | Clubes UVG'}">
+        Actividad | Clubes UVG
+    </title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body class="dashboard-page activity-editor-page">
+    <header class="topbar">
+        <a class="brand activity-editor-brand" th:href="@{/panel}">
+            <img th:src="@{/images/Logo-UVG.png}"
+                 alt="Universidad del Valle de Guatemala">
+            <span>Clubes <strong>UVG</strong></span>
+        </a>
+
+        <div class="topbar-actions">
+            <a th:href="@{/panel}">Ir al panel</a>
+
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-button">
+                    Cerrar sesión
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <main class="activity-editor-main">
+        <a class="activity-editor-back"
+           th:href="@{/club-admin/clubes/{id}/actividades(id=${clubId})}">
+            ← Volver a las actividades
+        </a>
+
+        <section class="activity-editor-banner"
+                 aria-labelledby="activity-editor-title">
+            <div>
+                <p class="activity-editor-eyebrow">Dale vida a tu club</p>
+
+                <h1 id="activity-editor-title"
+                    th:text="${actividad.id == null
+                        ? 'Comparte la próxima actividad.'
+                        : 'Actualiza tu actividad.'}">
+                    Comparte la próxima actividad.
+                </h1>
+
+                <p>
+                    Reúne a tu comunidad con una descripción clara,
+                    una fecha y un lugar de encuentro.
+                </p>
+            </div>
+
+            <span class="activity-editor-spark"
+                  aria-hidden="true">✦</span>
+        </section>
+
+        <section class="activity-editor-card"
+                 aria-labelledby="activity-form-title">
+            <header class="activity-editor-card-heading">
+                <p class="activity-editor-eyebrow">Información del evento</p>
+                <h2 id="activity-form-title">Los detalles hacen la diferencia</h2>
+                <p>Todos los campos son obligatorios.</p>
+            </header>
+
+            <form class="activity-editor-form"
+                  method="post"
+                  th:object="${actividad}"
+                  th:action="${actividad.id == null
+                      ? '/club-admin/clubes/' + clubId + '/actividades'
+                      : '/club-admin/actividades/' + actividad.id}">
+
+                <div class="activity-editor-fields">
+                    <div class="activity-editor-field activity-editor-wide">
+                        <label for="nombre">Nombre de la actividad</label>
+                        <input id="nombre"
+                               type="text"
+                               th:field="*{nombre}"
+                               placeholder="Ejemplo: Ensayo abierto del club"
+                               maxlength="100"
+                               required>
+                    </div>
+
+                    <div class="activity-editor-field activity-editor-wide">
+                        <label for="descripcion">¿En qué consiste?</label>
+                        <textarea id="descripcion"
+                                  th:field="*{descripcion}"
+                                  placeholder="Cuenta qué harán y qué deben saber los participantes."
+                                  rows="4"
+                                  maxlength="255"
+                                  aria-describedby="activity-description-help"
+                                  required></textarea>
+                        <p id="activity-description-help"
+                           class="activity-editor-help">
+                            Describe la actividad en un máximo de 255 caracteres.
+                        </p>
+                    </div>
+
+                    <div class="activity-editor-field">
+                        <label for="fecha">Fecha</label>
+                        <input id="fecha"
+                               type="date"
+                               th:field="*{fecha}"
+                               required>
+                    </div>
+
+                    <div class="activity-editor-field">
+                        <label for="horaInicio">Hora de inicio</label>
+                        <input id="horaInicio"
+                               type="time"
+                               th:field="*{horaInicio}"
+                               required>
+                    </div>
+
+                    <div class="activity-editor-field activity-editor-wide">
+                        <label for="ubicacion">Lugar de encuentro</label>
+                        <input id="ubicacion"
+                               type="text"
+                               th:field="*{ubicacion}"
+                               placeholder="Indica el edificio, salón o punto de reunión"
+                               maxlength="100"
+                               required>
+                    </div>
+                </div>
+
+                <div class="activity-editor-actions">
+                    <a class="button secondary"
+                       th:href="@{/club-admin/clubes/{id}/actividades(id=${clubId})}">
+                        Cancelar
+                    </a>
+
+                    <button type="submit"
+                            th:text="${actividad.id == null
+                                ? 'Publicar actividad →'
+                                : 'Guardar cambios →'}">
+                        Publicar actividad →
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

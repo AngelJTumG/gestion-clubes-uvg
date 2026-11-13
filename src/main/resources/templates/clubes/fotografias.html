@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fotografías del club | Clubes UVG</title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body class="dashboard-page activity-editor-page photo-manager-page">
+    <header class="topbar">
+        <a class="brand activity-editor-brand" th:href="@{/panel}">
+            <img th:src="@{/images/Logo-UVG.png}"
+                 alt="Universidad del Valle de Guatemala">
+            <span>Clubes <strong>UVG</strong></span>
+        </a>
+
+        <div class="topbar-actions">
+            <a th:href="@{/panel}">Ir al panel</a>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-button">
+                    Cerrar sesión
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <main class="photo-manager-main">
+        <a class="activity-editor-back"
+           th:href="@{/admin/clubes/{id}(id=${club.id})}">
+            ← Volver al club
+        </a>
+
+        <section class="activity-editor-banner"
+                 aria-labelledby="photo-manager-title">
+            <div>
+                <p class="activity-editor-eyebrow"
+                   th:text="${club.nombre}">
+                    Nombre del club
+                </p>
+
+                <h1 id="photo-manager-title">
+                    Comparte lo que viven juntos.
+                </h1>
+
+                <p>
+                    Muestra los encuentros, las actividades
+                    y los momentos que hacen especial a tu club.
+                </p>
+            </div>
+
+            <span class="activity-editor-spark"
+                  aria-hidden="true">✦</span>
+        </section>
+
+        <p class="alert success" role="status"
+           th:if="${exito}" th:text="${exito}"></p>
+
+        <p class="alert error" role="alert"
+           th:if="${error}" th:text="${error}"></p>
+
+        <!-- Agregar fotografía -->
+        <section class="photo-manager-upload"
+                 aria-labelledby="photo-upload-title">
+            <header class="photo-manager-heading">
+                <div>
+                    <p class="activity-editor-eyebrow">Un nuevo recuerdo</p>
+                    <h2 id="photo-upload-title">Agregar fotografía</h2>
+                    <p>Selecciona un archivo o escribe la URL de una imagen.</p>
+                </div>
+            </header>
+
+            <form class="photo-manager-form"
+                  method="post"
+                  enctype="multipart/form-data"
+                  th:action="@{/club-admin/clubes/{id}/fotografias(id=${club.id})}"
+                  th:object="${fotografia}">
+
+                <div class="photo-manager-fields">
+                    <div class="photo-manager-field photo-file-field">
+                        <label for="photo-file">Desde tus archivos</label>
+
+                        <input id="photo-file"
+                               type="file"
+                               name="archivo"
+                               accept="image/png,image/jpeg,image/gif,image/webp"
+                               aria-describedby="photo-file-help">
+
+                        <p id="photo-file-help" class="photo-manager-help">
+                            PNG, JPG, GIF o WebP. Máximo 5 MB.
+                        </p>
+                    </div>
+
+                    <div class="photo-manager-field">
+                        <label for="urlImagen">O utiliza una URL</label>
+
+                        <input id="urlImagen"
+                               type="text"
+                               th:field="*{urlImagen}"
+                               inputmode="url"
+                               maxlength="255"
+                               placeholder="https://..."
+                               aria-describedby="photo-url-help">
+
+                        <p id="photo-url-help" class="photo-manager-help">
+                            Opcional si seleccionaste un archivo.
+                            Si completas ambos, se utilizará el archivo.
+                        </p>
+                    </div>
+
+                    <div class="photo-manager-field photo-manager-wide">
+                        <label for="descripcion">
+                            Descripción de la fotografía
+                        </label>
+
+                        <input id="descripcion"
+                               type="text"
+                               th:field="*{descripcion}"
+                               maxlength="100"
+                               placeholder="Ejemplo: Presentación del club en la universidad"
+                               aria-describedby="photo-description-help">
+
+                        <p id="photo-description-help" class="photo-manager-help">
+                            Opcional. Hasta 100 caracteres para contar
+                            qué sucede en la imagen.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="photo-manager-submit">
+                    <button type="submit">Agregar fotografía →</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Galería -->
+        <section class="photo-manager-gallery-section"
+                 aria-labelledby="photo-gallery-title">
+            <header class="photo-manager-heading">
+                <div>
+                    <p class="activity-editor-eyebrow">Momentos del club</p>
+                    <h2 id="photo-gallery-title">Tu galería</h2>
+                </div>
+
+                <span class="photo-manager-count"
+                      th:text="${#lists.size(fotografias) == 1
+                          ? '1 fotografía'
+                          : #lists.size(fotografias) + ' fotografías'}">
+                    0 fotografías
+                </span>
+            </header>
+
+            <div class="photo-manager-empty"
+                 th:if="${#lists.isEmpty(fotografias)}">
+                <span aria-hidden="true">✦</span>
+                <h3>La historia de tu club empieza aquí</h3>
+                <p>
+                    Agrega la primera fotografía para que
+                    otros estudiantes conozcan su comunidad.
+                </p>
+            </div>
+
+            <div class="photo-manager-grid"
+                 th:unless="${#lists.isEmpty(fotografias)}">
+                <figure class="photo-manager-item"
+                        th:each="foto : ${fotografias}">
+                    <a class="photo-manager-image-link"
+                       th:href="${foto.urlImagen}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       th:aria-label="${'Abrir fotografía: '
+                           + foto.descripcion
+                           + ' (nueva pestaña)'}">
+                        <img th:src="${foto.urlImagen}"
+                             th:alt="${foto.descripcion}"
+                             loading="lazy">
+                    </a>
+
+                    <figcaption>
+                        <p th:text="${foto.descripcion}">
+                            Descripción de la fotografía
+                        </p>
+
+                        <div class="photo-manager-item-actions">
+                            <a th:href="${foto.urlImagen}"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                                Ampliar ↗
+                                <span class="photo-manager-sr-only">
+                                    (nueva pestaña)
+                                </span>
+                            </a>
+
+                            <form method="post"
+                                  th:action="@{/club-admin/fotografias/{id}/eliminar(id=${foto.id})}"
+                                  onsubmit="return confirm('¿Eliminar esta fotografía de la galería? Esta acción no se puede deshacer.');">
+                                <button type="submit"
+                                        class="photo-manager-delete"
+                                        th:aria-label="${'Eliminar fotografía: '
+                                            + foto.descripcion}">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </div>
+                    </figcaption>
+                </figure>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

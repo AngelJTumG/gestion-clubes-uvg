@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mis clubes | Clubes UVG</title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body class="dashboard-page activity-editor-page my-clubs-page">
+    <header class="topbar">
+        <a class="brand activity-editor-brand" th:href="@{/panel}">
+            <img th:src="@{/images/Logo-UVG.png}"
+                 alt="Universidad del Valle de Guatemala">
+            <span>Clubes <strong>UVG</strong></span>
+        </a>
+
+        <div class="topbar-actions">
+            <a class="topbar-icon"
+               th:href="@{/notificaciones}"
+               title="Notificaciones"
+               aria-label="Notificaciones">
+                <span aria-hidden="true">&#128276;</span>
+            </a>
+
+            <a class="profile-chip"
+               th:href="@{/perfil}"
+               title="Mi perfil"
+               aria-label="Mi perfil">
+                <span class="profile-avatar">
+                    <img th:if="${usuarioActual.fotoPerfil}"
+                         th:src="${usuarioActual.fotoPerfil}"
+                         th:alt="${usuarioActual.nombre}">
+                    <span th:unless="${usuarioActual.fotoPerfil}"
+                          aria-hidden="true">&#9673;</span>
+                </span>
+            </a>
+
+            <a th:href="@{/panel}">Ir al panel</a>
+        </div>
+    </header>
+
+    <main class="my-clubs-main">
+        <a class="activity-editor-back" th:href="@{/panel}">
+            ← Volver al panel
+        </a>
+
+        <section class="activity-editor-banner"
+                 aria-labelledby="my-clubs-title">
+            <div>
+                <p class="activity-editor-eyebrow">Participación estudiantil</p>
+                <h1 id="my-clubs-title">Estos son tus espacios.</h1>
+                <p>
+                    Encuentra las comunidades de las que formas parte
+                    y consulta cómo van tus solicitudes.
+                </p>
+            </div>
+
+            <span class="activity-editor-spark"
+                  aria-hidden="true">✦</span>
+        </section>
+
+        <!-- Membresías -->
+        <section class="my-clubs-section"
+                 aria-labelledby="my-clubs-list-title">
+            <header class="my-clubs-heading">
+                <div>
+                    <p class="activity-editor-eyebrow">Tu comunidad</p>
+                    <h2 id="my-clubs-list-title">Clubes a los que perteneces</h2>
+                </div>
+
+                <span class="my-clubs-count"
+                      th:text="${#lists.size(membresias) == 1
+                          ? '1 club'
+                          : #lists.size(membresias) + ' clubes'}">
+                    0 clubes
+                </span>
+            </header>
+
+            <div class="my-clubs-empty"
+                 th:if="${#lists.isEmpty(membresias)}">
+                <span aria-hidden="true">✦</span>
+                <h3>Tu próxima comunidad te espera</h3>
+                <p>
+                    Aún no perteneces a ningún club.
+                    Explora las opciones y solicita ingreso
+                    al que conecte con tus intereses.
+                </p>
+
+                <a class="button" th:href="@{/panel}">
+                    Explorar clubes →
+                </a>
+            </div>
+
+            <div class="my-clubs-grid"
+                 th:unless="${#lists.isEmpty(membresias)}">
+                <article class="my-club-card"
+                         th:each="membresia : ${membresias}">
+                    <span class="my-club-category"
+                          th:text="${membresia.club.categoria}">
+                        Categoría
+                    </span>
+
+                    <h3 th:text="${membresia.club.nombre}">
+                        Nombre del club
+                    </h3>
+
+                    <p class="my-club-description"
+                       th:text="${membresia.club.descripcion}">
+                        Descripción del club.
+                    </p>
+
+                    <p class="my-club-date">
+                        Miembro desde
+                        <strong th:text="${#temporals.format(membresia.fechaIngreso, 'dd/MM/yyyy')}">
+                            Fecha de ingreso
+                        </strong>
+                    </p>
+
+                    <a class="button my-club-link"
+                       th:href="@{/admin/clubes/{id}(id=${membresia.club.id})}"
+                       th:aria-label="${'Ver el club ' + membresia.club.nombre}">
+                        Ver mi club
+                        <span aria-hidden="true">↗</span>
+                    </a>
+                </article>
+            </div>
+        </section>
+
+        <!-- Resumen de solicitudes -->
+        <section class="my-clubs-requests"
+                 aria-labelledby="my-clubs-requests-title">
+            <header class="my-clubs-heading">
+                <div>
+                    <p class="activity-editor-eyebrow">Sigue tu participación</p>
+                    <h2 id="my-clubs-requests-title">Mis solicitudes</h2>
+                </div>
+
+                <a class="button secondary" th:href="@{/solicitudes}">
+                    Ver todas →
+                </a>
+            </header>
+
+            <p class="my-clubs-no-requests"
+               th:if="${#lists.isEmpty(solicitudes)}">
+                No tienes solicitudes registradas.
+                Puedes enviar una desde el detalle de un club.
+            </p>
+
+            <div class="my-clubs-request-list"
+                 th:unless="${#lists.isEmpty(solicitudes)}">
+                <article class="my-clubs-request"
+                         th:each="solicitud : ${solicitudes}">
+                    <div>
+                        <h3 th:text="${solicitud.club.nombre}">
+                            Nombre del club
+                        </h3>
+                        <p>
+                            Enviada el
+                            <time th:datetime="${solicitud.creadaEn}"
+                                  th:text="${#temporals.format(solicitud.creadaEn, 'dd/MM/yyyy HH:mm')}">
+                                Fecha de solicitud
+                            </time>
+                        </p>
+                    </div>
+
+                    <span class="my-clubs-request-status"
+                          th:attr="data-state=${solicitud.estado}"
+                          th:text="${solicitud.estado == T(com.gestionclubes.models.EstadoSolicitud).PENDIENTE
+                              ? 'Pendiente'
+                              : (solicitud.estado == T(com.gestionclubes.models.EstadoSolicitud).APROBADA
+                                  ? 'Aprobada'
+                                  : 'Rechazada')}">
+                        Pendiente
+                    </span>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Iniciar sesión | Clubes UVG</title>
+
+    <link rel="icon" type="image/png"
+          th:href="@{/images/Logo-UVG.png}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="login-page">
+    <main class="login-layout">
+        <section class="login-welcome"
+                 aria-labelledby="login-welcome-title">
+                <div class="login-shapes" aria-hidden="true">
+                    <span class="login-shape-star"></span>
+                    <span class="login-shape-ring"></span>
+                    <span class="login-shape-spark">✦</span>
+                </div>
+            <a class="login-home" th:href="@{/}">
+                <span aria-hidden="true">←</span> Volver al inicio
+            </a>
+
+            <div class="login-welcome-copy">
+                <p class="login-eyebrow">Clubes UVG</p>
+                <h2 id="login-welcome-title">
+                    Tu comunidad<br>
+                    <span>te espera.</span>
+                </h2>
+                <p>
+                    Conecta con tus intereses y encuentra
+                    tu próximo espacio en la universidad.
+                </p>
+            </div>
+            <div class="login-jack-window" 
+            aria-hidden="true">
+                <img class="login-jack" 
+                th:src="@{/images/jack/jack-hablando.png}" 
+                alt="">
+            </div>
+
+
+            <p class="login-welcome-footer">
+                Universidad del Valle de Guatemala
+            </p>
+        </section>
+
+        <section class="login-form-panel"
+                 aria-labelledby="login-title">
+            <div class="login-form-content">
+                <a class="login-brand" th:href="@{/}"
+                   aria-label="Clubes UVG, volver al inicio">
+                    <img th:src="@{/images/Logo-UVG.png}"
+                         alt="Universidad del Valle de Guatemala">
+                    <span>Clubes <strong>UVG</strong></span>
+                </a>
+
+                <p class="login-eyebrow">Bienvenido de nuevo</p>
+                <h1 id="login-title">Iniciar sesión</h1>
+                <p class="login-intro">
+                    Ingresa con el correo de tu cuenta para continuar.
+                </p>
+
+                <p th:if="${param.error}"
+                   class="alert error" role="alert">
+                    Correo o contraseña incorrectos.
+                </p>
+
+                <p th:if="${param.logout}"
+                   class="alert success" role="status">
+                    Sesión cerrada correctamente.
+                </p>
+
+                <p th:if="${param.registroExitoso}"
+                   class="alert success" role="status">
+                    Cuenta creada. Ya puedes iniciar sesión.
+                </p>
+
+                <form class="login-form"
+                      th:action="@{/login}" method="post">
+                    <label for="login-email">
+                        Correo electrónico
+                    </label>
+                    <input id="login-email"
+                           type="email"
+                           name="username"
+                           autocomplete="username"
+                           placeholder="tu.correo@ejemplo.com"
+                           required>
+
+                    <label for="login-password">
+                        Contraseña
+                    </label>
+                    <input id="login-password"
+                           type="password"
+                           name="password"
+                           autocomplete="current-password"
+                           placeholder="Ingresa tu contraseña"
+                           required>
+
+                    <button type="submit">Ingresar al portal →</button>
+                </form>
+
+                <p class="login-register">
+                    ¿Todavía no tienes cuenta?
+                    <a th:href="@{/registro}">Regístrate</a>
+                </p>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
