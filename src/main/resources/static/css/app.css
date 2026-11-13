@@ -4041,6 +4041,112 @@ body.activity-editor-page {
     margin: 22px 0 0;
 }
 
+.confirm-modal[hidden] {
+    display: none;
+}
+
+.confirm-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+}
+
+.confirm-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgb(3 23 14 / 62%);
+    backdrop-filter: blur(3px);
+}
+
+.confirm-modal-card {
+    position: relative;
+    width: min(100%, 430px);
+    padding: 30px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: #fff;
+    color: var(--uvg-text-dark);
+    box-shadow: 0 20px 70px rgb(0 0 0 / 28%);
+    text-align: center;
+    animation: confirm-modal-in .18s ease-out;
+}
+
+.confirm-modal-icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    background: #fff0e6;
+    color: #b94a16;
+    font-weight: 800;
+}
+
+.confirm-modal-card h2 {
+    margin: 0 0 8px;
+    color: var(--green-900);
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+}
+
+.confirm-modal-message {
+    margin: 0;
+    color: #52645c;
+    line-height: 1.6;
+}
+
+.confirm-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.confirm-modal-actions button {
+    min-width: 120px;
+}
+
+.confirm-modal-cancel {
+    background: var(--green-100);
+    color: var(--green-900);
+}
+
+.confirm-modal-submit {
+    background: #c62828;
+}
+
+.confirm-modal-submit:hover {
+    background: #9e1f1f;
+}
+
+@keyframes confirm-modal-in {
+    from { opacity: 0; transform: translateY(8px) scale(.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+:root[data-theme="dark"] .confirm-modal-card {
+    background: #1b2721;
+    color: #e8f2ed;
+    border-color: #527262;
+}
+
+:root[data-theme="dark"] .confirm-modal-card h2 {
+    color: #73e5a8;
+}
+
+:root[data-theme="dark"] .confirm-modal-message {
+    color: #b7cfc0;
+}
+
+:root[data-theme="dark"] .confirm-modal-cancel {
+    background: #194f36;
+    color: #d9ffe6;
+}
+
 .club-profile-join button {
     width: 100%;
     font-size: .88rem;

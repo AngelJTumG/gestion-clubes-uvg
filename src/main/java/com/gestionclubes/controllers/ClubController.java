@@ -25,6 +25,7 @@ import com.gestionclubes.models.EstadoSolicitud;
 import com.gestionclubes.service.ClubService;
 import com.gestionclubes.service.ActividadService;
 import com.gestionclubes.service.EstudianteService;
+import com.gestionclubes.service.MembresiaService;
 import com.gestionclubes.service.SolicitudIngresoService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -41,13 +42,16 @@ public class ClubController {
     private final SolicitudIngresoService solicitudService;
     private final EstudianteService estudianteService;
     private final ActividadService actividadService;
+    private final MembresiaService membresiaService;
 
     public ClubController(ClubService clubService, SolicitudIngresoService solicitudService,
-                          EstudianteService estudianteService, ActividadService actividadService) {
+                          EstudianteService estudianteService, ActividadService actividadService,
+                          MembresiaService membresiaService) {
         this.clubService = clubService;
         this.solicitudService = solicitudService;
         this.estudianteService = estudianteService;
         this.actividadService = actividadService;
+        this.membresiaService = membresiaService;
     }
 
     /** Prepara el formulario de creación con el usuario actual como coordinador. */
@@ -119,6 +123,7 @@ public class ClubController {
         model.addAttribute("puedeSolicitar", puedeSolicitar && club.isStatus());
         model.addAttribute("estadoSolicitud", estadoSolicitud);
         model.addAttribute("requiereCarne", puedeSolicitar && !estudianteService.tieneCarne(authentication.getName()));
+        model.addAttribute("esMiembro", membresiaService.esMiembro(authentication.getName(), id));
 
         return "clubes/detalle";
     }

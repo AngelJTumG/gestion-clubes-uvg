@@ -14,6 +14,7 @@ import com.gestionclubes.models.Usuario;
  */
 public interface MembresiaRepository extends JpaRepository<Membresia, Long> {
     Optional<Membresia> findByEstudiante_CarneAndClub_Id(String carne, Long clubId);
+    Optional<Membresia> findByEstudiante_Usuario_EmailIgnoreCaseAndClub_Id(String email, Long clubId);
     @EntityGraph(attributePaths = {"estudiante", "estudiante.usuario"})
     List<Membresia> findByClub_IdOrderByFechaIngresoAsc(Long clubId);
     @EntityGraph(attributePaths = {"club"})

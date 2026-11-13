@@ -17,6 +17,7 @@
 
     <link rel="stylesheet" th:href="@{/css/app.css}">
     <script th:src="@{/js/preferences.js}" defer></script>
+    <script th:src="@{/js/confirm-modal.js}" defer></script>
 </head>
 
 <body class="dashboard-page activity-editor-page club-profile-page">
@@ -269,6 +270,20 @@
                           method="post">
                         <button type="submit">
                             Solicitar ingreso →
+                        </button>
+                    </form>
+
+                    <form class="club-profile-request-form"
+                          th:if="${esMiembro}"
+                          th:action="@{/clubes/{id}/salir(id=${club.id})}"
+                          method="post"
+                          data-confirm-message="¿Quieres salir de este club?"
+                          data-confirm-action="Salir del club">
+                        <input type="hidden"
+                               th:name="${_csrf.parameterName}"
+                               th:value="${_csrf.token}">
+                        <button type="submit" class="club-profile-leave">
+                            Salir del club
                         </button>
                     </form>
                 </section>

@@ -199,6 +199,19 @@ public class GestionClubController {
         return "clubes/integrantes";
     }
 
+    @PostMapping("/club-admin/clubes/{clubId}/integrantes/{membresiaId}/retirar")
+    public String retirarIntegrante(@PathVariable Long clubId, @PathVariable Long membresiaId,
+                                    Principal principal, RedirectAttributes redirect) {
+        verificarClub(clubId, principal);
+        try {
+            membresiaService.retirar(membresiaId, clubId);
+            redirect.addFlashAttribute("exito", "Integrante retirado del club");
+        } catch (IllegalArgumentException ex) {
+            redirect.addFlashAttribute("error", ex.getMessage());
+        }
+        return "redirect:/clubes/" + clubId + "/integrantes";
+    }
+
     /** Muestra las solicitudes de ingreso del usuario autenticado. */
     @GetMapping({"/solicitudes", "/mis-solicitudes"})
     public String misSolicitudes(Principal principal, Model model) {
