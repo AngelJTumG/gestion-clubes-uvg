@@ -6600,6 +6600,19 @@ body.activity-editor-page {
     background: #194f36;
 }
 
+:root[data-theme="dark"] .campus-calendar-navigation .button.secondary,
+:root[data-theme="dark"] .campus-calendar-actions .button.secondary {
+    background: #24744d;
+    color: #f3fff8;
+    border: 1px solid #65d99b;
+}
+
+:root[data-theme="dark"] .campus-calendar-navigation .button.secondary:hover,
+:root[data-theme="dark"] .campus-calendar-actions .button.secondary:hover {
+    background: #2f9562;
+    color: #ffffff;
+}
+
 :root[data-theme="dark"] .panel-view .club-filters,
 :root[data-theme="dark"] .panel-view .panel-club-card,
 :root[data-theme="dark"] .panel-view .panel-club-card .club-card-body {
