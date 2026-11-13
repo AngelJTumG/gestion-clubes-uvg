@@ -30,6 +30,9 @@ import com.gestionclubes.service.SolicitudIngresoService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
+/**
+ * Atiende las operaciones de creación, consulta y administración de clubes.
+ */
 @Controller
 @RequestMapping("/admin/clubes")
 public class ClubController {
@@ -47,6 +50,7 @@ public class ClubController {
         this.actividadService = actividadService;
     }
 
+    /** Prepara el formulario de creación con el usuario actual como coordinador. */
     @GetMapping("/nuevo")
     public String formulario(Model model, Principal principal) {
         RegistroClubDto dto = new RegistroClubDto();
@@ -55,6 +59,7 @@ public class ClubController {
         return "clubes/nuevo";
     }
 
+    /** Valida y guarda un club, o devuelve el formulario con los errores. */
     @PostMapping
     public String crear(@Valid @ModelAttribute("club") RegistroClubDto dto,
                         BindingResult result, RedirectAttributes redirect) {
@@ -77,6 +82,7 @@ public class ClubController {
         return "clubes/nuevo";
     }
 
+    /** Muestra el club y las acciones disponibles según el rol del usuario. */
     @GetMapping("/{id}")
     public String detalle(@PathVariable("id") Long id, Model model, Authentication authentication) {
         Club club = clubService.buscarPorId(id)
@@ -117,6 +123,7 @@ public class ClubController {
         return "clubes/detalle";
     }
 
+    /** Comprueba permisos y prepara el formulario con los datos actuales del club. */
     @GetMapping("/{id}/editar")
     public String formularioEdicion(@PathVariable("id") Long id, Model model, Authentication authentication) {
         try {
@@ -129,6 +136,7 @@ public class ClubController {
         }
     }
 
+    /** Valida y guarda cambios del club después de comprobar los permisos. */
     @PostMapping("/{id}/editar")
     public String actualizar(@PathVariable("id") Long id,
                              @Valid @ModelAttribute("club") RegistroClubDto dto,
@@ -157,6 +165,7 @@ public class ClubController {
         return "clubes/editar";
     }
 
+    /** Desactiva el club y regresa a su página de detalle. */
     @PostMapping("/{id}/desactivar")
     public String desactivar(
         @PathVariable("id") Long id,
@@ -181,6 +190,7 @@ public class ClubController {
         return "redirect:/admin/clubes/" + id;
     }
 
+    /** Activa el club y regresa a su página de detalle. */
     @PostMapping("/{id}/activar")
     public String activar(@PathVariable("id") Long id,
                           Authentication authentication,
@@ -197,6 +207,7 @@ public class ClubController {
         return "redirect:/admin/clubes/" + id;
     }
 
+    /** Permite gestionar el club solo a su coordinador o a un administrador. */
     private void verificarGestion(Long id, Authentication authentication) {
         Club club = clubService.buscarPorId(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,

@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.EntityGraph;
 
 import com.gestionclubes.models.Actividad;
 
+/**
+ * Consultas de actividades, ordenadas por fecha y hora e incluyendo su club.
+ */
 public interface ActividadRepository extends JpaRepository<Actividad, Long> {
     @EntityGraph(attributePaths = {"club"})
     List<Actividad> findAllByOrderByFechaAscHoraInicioAsc();

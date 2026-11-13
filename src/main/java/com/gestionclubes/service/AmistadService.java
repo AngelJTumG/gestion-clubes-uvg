@@ -1,6 +1,7 @@
 package com.gestionclubes.service;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,16 @@ public class AmistadService {
     @Transactional(readOnly = true)
     public List<SolicitudAmistad> recibidas(String email) {
         return solicitudRepository.findByDestinatario_EmailIgnoreCaseOrderByCreadaEnDesc(email);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SolicitudAmistad> amistades(String email) {
+        List<SolicitudAmistad> resultado = new ArrayList<>();
+        resultado.addAll(solicitudRepository
+                .findByDestinatario_EmailIgnoreCaseAndEstadoOrderByCreadaEnDesc(email, EstadoSolicitud.APROBADA));
+        resultado.addAll(solicitudRepository
+                .findBySolicitante_EmailIgnoreCaseAndEstadoOrderByCreadaEnDesc(email, EstadoSolicitud.APROBADA));
+        return resultado;
     }
 
     @Transactional(readOnly = true)

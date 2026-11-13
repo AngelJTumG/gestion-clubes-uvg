@@ -25,6 +25,119 @@
     background: var(--uvg-light-bg);
 }
 
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --uvg-light-bg: #121916;
+    --uvg-text-dark: #e8f2ed;
+    --border: #355347;
+    --green-100: #183d2d;
+}
+
+:root[data-theme="dark"] body.dashboard-page,
+:root[data-theme="dark"] .settings-page,
+:root[data-theme="dark"] .chat-page {
+    background: #121916;
+    color: #e8f2ed;
+}
+
+:root[data-theme="dark"] .topbar,
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .settings-card,
+:root[data-theme="dark"] .chat-card {
+    background: #1b2721;
+    color: #e8f2ed;
+    border-color: #355347;
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] select {
+    background: #24352c;
+    color: #e8f2ed;
+    border-color: #527262;
+}
+
+.link-button {
+    border: 0;
+    padding: 4px 0;
+    background: transparent;
+    color: var(--green-700);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.link-button:hover { background: transparent; color: var(--green-900); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.chat-shell, .settings-shell { width: min(100% - 40px, 920px); margin: 40px auto; }
+.chat-card, .settings-card { background: #fff; border-radius: 20px; padding: 32px; box-shadow: 0 16px 50px rgba(6,75,50,.12); }
+.chat-heading { display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+.chat-heading h1, .settings-card h1 { margin: 0; }
+.chat-messages { display: grid; gap: 12px; min-height: 260px; max-height: 480px; overflow-y: auto; padding: 24px 0; }
+.chat-message { justify-self: start; max-width: 75%; padding: 10px 14px; border-radius: 14px 14px 14px 4px; background: var(--green-100); }
+.chat-message.is-mine { justify-self: end; border-radius: 14px 14px 4px 14px; background: var(--green-700); color: #fff; }
+.chat-message p { margin: 0 0 4px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.chat-message time { font-size: .75rem; opacity: .75; }
+.chat-compose button:disabled { opacity: .6; cursor: wait; }
+.chat-empty { align-self: center; text-align: center; color: #6b7b72; }
+.chat-compose { display: flex; gap: 10px; margin: 0; }
+.chat-compose input { flex: 1; }
+.chat-list { display: grid; gap: 10px; margin-top: 20px; }
+.chat-list-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--uvg-text-dark);
+    text-decoration: none;
+}
+.chat-list-item:hover { background: var(--green-100); }
+.chat-list-item .community-person-avatar { width: 44px; height: 44px; margin: 0; flex-shrink: 0; }
+.chat-list-item > span:nth-child(2) { display: grid; gap: 4px; flex: 1; }
+.chat-list-item small { color: #6b7b72; }
+.settings-option { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 0; border-top: 1px solid var(--border); }
+.settings-option h2 { margin: 0 0 6px; font-size: 1.05rem; }
+.settings-option p { margin: 0; color: #6b7b72; }
+
+.chat-messages {
+    align-content: start;
+    gap: 8px;
+    min-height: 180px;
+    padding: 18px 0;
+    overflow-anchor: none;
+}
+
+.live-notification-toast {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 20;
+    padding: 13px 18px;
+    border-radius: 999px;
+    background: var(--uvg-green-primary);
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 8px 26px rgb(0 0 0 / 25%);
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+}
+
+.live-notification-toast.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.chat-message {
+    width: fit-content;
+    max-width: min(75%, 520px);
+}
+
 * {
 	box-sizing: border-box;
 }
@@ -4872,6 +4985,32 @@ body.activity-editor-page {
     font-size: .85rem;
 }
 
+.campus-calendar-navigation {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.campus-calendar-navigation .button {
+    min-width: 42px;
+    padding-inline: 12px;
+    text-align: center;
+}
+
+.campus-calendar-today {
+    min-width: 52px !important;
+}
+
+.campus-calendar-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 28px 20px;
+}
+
+.campus-calendar-actions .button {
+    font-size: .85rem;
+}
+
 /* Guía */
 .campus-calendar-guide {
     display: flex;
@@ -6228,4 +6367,465 @@ body.activity-editor-page {
     .club-editor-jack {
         display: none;
     }
+}
+
+/* Contraste de controles y superficies para el tema oscuro. */
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] .club-editor-page,
+:root[data-theme="dark"] .activity-editor-page {
+    color: #e8f2ed;
+}
+
+:root[data-theme="dark"] .club-editor-section,
+:root[data-theme="dark"] .activity-editor-card,
+:root[data-theme="dark"] .community-friend-requests,
+:root[data-theme="dark"] .community-people-section {
+    background: #1b2721;
+    color: #e8f2ed;
+    border-color: #527262;
+}
+
+:root[data-theme="dark"] label,
+:root[data-theme="dark"] .club-editor-section-heading h2,
+:root[data-theme="dark"] .club-editor-section-heading p,
+:root[data-theme="dark"] .club-editor-field small,
+:root[data-theme="dark"] .community-friend-copy h3,
+:root[data-theme="dark"] .community-friend-copy p {
+    color: #e8f2ed;
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] .club-filters input,
+:root[data-theme="dark"] .club-filters select,
+:root[data-theme="dark"] .day-row input,
+:root[data-theme="dark"] .day-row select {
+    background-color: #24352c !important;
+    color: #f3fff8 !important;
+    border-color: #7da892 !important;
+    caret-color: #f3fff8;
+}
+
+:root[data-theme="dark"] select option {
+    background-color: #24352c !important;
+    color: #f3fff8 !important;
+}
+
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+    color: #b7cfc0 !important;
+    opacity: 1;
+}
+
+:root[data-theme="dark"] input:focus,
+:root[data-theme="dark"] select:focus,
+:root[data-theme="dark"] textarea:focus {
+    outline: 3px solid #65d99b !important;
+    box-shadow: 0 0 0 1px #0b2b1d;
+}
+
+:root[data-theme="dark"] .community-people-note,
+:root[data-theme="dark"] .community-person-description,
+:root[data-theme="dark"] .settings-option p {
+    color: #b7cfc0;
+}
+
+:root[data-theme="dark"] .chat-list-item {
+    background: #1b2721;
+    color: #e8f2ed;
+    border-color: #527262;
+}
+
+:root[data-theme="dark"] .chat-list-item:hover {
+    background: #194f36;
+}
+
+:root[data-theme="dark"] .chat-list-item small {
+    color: #b7cfc0;
+}
+
+:root[data-theme="dark"] .updates-main {
+    color: #e8f2ed;
+}
+
+:root[data-theme="dark"] .updates-section-heading h2 {
+    color: #73e5a8;
+}
+
+:root[data-theme="dark"] .updates-section-heading > span {
+    background: #194f36;
+    color: #d9ffe6;
+}
+
+:root[data-theme="dark"] .update-item,
+:root[data-theme="dark"] .updates-empty {
+    background: #1b2721;
+    color: #e8f2ed;
+    border-color: #527262;
+    box-shadow: 0 6px 24px rgb(0 0 0 / 18%);
+}
+
+:root[data-theme="dark"] .update-symbol {
+    background: #194f36;
+    color: #d9ffe6;
+}
+
+:root[data-theme="dark"] .update-friend .update-symbol {
+    background: #402b5c;
+    color: #e4caff;
+}
+
+:root[data-theme="dark"] .update-copy .update-type,
+:root[data-theme="dark"] .update-copy > p,
+:root[data-theme="dark"] .update-copy .update-date,
+:root[data-theme="dark"] .updates-empty p {
+    color: #b7cfc0;
+}
+
+:root[data-theme="dark"] .update-copy h3,
+:root[data-theme="dark"] .update-copy strong,
+:root[data-theme="dark"] .updates-empty h2 {
+    color: #e8f2ed;
+}
+
+:root[data-theme="dark"] .update-link,
+:root[data-theme="dark"] .updates-empty > span {
+    color: #65d99b;
+}
+
+:root[data-theme="dark"] .activity-editor-page .activity-editor-back,
+:root[data-theme="dark"] .activity-editor-page .topbar a {
+    color: #65d99b;
+}
+
+:root[data-theme="dark"] .updates-empty .button {
+    background: #24744d;
+    color: #f3fff8;
+    border-color: #65d99b;
+}
+
+:root[data-theme="dark"] .updates-empty .button:hover {
+    background: #2f9562;
+}
+
+:root[data-theme="dark"] .panel-view .club-filters,
+:root[data-theme="dark"] .panel-view .panel-club-card,
+:root[data-theme="dark"] .panel-view .panel-club-card .club-card-body {
+    background: #1b2721;
+    color: #e8f2ed;
+    border-color: #527262;
+}
+
+:root[data-theme="dark"] .panel-view .requests-content {
+    color: #e8f2ed;
+}
+
+:root[data-theme="dark"] .panel-view .requests-content h2,
+:root[data-theme="dark"] .panel-view .requests-content .eyebrow {
+    color: #54d995;
+}
+
+:root[data-theme="dark"] .panel-view .request-item {
+    background: #1b2721;
+    color: #e8f2ed;
+    border-color: #527262;
+}
+
+:root[data-theme="dark"] .panel-view .request-item strong,
+:root[data-theme="dark"] .panel-view .request-item b,
+:root[data-theme="dark"] .panel-view .request-item span {
+    color: #e8f2ed;
+}
+
+:root[data-theme="dark"] .panel-view .request-item span {
+    color: #b7cfc0;
+}
+
+:root[data-theme="dark"] .panel-view .club-filters label,
+:root[data-theme="dark"] .panel-view .panel-club-card h3,
+:root[data-theme="dark"] .panel-view .panel-club-card p {
+    color: #e8f2ed;
+}
+
+/* Vistas de actividades, membresías, solicitudes y calendario. */
+:root[data-theme="dark"] .activity-agenda-content,
+:root[data-theme="dark"] .my-clubs-section,
+:root[data-theme="dark"] .applications-content,
+:root[data-theme="dark"] .campus-calendar-card {
+    color: #e8f2ed;
+}
+
+:root[data-theme="dark"] .activity-management-heading h2,
+:root[data-theme="dark"] .activity-management-heading > div > p:last-child,
+:root[data-theme="dark"] .my-clubs-heading h2,
+:root[data-theme="dark"] .applications-heading h2,
+:root[data-theme="dark"] .campus-calendar-heading h2 {
+    color: #73e5a8;
+}
+
+:root[data-theme="dark"] .activity-management-heading > div > p:last-child,
+:root[data-theme="dark"] .campus-calendar-guide p,
+:root[data-theme="dark"] .campus-calendar-note,
+:root[data-theme="dark"] .my-club-description,
+:root[data-theme="dark"] .my-club-date,
+:root[data-theme="dark"] .my-club-date strong,
+:root[data-theme="dark"] .my-clubs-request p,
+:root[data-theme="dark"] .applications-stat > span,
+:root[data-theme="dark"] .applications-stat p,
+:root[data-theme="dark"] .application-date,
+:root[data-theme="dark"] .application-message,
+:root[data-theme="dark"] .application-unavailable,
+:root[data-theme="dark"] .applications-empty p {
+    color: #b7cfc0;
+}
+
+:root[data-theme="dark"] .activity-management-empty,
+:root[data-theme="dark"] .my-clubs-empty,
+:root[data-theme="dark"] .my-clubs-requests,
+:root[data-theme="dark"] .applications-stat,
+:root[data-theme="dark"] .application-item,
+:root[data-theme="dark"] .applications-empty,
+:root[data-theme="dark"] .my-club-card,
+:root[data-theme="dark"] .campus-calendar-card {
+    background: #1b2721;
+    color: #e8f2ed;
+    border-color: #527262;
+}
+
+:root[data-theme="dark"] .activity-management-empty h3,
+:root[data-theme="dark"] .my-clubs-empty h3,
+:root[data-theme="dark"] .my-club-card h3,
+:root[data-theme="dark"] .my-clubs-request h3,
+:root[data-theme="dark"] .applications-empty h3,
+:root[data-theme="dark"] .application-copy h3 {
+    color: #e8f2ed;
+}
+
+:root[data-theme="dark"] .my-club-category,
+:root[data-theme="dark"] .my-clubs-count,
+:root[data-theme="dark"] .my-clubs-no-requests {
+    background: #194f36;
+    color: #d9ffe6;
+}
+
+:root[data-theme="dark"] .campus-calendar-heading,
+:root[data-theme="dark"] .campus-calendar-guide {
+    background: #1b2721;
+}
+
+:root[data-theme="dark"] .campus-calendar-day {
+    background: #1b2721;
+    color: #e8f2ed;
+}
+
+:root[data-theme="dark"] .campus-calendar-day-empty {
+    background: #152019;
+}
+
+:root[data-theme="dark"] .campus-calendar-number {
+    color: #e8f2ed;
+}
+
+:root[data-theme="dark"] .campus-calendar-day:nth-child(7n) .campus-calendar-number,
+:root[data-theme="dark"] .campus-calendar-day:nth-child(7n - 1) .campus-calendar-number {
+    background: #194f36;
+}
+
+:root[data-theme="dark"] .campus-calendar-event {
+    background: #194f36;
+    color: #eafff0;
+}
+
+:root[data-theme="dark"] .campus-calendar-event:hover {
+    background: #24744d;
+}
+
+:root[data-theme="dark"] .campus-calendar-event > span {
+    color: #c1e6ce;
+}
+
+:root[data-theme="dark"] .application-status[data-state="PENDIENTE"],
+:root[data-theme="dark"] .my-clubs-request-status[data-state="PENDIENTE"] {
+    background: #5b431e;
+    color: #ffe8ad;
+}
+
+:root[data-theme="dark"] .application-status[data-state="APROBADA"],
+:root[data-theme="dark"] .my-clubs-request-status[data-state="APROBADA"] {
+    background: #194f36;
+    color: #d9ffe6;
+}
+
+:root[data-theme="dark"] .application-status[data-state="RECHAZADA"],
+:root[data-theme="dark"] .my-clubs-request-status[data-state="RECHAZADA"] {
+    background: #5a2929;
+    color: #ffcaca;
+}
+
+/* Detalle del club: todas las tarjetas conservan contraste en modo oscuro. */
+:root[data-theme="dark"] .club-profile-page .club-profile-card {
+    background: #1b2721;
+    color: #e8f2ed;
+    border-color: #527262;
+}
+
+:root[data-theme="dark"] .club-profile-page .club-profile-card h2,
+:root[data-theme="dark"] .club-profile-page .club-profile-card h3,
+:root[data-theme="dark"] .club-profile-page .club-profile-details dt,
+:root[data-theme="dark"] .club-profile-page .club-profile-carne-form label {
+    color: #73e5a8;
+}
+
+:root[data-theme="dark"] .club-profile-page .club-profile-description,
+:root[data-theme="dark"] .club-profile-page .club-profile-requirements p,
+:root[data-theme="dark"] .club-profile-page .club-profile-event > p,
+:root[data-theme="dark"] .club-profile-page .club-profile-details dd,
+:root[data-theme="dark"] .club-profile-page .club-profile-join > p:not(.activity-editor-eyebrow),
+:root[data-theme="dark"] .club-profile-page .club-profile-join > div > p,
+:root[data-theme="dark"] .club-profile-page .club-profile-management > div > p:last-child,
+:root[data-theme="dark"] .club-profile-page .club-profile-gallery figcaption {
+    color: #c1d9ca;
+}
+
+:root[data-theme="dark"] .club-profile-page .club-profile-requirements,
+:root[data-theme="dark"] .club-profile-page .club-profile-empty,
+:root[data-theme="dark"] .club-profile-page .club-profile-gallery figure > a {
+    background: #24352c;
+    color: #d9eee1;
+    border-color: #527262;
+}
+
+:root[data-theme="dark"] .club-profile-page .club-profile-event {
+    background: #24352c;
+    border-color: #527262;
+    border-left-color: #00c878;
+}
+
+:root[data-theme="dark"] .club-profile-page .club-profile-event .club-profile-event-date {
+    color: #73e5a8;
+}
+
+:root[data-theme="dark"] .club-profile-page .club-profile-join .club-profile-status {
+    background: #194f36;
+    color: #eafff0;
+}
+
+:root[data-theme="dark"] .club-profile-page .club-profile-carne-form input {
+    background: #24352c;
+    color: #f3fff8;
+    border-color: #7da892;
+}
+
+:root[data-theme="dark"] .club-profile-page .club-profile-full-button,
+:root[data-theme="dark"] .club-profile-page .club-profile-join .secondary {
+    background: #00a968;
+    color: #ffffff;
+}
+
+:root[data-theme="dark"] .club-profile-page .club-profile-full-button:hover,
+:root[data-theme="dark"] .club-profile-page .club-profile-join .secondary:hover {
+    background: #00c878;
+    color: #062d1c;
+}
+
+:root[data-theme="dark"] .club-profile-page .club-profile-inactive {
+    background: #5b431e;
+    border-color: #d7ad58;
+    color: #ffe8ad;
+}
+
+/* Integrantes del club. */
+:root[data-theme="dark"] .club-members-page .club-members-heading h2,
+:root[data-theme="dark"] .club-members-page .club-member-name h3,
+:root[data-theme="dark"] .club-members-page .club-members-empty h3 {
+    color: #73e5a8;
+}
+
+:root[data-theme="dark"] .club-members-page .club-members-count {
+    background: #194f36;
+    color: #d9ffe6;
+}
+
+:root[data-theme="dark"] .club-members-page .club-member-card,
+:root[data-theme="dark"] .club-members-page .club-members-empty {
+    background: #1b2721;
+    color: #e8f2ed;
+    border-color: #527262;
+}
+
+:root[data-theme="dark"] .club-members-page .club-member-identity {
+    border-bottom-color: #527262;
+}
+
+:root[data-theme="dark"] .club-members-page .club-member-name p,
+:root[data-theme="dark"] .club-members-page .club-member-details dt,
+:root[data-theme="dark"] .club-members-page .club-members-empty p {
+    color: #b7cfc0;
+}
+
+:root[data-theme="dark"] .club-members-page .club-member-details dd {
+    color: #e8f2ed;
+}
+
+:root[data-theme="dark"] .club-members-page .club-member-avatar {
+    background: #194f36;
+    color: #73e5a8;
+}
+
+/* Personas y amistades. */
+:root[data-theme="dark"] .community-people-page .community-people-heading h2,
+:root[data-theme="dark"] .community-people-page .community-person-card h3,
+:root[data-theme="dark"] .community-people-page .community-people-empty h3 {
+    color: #73e5a8;
+}
+
+:root[data-theme="dark"] .community-people-page .community-people-count {
+    background: #194f36;
+    color: #d9ffe6;
+}
+
+:root[data-theme="dark"] .community-people-page .community-friend-requests,
+:root[data-theme="dark"] .community-people-page .community-person-card,
+:root[data-theme="dark"] .community-people-page .community-people-empty {
+    background: #1b2721;
+    color: #e8f2ed;
+    border-color: #527262;
+}
+
+:root[data-theme="dark"] .community-people-page .community-people-note {
+    background: #152019;
+    color: #c1d9ca;
+}
+
+:root[data-theme="dark"] .community-people-page .community-friend-request {
+    border-top-color: #527262;
+}
+
+:root[data-theme="dark"] .community-people-page .community-friend-copy h3,
+:root[data-theme="dark"] .community-people-page .community-friend-copy p,
+:root[data-theme="dark"] .community-people-page .community-friend-copy time,
+:root[data-theme="dark"] .community-people-page .community-person-description,
+:root[data-theme="dark"] .community-people-page .community-people-empty p {
+    color: #c1d9ca;
+}
+
+:root[data-theme="dark"] .community-people-page .community-person-label {
+    color: #73e5a8;
+}
+
+:root[data-theme="dark"] .community-people-page .community-person-avatar {
+    background: #194f36;
+    color: #73e5a8;
+}
+
+:root[data-theme="dark"] .community-people-page .community-friend-reject {
+    background: #5a2929;
+    border-color: #9c5555;
+    color: #ffcaca;
+}
+
+:root[data-theme="dark"] .community-people-page .community-friend-reject:hover {
+    background: #743333;
+    color: #ffffff;
 }

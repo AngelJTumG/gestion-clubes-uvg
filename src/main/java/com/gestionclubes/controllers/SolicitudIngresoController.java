@@ -16,6 +16,9 @@ import com.gestionclubes.models.Rol;
 import com.gestionclubes.service.SolicitudIngresoService;
 import com.gestionclubes.service.SolicitudIngresoService.ResultadoAprobacionMasiva;
 
+/**
+ * Recibe solicitudes de ingreso y acciones para aprobarlas o rechazarlas.
+ */
 @Controller
 public class SolicitudIngresoController {
     private final SolicitudIngresoService solicitudService;
@@ -24,6 +27,7 @@ public class SolicitudIngresoController {
         this.solicitudService = solicitudService;
     }
 
+    /** Registra el carné del usuario y sincroniza sus ingresos ya aprobados. */
     @PostMapping("/clubes/{clubId}/carne")
     public String completarCarne(@PathVariable Long clubId, @RequestParam String carne,
                                  Principal principal, RedirectAttributes redirect) {
@@ -40,6 +44,7 @@ public class SolicitudIngresoController {
         return "redirect:/admin/clubes/" + clubId;
     }
 
+    /** Registra una solicitud del usuario para ingresar al club indicado. */
     @PostMapping("/clubes/{clubId}/solicitud")
     public String solicitar(@PathVariable Long clubId, Principal principal,
                             RedirectAttributes redirect) {
@@ -54,6 +59,7 @@ public class SolicitudIngresoController {
         return "redirect:/admin/clubes/" + clubId;
     }
 
+    /** Aprueba una solicitud pendiente del club que administra el usuario. */
     @PostMapping("/club-admin/solicitudes/{solicitudId}/aprobar")
     public String aprobar(@PathVariable Long solicitudId, Authentication authentication,
                           RedirectAttributes redirect) {
@@ -61,6 +67,7 @@ public class SolicitudIngresoController {
         return "redirect:/panel";
     }
 
+    /** Rechaza una solicitud pendiente del club que administra el usuario. */
     @PostMapping("/club-admin/solicitudes/{solicitudId}/rechazar")
     public String rechazar(@PathVariable Long solicitudId, Authentication authentication,
                            RedirectAttributes redirect) {
@@ -68,6 +75,7 @@ public class SolicitudIngresoController {
         return "redirect:/panel";
     }
 
+    /** Permite al administrador global aprobar todas las solicitudes que tengan carné. */
     @PostMapping("/admin/solicitudes/aprobar-todas")
     public String aprobarTodas(Authentication authentication, RedirectAttributes redirect) {
         boolean administradorGlobal = authentication.getAuthorities().stream()
@@ -90,6 +98,7 @@ public class SolicitudIngresoController {
         return "redirect:/panel";
     }
 
+    /** Ejecuta una aprobación o rechazo individual y prepara el mensaje de respuesta. */
     private void gestionar(Long solicitudId, Authentication authentication,
                            RedirectAttributes redirect, boolean aprobar) {
         String email = authentication.getName();

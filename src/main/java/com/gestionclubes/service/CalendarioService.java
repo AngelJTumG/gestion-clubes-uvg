@@ -21,7 +21,10 @@ public class CalendarioService {
     }
 
     public CalendarioMensual mesActual() {
-        YearMonth mes = YearMonth.now();
+        return mes(YearMonth.now());
+    }
+
+    public CalendarioMensual mes(YearMonth mes) {
         List<Actividad> actividades = actividadService.listarTodas();
         List<DiaCalendario> dias = new ArrayList<>();
         int primerDia = mes.atDay(1).getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue();
@@ -36,10 +39,10 @@ public class CalendarioService {
             dias.add(new DiaCalendario(fecha, delDia));
         }
         String nombreMes = mes.format(DateTimeFormatter.ofPattern("MMMM yyyy", new Locale("es", "GT")));
-        return new CalendarioMensual(nombreMes, dias);
+        return new CalendarioMensual(mes, nombreMes, dias);
     }
 
-    public record CalendarioMensual(String nombreMes, List<DiaCalendario> dias) {
+    public record CalendarioMensual(YearMonth mes, String nombreMes, List<DiaCalendario> dias) {
     }
 
     public record DiaCalendario(LocalDate fecha, List<Actividad> actividades) {

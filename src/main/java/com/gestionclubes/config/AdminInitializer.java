@@ -9,6 +9,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+/**
+ * Crea el administrador inicial al arrancar la aplicación si está configurado.
+ */
 @Component
 public class AdminInitializer implements CommandLineRunner {
     private final UsuarioRepository repository;
@@ -22,6 +25,7 @@ public class AdminInitializer implements CommandLineRunner {
         this.encoder = encoder;
     }
 
+    /** Crea la cuenta solo si hay credenciales configuradas y el correo no existe. */
     @Override
     public void run(String... args) {
         if (email.isBlank() || password.isBlank() || repository.existsByEmailIgnoreCase(email)) return;

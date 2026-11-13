@@ -14,6 +14,7 @@
           rel="stylesheet">
 
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/preferences.js}" defer></script>
 </head>
 
 <body class="dashboard-page activity-editor-page updates-page">
@@ -25,6 +26,12 @@
         </a>
 
         <div class="topbar-actions">
+            <a class="topbar-icon" th:href="@{/chats}" title="Chats" aria-label="Abrir chats">
+                <span aria-hidden="true">&#128172;</span>
+                <span class="notification-badge"
+                      th:if="${mensajesNoLeidos != null and !#lists.isEmpty(mensajesNoLeidos)}"
+                      th:text="${#lists.size(mensajesNoLeidos)}">0</span>
+            </a>
             <a th:href="@{/personas}">Personas</a>
             <a th:href="@{/panel}">Ir al panel</a>
         </div>
@@ -54,7 +61,8 @@
         <section class="updates-empty"
                  th:if="${#lists.isEmpty(notificaciones)
                      and #lists.isEmpty(notificacionesAmistad)
-                     and #lists.isEmpty(solicitudesAmistadPendientes)}"
+                     and #lists.isEmpty(solicitudesAmistadPendientes)
+                     and #lists.isEmpty(mensajesNoLeidos)}"
                  aria-labelledby="updates-empty-title">
             <span aria-hidden="true">✦</span>
             <h2 id="updates-empty-title">Estás al día</h2>
@@ -66,6 +74,30 @@
             <a class="button secondary" th:href="@{/panel}">
                 Explorar clubes →
             </a>
+        </section>
+
+        <section class="updates-section"
+                 th:unless="${#lists.isEmpty(mensajesNoLeidos)}"
+                 aria-labelledby="messages-title">
+            <header class="updates-section-heading">
+                <h2 id="messages-title">Mensajes nuevos</h2>
+                <span th:text="${#lists.size(mensajesNoLeidos)}">0</span>
+            </header>
+            <div class="updates-list">
+                <article class="update-item update-friend" th:each="mensaje : ${mensajesNoLeidos}">
+                    <span class="update-symbol" aria-hidden="true">&#128172;</span>
+                    <div class="update-copy">
+                        <p class="update-type">Nuevo mensaje</p>
+                        <h3 th:text="${'Mensaje de ' + mensaje.remitente.nombre}">Nuevo mensaje</h3>
+                        <p th:text="${mensaje.contenido}">Contenido del mensaje</p>
+                        <p class="update-date"
+                           th:text="${#temporals.format(mensaje.enviadoEn, 'dd/MM/yyyy HH:mm')}">Fecha</p>
+                        <a class="update-link" th:href="@{/chat/{id}(id=${mensaje.remitente.id})}">
+                            Abrir conversación →
+                        </a>
+                    </div>
+                </article>
+            </div>
         </section>
 
         <!-- Respuestas de clubes -->

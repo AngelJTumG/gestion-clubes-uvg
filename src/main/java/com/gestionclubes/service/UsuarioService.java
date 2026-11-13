@@ -43,6 +43,12 @@ public class UsuarioService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
     }
 
+    @Transactional(readOnly = true)
+    public Usuario buscarPorId(Long id) {
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+    }
+
     @Transactional
     public Usuario actualizarPerfil(String email, String nombre, String descripcion, MultipartFile foto)
             throws IOException {
@@ -118,4 +124,3 @@ public class UsuarioService implements UserDetailsService {
                 .build();
     }
 }
-

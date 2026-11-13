@@ -14,6 +14,10 @@
           rel="stylesheet">
 
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/notifications-live.js}" defer></script>
+    <script th:src="@{/js/friend-requests-live.js}" defer></script>
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
 
 <body class="dashboard-page activity-editor-page community-people-page">
@@ -25,6 +29,12 @@
         </a>
 
         <div class="topbar-actions">
+            <a class="topbar-icon" th:href="@{/chats}" title="Chats" aria-label="Abrir chats">
+                <span aria-hidden="true">&#128172;</span>
+                <span class="notification-badge"
+                      th:if="${mensajesNoLeidos != null and !#lists.isEmpty(mensajesNoLeidos)}"
+                      th:text="${#lists.size(mensajesNoLeidos)}">0</span>
+            </a>
             <a th:href="@{/notificaciones}">Notificaciones</a>
             <a th:href="@{/panel}">Ir al panel</a>
         </div>
@@ -58,6 +68,22 @@
         <p class="alert error" role="alert"
            th:if="${error}" th:text="${error}"></p>
 
+        <section class="community-friend-requests" th:if="${!#lists.isEmpty(amistades)}"
+                 aria-labelledby="community-chat-title">
+            <header class="community-people-heading">
+                <div><p class="activity-editor-eyebrow">Conversaciones</p><h2 id="community-chat-title">Mis amistades</h2></div>
+            </header>
+            <div class="community-friend-list">
+                <article class="community-friend-request" th:each="amistad : ${amistades}">
+                    <div class="community-friend-copy">
+                        <h3 th:text="${amistad.solicitante.email == usuarioActual.email ? amistad.destinatario.nombre : amistad.solicitante.nombre}">Amigo</h3>
+                        <p>Amistad aceptada</p>
+                    </div>
+                    <a class="button" th:href="@{/chat/{id}(id=${amistad.solicitante.email == usuarioActual.email ? amistad.destinatario.id : amistad.solicitante.id})}">Chatear</a>
+                </article>
+            </div>
+        </section>
+
         <!-- Solicitudes recibidas -->
         <section class="community-friend-requests"
                  aria-labelledby="community-friend-title">
@@ -68,17 +94,19 @@
                 </div>
 
                 <span class="community-people-count"
+                      id="friend-requests-count"
                       th:text="${#lists.size(pendientes)}">
                     0
                 </span>
             </header>
 
-            <p class="community-people-note"
+            <p class="community-people-note" id="friend-requests-empty"
                th:if="${#lists.isEmpty(pendientes)}">
                 No tienes solicitudes de amistad pendientes.
             </p>
 
-            <div class="community-friend-list"
+            <div class="community-friend-list" id="friend-requests-list"
+                 th:attr="data-current-count=${#lists.size(pendientes)}"
                  th:unless="${#lists.isEmpty(pendientes)}">
 
                 <article class="community-friend-request"
@@ -199,5 +227,6 @@
             </div>
         </section>
     </main>
+<script th:src="@{/js/preferences.js}"></script>
 </body>
 </html>

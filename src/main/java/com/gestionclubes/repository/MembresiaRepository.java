@@ -9,6 +9,9 @@ import org.springframework.data.repository.query.Param;
 import com.gestionclubes.models.Membresia;
 import com.gestionclubes.models.Usuario;
 
+/**
+ * Consultas de membresías por club o estudiante, y de usuarios integrantes.
+ */
 public interface MembresiaRepository extends JpaRepository<Membresia, Long> {
     Optional<Membresia> findByEstudiante_CarneAndClub_Id(String carne, Long clubId);
     @EntityGraph(attributePaths = {"estudiante", "estudiante.usuario"})
@@ -16,6 +19,7 @@ public interface MembresiaRepository extends JpaRepository<Membresia, Long> {
     @EntityGraph(attributePaths = {"club"})
     List<Membresia> findByEstudiante_Usuario_EmailIgnoreCaseOrderByFechaIngresoAsc(String email);
 
+    /** Lista usuarios que pertenecen a clubes, excluyendo al usuario indicado. */
     @Query("""
         select distinct m.estudiante.usuario from Membresia m
         where lower(m.estudiante.usuario.email) <> lower(:email)

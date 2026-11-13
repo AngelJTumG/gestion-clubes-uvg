@@ -226,7 +226,8 @@
                                 th:errorclass="field-invalid">
                             <option value="">Selecciona un edificio</option>
 
-                            <option th:each="edificio : ${#strings.arraySplit('A,B,CIT,D,E,F,G,H,I,J,K', ',')}"
+                            <!-- Para agregar edificios, añade su código/nombre a esta lista separada por comas. -->
+                            <option th:each="edificio : ${#strings.arraySplit('A,B,CIT,D,E,F,G,H,I,J,K,Canchas UVG, Canchas Colegio Americano, Piscina Americano',',')}"
                                     th:value="${edificio}"
                                     th:text="${edificio}">
                             </option>
@@ -320,5 +321,6 @@
     </main>
 
     <script th:src="@{/js/club-form.js}"></script>
+    <script th:src="@{/js/preferences.js}"></script>
 </body>
 </html>

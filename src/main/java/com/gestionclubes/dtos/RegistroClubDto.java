@@ -6,6 +6,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+/**
+ * Recibe y valida los datos del formulario para crear o editar un club.
+ * Convierte los campos de horario y ubicación al formato usado por la aplicación.
+ */
 public class RegistroClubDto {
     @NotBlank(message = "Nombre: este campo es obligatorio")
     @Size(max = 100, message = "Nombre: máximo 100 caracteres")
@@ -65,7 +69,8 @@ public class RegistroClubDto {
         this.categoria = categoria == null ? null : categoria.trim();
     }
 
-    public String getHorario() { 
+    /** Combina los horarios del formulario en una cadena separada por punto y coma. */
+    public String getHorario() {
         if (horarioDias1 == null) return "";
         StringBuilder horarioCompleto = new StringBuilder();
         for (int indice = 0; indice < horarioDias1.length; indice++) {
@@ -79,6 +84,7 @@ public class RegistroClubDto {
         return horarioCompleto.toString();
     }
 
+    /** Separa la cadena de horarios almacenada en día, hora de inicio y hora de fin. */
     public void setHorario(String horario) {
         this.horario = horario == null ? null : horario.trim();
         horarioDias1 = new String[]{""};
@@ -103,11 +109,13 @@ public class RegistroClubDto {
         }
     }
 
-    public String getUbicacion() { 
+    /** Combina el edificio y el número de aula en una sola ubicación. */
+    public String getUbicacion() {
         if (ubicacionEdificio == null || ubicacionNumero == null) return ubicacion;
         return ubicacionEdificio + " " + ubicacionNumero;
     }
 
+    /** Separa la ubicación recibida en edificio y número para el formulario. */
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion == null ? null : ubicacion.trim();
         this.ubicacionEdificio = null;
@@ -141,6 +149,7 @@ public class RegistroClubDto {
 
     public void setUbicacionNumero(String ubicacionNumero) { this.ubicacionNumero = ubicacionNumero; }
 
+    /** Comprueba que cada horario tenga día, horas válidas y una hora final posterior. */
     @AssertTrue(message = "Completa al menos un horario con día y horas válidas")
     public boolean isHorarioValido() {
         if (horarioDias1 == null || horarioDias1.length == 0) return false;
@@ -155,10 +164,11 @@ public class RegistroClubDto {
         return tieneHorario;
     }
 
+    /** Comprueba que el edificio sea válido y que el aula tenga tres dígitos. */
     @AssertTrue(message = "La ubicación debe tener un edificio válido y exactamente 3 dígitos")
     public boolean isUbicacionValida() {
         return ubicacionEdificio != null
-                && ubicacionEdificio.matches("CIT|[ABDEFGHIJK]")
+                && ubicacionEdificio.matches("[A-Za-z0-9][A-Za-z0-9 _-]{0,29}")
                 && ubicacionNumero != null
                 && ubicacionNumero.matches("\\d{3}");
     }
