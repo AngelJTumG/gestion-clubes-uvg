@@ -6,6 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.http.MediaType;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.gestionclubes.service.ClubService;
@@ -85,4 +89,27 @@ public class HomeController {
 
         return "panel";
     }
+
+    @GetMapping(value = "/api/admin/solicitudes/pendientes",
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    List<SolicitudPendienteView> solicitudesPendientes(Authentication authentication) {
+        boolean administradorGlobal = authentication.getAuthorities().stream()
+                .anyMatch(rol -> rol.getAuthority().equals("ROLE_ADMIN"));
+        boolean puedeGestionar = administradorGlobal || authentication.getAuthorities().stream()
+                .anyMatch(rol -> rol.getAuthority().equals("ROLE_ADMIN_CLUB"));
+        if (!puedeGestionar) {
+            return List.of();
+        }
+
+        return solicitudService.pendientesPara(authentication.getName(), administradorGlobal).stream()
+                .map(solicitud -> new SolicitudPendienteView(
+                        solicitud.getId(),
+                        solicitud.getUsuario().getNombre(),
+                        solicitud.getClub().getNombre(),
+                        solicitud.getCreadaEn().format(DateTimeFormatter.ofPattern("dd/MM HH:mm"))))
+                .toList();
+    }
+
+    record SolicitudPendienteView(Long id, String usuario, String club, String creadaEn) {}
 }
