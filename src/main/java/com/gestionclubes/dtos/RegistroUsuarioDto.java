@@ -5,6 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
 
+/**
+ * Recibe los datos para registrar una cuenta y su carné de estudiante.
+ * Las restricciones validan campos obligatorios, formatos y longitudes.
+ */
 public class RegistroUsuarioDto {
     @NotBlank(message = "Por favor, ingresa tu carné")
     @Pattern(regexp = "[0-9]{1,30}", message = "El carné debe contener de 1 a 30 dígitos")
