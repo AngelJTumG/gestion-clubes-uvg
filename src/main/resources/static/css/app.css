@@ -6509,6 +6509,66 @@ body.activity-editor-page {
     background: #2f9562;
 }
 
+:root[data-theme="dark"] .account-profile-summary,
+:root[data-theme="dark"] .account-profile-editor {
+    background: #1b2721;
+    color: #e8f2ed;
+    border-color: #527262;
+    box-shadow: 0 6px 24px rgb(0 0 0 / 18%);
+}
+
+:root[data-theme="dark"] .account-profile-avatar {
+    border-color: #1b2721;
+    background: #194f36;
+    color: #65d99b;
+}
+
+:root[data-theme="dark"] .account-profile-summary h2,
+:root[data-theme="dark"] .account-profile-editor-heading h2,
+:root[data-theme="dark"] .account-profile-form label {
+    color: #e8f2ed;
+}
+
+:root[data-theme="dark"] .account-profile-email,
+:root[data-theme="dark"] .account-profile-bio,
+:root[data-theme="dark"] .account-profile-editor-heading > p:last-child,
+:root[data-theme="dark"] .account-profile-form label span,
+:root[data-theme="dark"] .account-profile-help {
+    color: #b7cfc0;
+}
+
+:root[data-theme="dark"] .account-profile-role {
+    background: #194f36;
+    color: #d9ffe6;
+}
+
+:root[data-theme="dark"] .account-profile-field input,
+:root[data-theme="dark"] .account-profile-field textarea {
+    background: #24352c;
+    color: #f3fff8;
+    border-color: #7da892;
+}
+
+:root[data-theme="dark"] .account-profile-field input:focus,
+:root[data-theme="dark"] .account-profile-field textarea:focus {
+    background: #2b4034;
+}
+
+:root[data-theme="dark"] .account-profile-photo-field {
+    background: #152019;
+    border-color: #7da892;
+}
+
+:root[data-theme="dark"] .account-profile-photo-field input::file-selector-button {
+    background: #24352c;
+    color: #f3fff8;
+    border-color: #7da892;
+}
+
+:root[data-theme="dark"] .account-profile-photo-field input::file-selector-button:hover {
+    background: #194f36;
+}
+
 :root[data-theme="dark"] .panel-view .club-filters,
 :root[data-theme="dark"] .panel-view .panel-club-card,
 :root[data-theme="dark"] .panel-view .panel-club-card .club-card-body {
