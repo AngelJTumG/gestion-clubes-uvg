@@ -4,6 +4,8 @@
 
     let previousIds = new Set();
     let initialized = false;
+    const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
 
     function showRequest(request) {
         let toast = document.querySelector('.live-admin-request-toast');
@@ -25,7 +27,7 @@
         window.setTimeout(() => toast.classList.remove('is-visible'), 7000);
     }
 
-    function renderRequests(requests) {
+    function renderRequests(requests, puedeAprobarTodas) {
         let section = document.querySelector('[data-admin-requests]');
         if (!requests.length) {
             if (section) section.hidden = true;
@@ -40,12 +42,34 @@
             section.innerHTML =
                 '<p class="eyebrow">Gestión de clubes</p>' +
                 '<h2>Solicitudes de ingreso</h2>' +
+                '<div data-approve-all></div>' +
                 '<div class="requests-list" data-admin-requests-list></div>';
             const main = document.querySelector('.panel-view main');
             if (main) main.appendChild(section);
         }
 
         section.hidden = false;
+        const approveAll = section.querySelector('[data-approve-all]');
+        if (approveAll) {
+            approveAll.replaceChildren();
+            if (puedeAprobarTodas) {
+                const form = document.createElement('form');
+                form.method = 'post';
+                form.action = '/admin/solicitudes/aprobar-todas';
+                if (csrfToken) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = '_csrf';
+                    input.value = csrfToken;
+                    form.appendChild(input);
+                }
+                const button = document.createElement('button');
+                button.type = 'submit';
+                button.textContent = 'Aprobar todas las solicitudes';
+                form.appendChild(button);
+                approveAll.appendChild(form);
+            }
+        }
         const list = section.querySelector('[data-admin-requests-list]');
         if (!list) return;
         list.replaceChildren(...requests.map(request => {
@@ -72,9 +96,10 @@
                 cache: 'no-store'
             });
             if (!response.ok) return;
-            const requests = await response.json();
+            const data = await response.json();
+            const requests = data.solicitudes || [];
             const ids = new Set(requests.map(request => String(request.id)));
-            renderRequests(requests);
+            renderRequests(requests, data.puedeAprobarTodas);
             if (initialized) {
                 const newRequest = requests.find(request => !previousIds.has(String(request.id)));
                 if (newRequest) showRequest(newRequest);

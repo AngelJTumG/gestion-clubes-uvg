@@ -93,23 +93,28 @@ public class HomeController {
     @GetMapping(value = "/api/admin/solicitudes/pendientes",
                 produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    List<SolicitudPendienteView> solicitudesPendientes(Authentication authentication) {
+    SolicitudesPendientesView solicitudesPendientes(Authentication authentication) {
         boolean administradorGlobal = authentication.getAuthorities().stream()
                 .anyMatch(rol -> rol.getAuthority().equals("ROLE_ADMIN"));
         boolean puedeGestionar = administradorGlobal || authentication.getAuthorities().stream()
                 .anyMatch(rol -> rol.getAuthority().equals("ROLE_ADMIN_CLUB"));
         if (!puedeGestionar) {
-            return List.of();
+            return new SolicitudesPendientesView(List.of(), false);
         }
 
-        return solicitudService.pendientesPara(authentication.getName(), administradorGlobal).stream()
+        List<SolicitudPendienteView> solicitudes = solicitudService
+                .pendientesPara(authentication.getName(), administradorGlobal).stream()
                 .map(solicitud -> new SolicitudPendienteView(
                         solicitud.getId(),
                         solicitud.getUsuario().getNombre(),
                         solicitud.getClub().getNombre(),
                         solicitud.getCreadaEn().format(DateTimeFormatter.ofPattern("dd/MM HH:mm"))))
                 .toList();
+        return new SolicitudesPendientesView(solicitudes, administradorGlobal);
     }
 
     record SolicitudPendienteView(Long id, String usuario, String club, String creadaEn) {}
+
+    record SolicitudesPendientesView(List<SolicitudPendienteView> solicitudes,
+                                     boolean puedeAprobarTodas) {}
 }

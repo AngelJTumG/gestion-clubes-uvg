@@ -262,7 +262,7 @@ public class GestionClubController {
         return "redirect:/perfil";
     }
 
-    /** Muestra las notificaciones y las marca como leídas. */
+    /** Muestra las notificaciones sin marcarlas como leídas automáticamente. */
     @GetMapping("/notificaciones")
     public String notificaciones(Principal principal, Model model) {
         model.addAttribute("notificaciones", solicitudService.notificacionesDe(principal.getName()));
@@ -270,7 +270,6 @@ public class GestionClubController {
         model.addAttribute("solicitudesAmistadPendientes",
                 amistadService.solicitudesPendientesRecibidas(principal.getName()));
         model.addAttribute("mensajesNoLeidos", mensajeService.noLeidos(principal.getName()));
-        solicitudService.marcarNotificacionesLeidas(principal.getName());
         amistadService.marcarNotificacionesLeidas(principal.getName());
         amistadService.marcarSolicitudesRecibidasLeidas(principal.getName());
         return "notificaciones";
